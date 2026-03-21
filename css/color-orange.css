@@ -1,0 +1,154 @@
+a {
+	color: #ed7b1b;
+}
+a:hover, a:focus {
+	color: #ed7b1b;
+}
+.pl-child {
+	background-color: #ed7b1b;
+}
+blockquote .fa { 
+	color: #3a9ac8;
+}
+.hr-primary:after {
+	background: #3a9ac8;
+}
+.section-title:before, 
+.section-title:after {
+	background: #ed7b1b;
+}
+.section-title span:before, 
+.section-title span:after {
+	background: #ed7b1b;
+}
+.side-menu-trigger, 
+.navbar-toggle {
+	background: #ed7b1b;
+}
+.sidenav-wrapper .nav > li > a:hover {
+	color: #3a9ac8;
+}
+.close-menu {
+	background: #ed7b1b;
+}
+.close-menu:hover, 
+.side-menu-trigger:hover, 
+.navbar-toggle:hover {
+	background: #e27011;
+}
+.owl-dot.active, 
+.owl-dot:hover {
+	border-color: #3a9ac8;
+}
+.owl-dot.active span, 
+.owl-dot:hover span {
+	background: #3a9ac8;
+}
+.feature-col i {
+	color: #ed7b1b;
+}
+.bg-primary {
+	background: #3a9ac8;
+}
+.service-col:after, 
+.feature-col:after {
+	background: #ed7b1b;
+}
+.service-col i {
+	color: #ed7b1b;
+}
+.vbox-close {
+	background: #ed7b1b !important;
+}
+.project-catagory {
+	color: #3a9ac8;
+}
+.testimonial-box h4 {
+	color: #3a9ac8;
+}
+.blog-category:after {
+	background: #3a9ac8;
+}
+.posted-date {
+	color: #3a9ac8;
+}
+.posted-date:after {
+	background: #3a9ac8;
+}
+.post-title a:hover, 
+.post-title a:focus {
+	color: #3a9ac8;
+}
+.posted-by a:hover, 
+.posted-by a:focus {
+	color: #3a9ac8;
+}
+.footer-cols h4:after {
+	background: #3a9ac8;
+}
+.contact-col i {
+	color: #3a9ac8;
+}
+.contact-col i:after {
+	background: #3a9ac8;
+}
+.pagination > li > a:hover, 
+.pagination > li.current > span, 
+.pagination > li > a:focus {
+	background: #3a9ac8;
+	border-color: #3a9ac8;
+}
+.widget-single h4:before { 
+	background: #3a9ac8 ; 
+}
+.widget-single li a:hover { 
+	color: #3a9ac8; 
+}
+.post-summary a:hover {
+	color: #3a9ac8;
+}
+.taglist li a:hover {
+	background: #3a9ac8;
+	border-color: #3a9ac8;
+}
+.tags-list ul li a:hover {
+	color: #3a9ac8;
+}
+.comment-by .reply {
+	color: #3a9ac8;
+}
+.comment-by .reply:hover {
+	background: #3a9ac8;
+}
+.sub-title {
+	color: #3a9ac8;	
+}
+.progress-bar-value {
+    background: #3a9ac8;
+}
+input[type="button"], 
+input[type="submit"], 
+button {
+	background: #3a9ac8;
+
+}
+.breadcrumb li a:hover {
+	color: #3a9ac8;
+}
+.btn {
+	background-color: #ed7b1b;
+}
+.btn.btn-white:before {
+	background: #3a9ac8;
+}
+.btn.btn-outline-white:hover, 
+input[type="submit"].btn-outline-white:hover, 
+input[type="button"].btn-outline-white:hover {
+	color: #3a9ac8;
+}
+.back-top {
+	background:	#ed7b1b;
+}
+
+/*==========Addition style for this page Only=========*/
+.btn-blue { background: #3a9ac8; }
