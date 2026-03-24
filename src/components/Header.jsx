@@ -23,8 +23,13 @@ const Header = () => {
         <div className="flex justify-between items-center py-4">
           {/* Logo */}
           <div className="flex items-center">
-            <Link to="/" className="text-2xl font-bold">
-              <span className="text-orange-600">UX</span> Infotech
+            <Link to="/" className="flex flex-col items-start leading-none group pb-1">
+              <div className="flex items-baseline mb-1">
+                <span className="text-[#3282C4] text-[42px] font-black tracking-tighter leading-none">U</span>
+                <span className="text-[#F18835] text-[42px] font-black tracking-tighter leading-none ml-[-2px]">X</span>
+                <span className="text-[#3282C4] text-[34px] font-light tracking-widest leading-none ml-3 uppercase">INFOTECH</span>
+              </div>
+              <span className="text-gray-500 text-[11px] tracking-[0.25em] font-medium mt-1">DESIGN FOR YOUR SUCCESS</span>
             </Link>
           </div>
 

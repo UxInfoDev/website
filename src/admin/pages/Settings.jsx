@@ -1,26 +1,32 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
+import axios from 'axios'
 
 const SettingsPage = () => {
-  const { register, handleSubmit, reset } = useForm({
-    defaultValues: {
-      siteName: 'UX Infotech',
-      siteDescription: 'UX Design & Web Development Agency',
-      phone: '+91 98765 43210',
-      email: 'hello@uxinfotech.com',
-      address: 'Ahmedabad, Gujarat, India',
-      facebookUrl: '#',
-      twitterUrl: '#',
-      linkedinUrl: '#',
-      youtubeUrl: '#'
+  const { register, handleSubmit, reset } = useForm()
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const response = await axios.get(`/api/settings?_t=${new Date().getTime()}`)
+        if (response.data) {
+          reset(response.data)
+        }
+      } catch (error) {
+        toast.error('Failed to load settings from server')
+      }
     }
-  })
+    fetchSettings()
+  }, [reset])
 
   const onSubmit = async (data) => {
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    console.log('Settings updated:', data)
-    toast.success('Settings saved successfully!')
+    try {
+      await axios.put('/api/settings', data)
+      toast.success('Settings saved successfully!')
+    } catch (error) {
+      toast.error('Failed to save settings')
+    }
   }
 
   return (
@@ -55,7 +61,7 @@ const SettingsPage = () => {
                   <label className="block font-bold mb-2">Site Name</label>
                   <input
                     type="text"
-                    {...register('siteName')}
+                    {...register('site_name')}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg"
                   />
                 </div>
@@ -63,7 +69,7 @@ const SettingsPage = () => {
                 <div>
                   <label className="block font-bold mb-2">Site Description</label>
                   <textarea
-                    {...register('siteDescription')}
+                    {...register('site_description')}
                     rows="3"
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg"
                   />
@@ -116,7 +122,7 @@ const SettingsPage = () => {
                   <label className="block font-bold mb-2">Facebook URL</label>
                   <input
                     type="url"
-                    {...register('facebookUrl')}
+                    {...register('facebook_url')}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg"
                   />
                 </div>
@@ -125,7 +131,7 @@ const SettingsPage = () => {
                   <label className="block font-bold mb-2">Twitter URL</label>
                   <input
                     type="url"
-                    {...register('twitterUrl')}
+                    {...register('twitter_url')}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg"
                   />
                 </div>
@@ -134,7 +140,7 @@ const SettingsPage = () => {
                   <label className="block font-bold mb-2">LinkedIn URL</label>
                   <input
                     type="url"
-                    {...register('linkedinUrl')}
+                    {...register('linkedin_url')}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg"
                   />
                 </div>
@@ -143,7 +149,7 @@ const SettingsPage = () => {
                   <label className="block font-bold mb-2">YouTube URL</label>
                   <input
                     type="url"
-                    {...register('youtubeUrl')}
+                    {...register('youtube_url')}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg"
                   />
                 </div>

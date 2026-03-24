@@ -10,7 +10,7 @@ const ProjectDetails = () => {
   useEffect(() => {
     const fetchProject = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/projects/${id}`)
+        const response = await axios.get(`/api/projects/${id}`)
         setProject(response.data)
       } catch (error) {
         console.error('Error fetching project:', error)
@@ -21,7 +21,7 @@ const ProjectDetails = () => {
 
   if (!project) return <div className="py-32 text-center text-xl font-bold">Loading Project...</div>
 
-  const imageUrl = project.image?.startsWith('/uploads') ? `http://localhost:5000${project.image}` : project.image
+  const imageUrl = project.image?.startsWith('/uploads') ? `${project.image}` : project.image
 
   return (
     <section className="py-24 bg-white">

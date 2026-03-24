@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import { Link } from 'react-router-dom'
 
 const PortfolioSection = () => {
   const [activeFilter, setActiveFilter] = useState('all')
@@ -8,7 +9,7 @@ const PortfolioSection = () => {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/projects?_t=${new Date().getTime()}`)
+        const response = await axios.get(`/api/projects?_t=${new Date().getTime()}`)
         setProjects(response.data)
       } catch (error) {
         console.error('Error fetching projects:', error)
@@ -65,7 +66,7 @@ const PortfolioSection = () => {
             >
               {/* Image */}
               <img
-                src={project.image?.startsWith('/uploads') ? `http://localhost:5000${project.image}` : project.image}
+                src={project.image?.startsWith('/uploads') ? `${project.image}` : project.image}
                 alt={project.title}
                 className="w-full h-64 object-cover group-hover:scale-110 transition duration-300"
               />
@@ -75,9 +76,9 @@ const PortfolioSection = () => {
                 <div className="text-white">
                   <h3 className="text-xl font-bold mb-2">{project.title}</h3>
                   <p className="text-gray-200 text-sm mb-4">{project.description}</p>
-                  <button className="text-orange-400 font-bold hover:text-orange-300">
+                  <Link to={`/project/${project.id}`} className="text-orange-400 font-bold hover:text-orange-300 inline-block">
                     View Project →
-                  </button>
+                  </Link>
                 </div>
               </div>
             </div>

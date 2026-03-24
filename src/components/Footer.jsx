@@ -1,8 +1,33 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { FaFacebook, FaTwitter, FaYoutube, FaLinkedin, FaMapMarkerAlt, FaPhone, FaEnvelope } from 'react-icons/fa'
+import axios from 'axios'
 
 const Footer = () => {
   const currentYear = new Date().getFullYear()
+  const [settings, setSettings] = useState({
+    site_name: 'UX Infotech',
+    address: 'Ahmedabad, Gujarat\nIndia',
+    phone: '+91 98765 43210',
+    email: 'hello@uxinfotech.com',
+    facebook_url: '#',
+    twitter_url: '#',
+    linkedin_url: '#',
+    youtube_url: '#'
+  })
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const response = await axios.get(`/api/settings?_t=${new Date().getTime()}`)
+        if (response.data) {
+          setSettings(response.data)
+        }
+      } catch (error) {
+        console.error('Failed to load settings')
+      }
+    }
+    fetchSettings()
+  }, [])
 
   return (
     <footer className="bg-gray-900 text-white">
@@ -52,20 +77,20 @@ const Footer = () => {
                 <FaMapMarkerAlt className="text-orange-600 mt-1" />
                 <div>
                   <p className="font-medium">Address</p>
-                  <address>Ahmedabad, Gujarat<br />India</address>
+                  <address className="whitespace-pre-line">{settings.address}</address>
                 </div>
               </div>
               <div className="flex items-center gap-3">
                 <FaPhone className="text-orange-600" />
                 <div>
-                  <p className="font-medium">+91 98765 43210</p>
+                  <a href={`tel:${settings.phone}`} className="font-medium hover:text-orange-600">{settings.phone}</a>
                 </div>
               </div>
               <div className="flex items-center gap-3">
                 <FaEnvelope className="text-orange-600" />
                 <div>
-                  <a href="mailto:hello@uxinfotech.com" className="hover:text-orange-600">
-                    hello@uxinfotech.com
+                  <a href={`mailto:${settings.email}`} className="hover:text-orange-600">
+                    {settings.email}
                   </a>
                 </div>
               </div>
@@ -90,18 +115,26 @@ const Footer = () => {
             <div>
               <p className="font-medium mb-3">Connect with us</p>
               <div className="flex gap-4">
-                <a href="#facebook" className="text-xl hover:text-orange-600">
-                  <FaFacebook />
-                </a>
-                <a href="#twitter" className="text-xl hover:text-orange-600">
-                  <FaTwitter />
-                </a>
-                <a href="#youtube" className="text-xl hover:text-orange-600">
-                  <FaYoutube />
-                </a>
-                <a href="#linkedin" className="text-xl hover:text-orange-600">
-                  <FaLinkedin />
-                </a>
+                {settings.facebook_url && (
+                  <a href={settings.facebook_url} target="_blank" rel="noopener noreferrer" className="text-xl hover:text-orange-600">
+                    <FaFacebook />
+                  </a>
+                )}
+                {settings.twitter_url && (
+                  <a href={settings.twitter_url} target="_blank" rel="noopener noreferrer" className="text-xl hover:text-orange-600">
+                    <FaTwitter />
+                  </a>
+                )}
+                {settings.youtube_url && (
+                  <a href={settings.youtube_url} target="_blank" rel="noopener noreferrer" className="text-xl hover:text-orange-600">
+                    <FaYoutube />
+                  </a>
+                )}
+                {settings.linkedin_url && (
+                  <a href={settings.linkedin_url} target="_blank" rel="noopener noreferrer" className="text-xl hover:text-orange-600">
+                    <FaLinkedin />
+                  </a>
+                )}
               </div>
             </div>
           </div>
@@ -109,7 +142,7 @@ const Footer = () => {
 
         {/* Copyright */}
         <div className="border-t border-gray-700 pt-8 text-center text-gray-400">
-          <p>&copy; {currentYear} UX Infotech. All Rights Reserved. | Crafting Digital Experiences</p>
+          <p>&copy; {currentYear} {settings.site_name}. All Rights Reserved. | Crafting Digital Experiences</p>
         </div>
       </div>
     </footer>

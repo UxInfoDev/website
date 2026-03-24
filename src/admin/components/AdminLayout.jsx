@@ -12,6 +12,7 @@ const AdminLayout = ({ children, onLogout }) => {
     { path: '/services', label: 'Services', icon: <FaTools /> },
     { path: '/team', label: 'Team Members', icon: <FaUsers /> },
     { path: '/inquiries', label: 'Inquiries', icon: <FaEnvelope /> },
+    { path: '/banners', label: 'Banners', icon: <FaTools /> },
     { path: '/settings', label: 'Settings', icon: <FaCog /> }
   ]
 
@@ -25,7 +26,13 @@ const AdminLayout = ({ children, onLogout }) => {
       }`}>
         <div className="p-4 flex items-center justify-between">
           {isSidebarOpen && (
-            <h1 className="text-xl font-bold">UX Admin</h1>
+            <div className="flex flex-col items-start leading-none group">
+              <div className="flex items-baseline mb-1">
+                <span className="text-[#3282C4] text-[28px] font-black tracking-tighter leading-none">U</span>
+                <span className="text-[#F18835] text-[28px] font-black tracking-tighter leading-none ml-[-2px]">X</span>
+                <span className="text-[#3282C4] text-[22px] font-light tracking-widest leading-none ml-2 uppercase">ADMIN</span>
+              </div>
+            </div>
           )}
           <button
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}

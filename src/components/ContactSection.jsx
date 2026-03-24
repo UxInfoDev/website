@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import axios from 'axios'
@@ -6,11 +6,30 @@ import axios from 'axios'
 const ContactSection = () => {
   const { register, handleSubmit, reset, formState: { errors } } = useForm()
   const [loading, setLoading] = useState(false)
+  const [settings, setSettings] = useState({
+    address: 'Loading...',
+    phone: 'Loading...',
+    email: 'Loading...'
+  })
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const response = await axios.get(`/api/settings?_t=${new Date().getTime()}`)
+        if (response.data) {
+          setSettings(response.data)
+        }
+      } catch (error) {
+        console.error('Failed to load settings')
+      }
+    }
+    fetchSettings()
+  }, [])
 
   const onSubmit = async (data) => {
     setLoading(true)
     try {
-      await axios.post('http://localhost:5000/inquiries', data)
+      await axios.post('/api/inquiries', data)
       toast.success('Your inquiry has been sent successfully! We\'ll get back to you soon.')
       reset()
     } catch (error) {
@@ -36,21 +55,20 @@ const ContactSection = () => {
           <div className="lg:col-span-1 space-y-8">
             <div>
               <h4 className="text-2xl font-bold mb-2">📍 Address</h4>
-              <p className="text-gray-600">
-                Ahmedabad, Gujarat<br />
-                India
+              <p className="text-gray-600 whitespace-pre-line">
+                {settings.address}
               </p>
             </div>
             <div>
               <h4 className="text-2xl font-bold mb-2">📞 Phone</h4>
-              <a href="tel:+919876543210" className="text-orange-600 hover:text-orange-700 font-bold text-lg">
-                +91 98765 43210
+              <a href={`tel:${settings.phone}`} className="text-orange-600 hover:text-orange-700 font-bold text-lg">
+                {settings.phone}
               </a>
             </div>
             <div>
               <h4 className="text-2xl font-bold mb-2">✉️ Email</h4>
-              <a href="mailto:hello@uxinfotech.com" className="text-orange-600 hover:text-orange-700 font-bold text-lg">
-                hello@uxinfotech.com
+              <a href={`mailto:${settings.email}`} className="text-orange-600 hover:text-orange-700 font-bold text-lg">
+                {settings.email}
               </a>
             </div>
           </div>

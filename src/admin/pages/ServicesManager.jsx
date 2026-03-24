@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form'
 import axios from 'axios'
 import * as Icons from 'react-icons/fa'
 
-const API_BASE = 'http://localhost:5000/services'
+const API_BASE = '/api/services'
 
 const ServicesManager = () => {
   const [services, setServices] = useState([])

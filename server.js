@@ -52,7 +52,7 @@ const initDb = async () => {
 initDb();
 
 // Projects API -----------------------------------------
-app.get('/projects', async (req, res) => {
+app.get('/api/projects', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM projects ORDER BY created_at DESC');
     res.json(result.rows);
@@ -62,7 +62,18 @@ app.get('/projects', async (req, res) => {
   }
 });
 
-app.post('/projects', upload.single('image'), async (req, res) => {
+app.get('/api/projects/:id', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM projects WHERE id = $1', [req.params.id]);
+    if (result.rows.length === 0) return res.status(404).json({ error: 'Not found' });
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.post('/api/projects', upload.single('image'), async (req, res) => {
   const { title, category, status, description } = req.body;
   const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
   
@@ -78,7 +89,7 @@ app.post('/projects', upload.single('image'), async (req, res) => {
   }
 });
 
-app.put('/projects/:id', upload.single('image'), async (req, res) => {
+app.put('/api/projects/:id', upload.single('image'), async (req, res) => {
   const { id } = req.params;
   const { title, category, status, description } = req.body;
   const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
@@ -103,7 +114,7 @@ app.put('/projects/:id', upload.single('image'), async (req, res) => {
   }
 });
 
-app.delete('/projects/:id', async (req, res) => {
+app.delete('/api/projects/:id', async (req, res) => {
   const { id } = req.params;
   try {
     await pool.query('DELETE FROM projects WHERE id = $1', [id]);
@@ -115,7 +126,7 @@ app.delete('/projects/:id', async (req, res) => {
 });
 
 // Services API -----------------------------------------
-app.get('/services', async (req, res) => {
+app.get('/api/services', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM services ORDER BY created_at DESC');
     res.json(result.rows);
@@ -125,7 +136,18 @@ app.get('/services', async (req, res) => {
   }
 });
 
-app.post('/services', upload.single('image'), async (req, res) => {
+app.get('/api/services/:id', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM services WHERE id = $1', [req.params.id]);
+    if (result.rows.length === 0) return res.status(404).json({ error: 'Not found' });
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.post('/api/services', upload.single('image'), async (req, res) => {
   const { title, description, icon } = req.body;
   const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
   
@@ -141,7 +163,7 @@ app.post('/services', upload.single('image'), async (req, res) => {
   }
 });
 
-app.put('/services/:id', upload.single('image'), async (req, res) => {
+app.put('/api/services/:id', upload.single('image'), async (req, res) => {
   const { id } = req.params;
   const { title, description, icon } = req.body;
   const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
@@ -166,7 +188,7 @@ app.put('/services/:id', upload.single('image'), async (req, res) => {
   }
 });
 
-app.delete('/services/:id', async (req, res) => {
+app.delete('/api/services/:id', async (req, res) => {
   const { id } = req.params;
   try {
     await pool.query('DELETE FROM services WHERE id = $1', [id]);
@@ -178,7 +200,7 @@ app.delete('/services/:id', async (req, res) => {
 });
 
 // Inquiries API -----------------------------------------
-app.get('/inquiries', async (req, res) => {
+app.get('/api/inquiries', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM inquiries ORDER BY created_at DESC');
     res.json(result.rows);
@@ -188,7 +210,7 @@ app.get('/inquiries', async (req, res) => {
   }
 });
 
-app.post('/inquiries', async (req, res) => {
+app.post('/api/inquiries', async (req, res) => {
   const { name, email, subject, message } = req.body;
   try {
     const result = await pool.query(
@@ -202,7 +224,7 @@ app.post('/inquiries', async (req, res) => {
   }
 });
 
-app.put('/inquiries/:id', async (req, res) => {
+app.put('/api/inquiries/:id', async (req, res) => {
   const { id } = req.params;
   const { status } = req.body;
   try {
@@ -217,11 +239,162 @@ app.put('/inquiries/:id', async (req, res) => {
   }
 });
 
-app.delete('/inquiries/:id', async (req, res) => {
+app.delete('/api/inquiries/:id', async (req, res) => {
   const { id } = req.params;
   try {
     await pool.query('DELETE FROM inquiries WHERE id = $1', [id]);
     res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Banners API -----------------------------------------
+app.get('/api/banners', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM carousels ORDER BY created_at ASC');
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.post('/api/banners', upload.single('image'), async (req, res) => {
+  const { title, description, cta_text, cta_link, cta_alt } = req.body;
+  const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
+  
+  try {
+    const result = await pool.query(
+      'INSERT INTO carousels (title, description, image, cta_text, cta_link, cta_alt) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+      [title, description, imagePath, cta_text, cta_link, cta_alt]
+    );
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.put('/api/banners/:id', upload.single('image'), async (req, res) => {
+  const { id } = req.params;
+  const { title, description, cta_text, cta_link, cta_alt } = req.body;
+  const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
+  
+  try {
+    if (imagePath) {
+      const result = await pool.query(
+        'UPDATE carousels SET title = $1, description = $2, image = $3, cta_text = $4, cta_link = $5, cta_alt = $6 WHERE id = $7 RETURNING *',
+        [title, description, imagePath, cta_text, cta_link, cta_alt, id]
+      );
+      res.json(result.rows[0]);
+    } else {
+      const result = await pool.query(
+        'UPDATE carousels SET title = $1, description = $2, cta_text = $3, cta_link = $4, cta_alt = $5 WHERE id = $6 RETURNING *',
+        [title, description, cta_text, cta_link, cta_alt, id]
+      );
+      res.json(result.rows[0]);
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.delete('/api/banners/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    await pool.query('DELETE FROM carousels WHERE id = $1', [id]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Team API -----------------------------------------
+app.get('/api/team', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM team ORDER BY created_at ASC');
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.post('/api/team', upload.single('image'), async (req, res) => {
+  const { name, role, bio, linkedin, twitter, github } = req.body;
+  const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
+  
+  try {
+    const result = await pool.query(
+      'INSERT INTO team (name, role, bio, image, linkedin, twitter, github) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+      [name, role, bio, imagePath, linkedin, twitter, github]
+    );
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.put('/api/team/:id', upload.single('image'), async (req, res) => {
+  const { id } = req.params;
+  const { name, role, bio, linkedin, twitter, github } = req.body;
+  const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
+  
+  try {
+    if (imagePath) {
+      const result = await pool.query(
+        'UPDATE team SET name = $1, role = $2, bio = $3, image = $4, linkedin = $5, twitter = $6, github = $7 WHERE id = $8 RETURNING *',
+        [name, role, bio, imagePath, linkedin, twitter, github, id]
+      );
+      res.json(result.rows[0]);
+    } else {
+      const result = await pool.query(
+        'UPDATE team SET name = $1, role = $2, bio = $3, linkedin = $4, twitter = $5, github = $6 WHERE id = $7 RETURNING *',
+        [name, role, bio, linkedin, twitter, github, id]
+      );
+      res.json(result.rows[0]);
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.delete('/api/team/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    await pool.query('DELETE FROM team WHERE id = $1', [id]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Settings API -----------------------------------------
+app.get('/api/settings', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM settings WHERE id = 1');
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.put('/api/settings', async (req, res) => {
+  const { site_name, site_description, phone, email, address, facebook_url, twitter_url, linkedin_url, youtube_url } = req.body;
+  try {
+    const result = await pool.query(
+      'UPDATE settings SET site_name = $1, site_description = $2, phone = $3, email = $4, address = $5, facebook_url = $6, twitter_url = $7, linkedin_url = $8, youtube_url = $9, updated_at = CURRENT_TIMESTAMP WHERE id = 1 RETURNING *',
+      [site_name, site_description, phone, email, address, facebook_url, twitter_url, linkedin_url, youtube_url]
+    );
+    res.json(result.rows[0]);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Internal server error' });

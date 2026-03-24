@@ -1,45 +1,33 @@
 import React, { useState, useEffect } from 'react'
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'
+import axios from 'axios'
+import { Link } from 'react-router-dom'
 
 const BannerSection = () => {
   const [currentSlide, setCurrentSlide] = useState(0)
-
-  const slides = [
-    {
-      id: 1,
-      image: '/images/slider-05.jpg',
-      title: 'Crafting Exceptional Digital Experiences',
-      description: 'User-centered design and full-stack development for modern web applications',
-      ctaText: 'View Our Services',
-      ctaLink: '#services',
-      ctaAlt: 'Get Started Today'
-    },
-    {
-      id: 2,
-      image: '/images/slider-07.jpg',
-      title: 'Design Driven by Research',
-      description: 'We transform complex problems into intuitive, beautiful digital solutions',
-      ctaText: 'View Portfolio',
-      ctaLink: '#portfolio',
-      ctaAlt: 'Contact Us'
-    },
-    {
-      id: 3,
-      image: '/images/slider-03.jpg',
-      title: 'Innovation Through User Insights',
-      description: 'Creating meaningful digital products that solve real problems',
-      ctaText: 'Explore Our Work',
-      ctaLink: '#portfolio',
-      ctaAlt: 'Learn More'
-    }
-  ]
+  const [slides, setSlides] = useState([])
 
   useEffect(() => {
+    const fetchBanners = async () => {
+      try {
+        const response = await axios.get(`/api/banners?_t=${new Date().getTime()}`)
+        if (response.data && response.data.length > 0) {
+          setSlides(response.data)
+        }
+      } catch (error) {
+        console.error('Failed to load banners')
+      }
+    }
+    fetchBanners()
+  }, [])
+
+  useEffect(() => {
+    if (slides.length === 0) return;
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length)
     }, 5000)
     return () => clearInterval(timer)
-  }, [])
+  }, [slides.length])
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % slides.length)
@@ -57,30 +45,34 @@ const BannerSection = () => {
           <div
             key={slide.id}
             className={`absolute w-full h-full transition-opacity duration-1000 ${
-              index === currentSlide ? 'opacity-100' : 'opacity-0'
+              index === currentSlide ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
             }`}
           >
             {/* Background Image */}
             <div
               className="absolute inset-0 bg-cover bg-center"
               style={{
-                backgroundImage: `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('${slide.image}')`
+                backgroundImage: `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('${slide.image?.startsWith('/uploads') ? `${slide.image}` : slide.image}')`
               }}
             />
 
             {/* Content */}
-            <div className="relative h-full flex items-center">
+            <div className="relative h-full flex items-center z-20">
               <div className="container">
                 <div className="max-w-2xl text-white slide-animation">
-                  <h1 className="text-5xl md:text-6xl font-bold mb-6">{slide.title}</h1>
-                  <p className="text-xl md:text-2xl mb-8 text-gray-200">{slide.description}</p>
+                  <h1 className="text-5xl md:text-7xl font-extrabold mb-6 tracking-tight" style={{ color: '#ffffff', textShadow: '2px 3px 12px rgba(0,0,0,0.9)' }}>{slide.title}</h1>
+                  <p className="text-xl md:text-3xl mb-10 font-medium" style={{ color: '#f3f4f6', textShadow: '1px 2px 8px rgba(0,0,0,0.9)' }}>{slide.description}</p>
                   <div className="flex flex-col sm:flex-row gap-4">
-                    <a href={slide.ctaLink} className="btn bg-blue-600 hover:bg-blue-700 text-white">
-                      {slide.ctaText}
-                    </a>
-                    <a href="#contact" className="btn border-2 border-white text-white hover:bg-white hover:text-gray-900">
-                      {slide.ctaAlt}
-                    </a>
+                    {slide.cta_text && slide.cta_link && (
+                      <Link to={slide.cta_link.startsWith('#') || slide.cta_link.startsWith('/') ? slide.cta_link : `/${slide.cta_link}`} className="btn bg-blue-600 hover:bg-blue-700 text-white">
+                        {slide.cta_text}
+                      </Link>
+                    )}
+                    {slide.cta_alt && (
+                      <a href="#contact" className="btn border-2 border-white text-white hover:bg-white hover:text-gray-900">
+                        {slide.cta_alt}
+                      </a>
+                    )}
                   </div>
                 </div>
               </div>

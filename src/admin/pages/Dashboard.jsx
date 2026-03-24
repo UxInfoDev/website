@@ -9,7 +9,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/inquiries?_t=${new Date().getTime()}`)
+        const response = await axios.get(`/api/inquiries?_t=${new Date().getTime()}`)
         setInquiryCount(response.data.filter(i => i.status === 'new').length)
         setRecentInquiries(response.data.slice(0, 3))
       } catch (error) {

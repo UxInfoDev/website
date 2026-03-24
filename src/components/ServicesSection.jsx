@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-
+import { Link } from 'react-router-dom'
 import * as Icons from 'react-icons/fa'
 
 const ServicesSection = () => {
@@ -9,7 +9,7 @@ const ServicesSection = () => {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/services?_t=${new Date().getTime()}`)
+        const response = await axios.get(`/api/services?_t=${new Date().getTime()}`)
         setServices(response.data)
       } catch (error) {
         console.error('Error fetching services:', error)
@@ -44,9 +44,9 @@ const ServicesSection = () => {
                 </div>
                 <h3 className="text-2xl font-bold mb-3">{service.title}</h3>
               <p className="text-gray-600">{service.description}</p>
-              <a href="#contact" className="text-orange-600 font-bold mt-4 inline-block hover:text-orange-700">
+              <Link to={`/service/${service.id}`} className="text-orange-600 font-bold mt-4 inline-block hover:text-orange-700">
                 Learn More →
-              </a>
+              </Link>
             </div>
             )
           })}

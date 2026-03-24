@@ -1,39 +1,71 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { FaEdit, FaTrash, FaPlus } from 'react-icons/fa'
 import { toast } from 'react-toastify'
 import { useForm } from 'react-hook-form'
+import axios from 'axios'
+
+const API_BASE = '/api/team'
 
 const TeamManager = () => {
-  const [teamMembers, setTeamMembers] = useState([
-    { id: 1, name: 'John Designer', role: 'UX/UI Design Lead', bio: 'Award-winning designer' },
-    { id: 2, name: 'Sarah Developer', role: 'Full Stack Developer', bio: 'Expert in React, Node.js' },
-    { id: 3, name: 'Michael PM', role: 'Project Manager', bio: 'Agile certified' }
-  ])
+  const [teamMembers, setTeamMembers] = useState([])
 
   const [showForm, setShowForm] = useState(false)
   const [editingId, setEditingId] = useState(null)
   const { register, handleSubmit, reset, formState: { errors } } = useForm()
 
-  const onSubmit = async (data) => {
-    await new Promise(resolve => setTimeout(resolve, 500))
-    
-    if (editingId) {
-      setTeamMembers(teamMembers.map(m => m.id === editingId ? { ...m, ...data } : m))
-      toast.success('Team member updated successfully!')
-      setEditingId(null)
-    } else {
-      setTeamMembers([...teamMembers, { ...data, id: Date.now() }])
-      toast.success('Team member added successfully!')
+  useEffect(() => {
+    fetchTeamMembers()
+  }, [])
+
+  const fetchTeamMembers = async () => {
+    try {
+      const response = await axios.get(`${API_BASE}?_t=${new Date().getTime()}`)
+      setTeamMembers(response.data)
+    } catch (error) {
+      toast.error('Failed to fetch team members')
     }
-    
-    reset()
-    setShowForm(false)
   }
 
-  const handleDelete = (id) => {
+  const onSubmit = async (data) => {
+    try {
+      const formData = new FormData()
+      formData.append('name', data.name)
+      formData.append('role', data.role)
+      formData.append('bio', data.bio)
+      formData.append('linkedin', data.linkedin || '')
+      formData.append('twitter', data.twitter || '')
+      formData.append('github', data.github || '')
+      if (data.image && data.image[0]) {
+        formData.append('image', data.image[0])
+      }
+      
+      const config = { headers: { 'Content-Type': 'multipart/form-data' } }
+
+      if (editingId) {
+        await axios.put(`${API_BASE}/${editingId}`, formData, config)
+        toast.success('Team member updated successfully!')
+        setEditingId(null)
+      } else {
+        await axios.post(API_BASE, formData, config)
+        toast.success('Team member added successfully!')
+      }
+      fetchTeamMembers()
+      reset()
+      setShowForm(false)
+    } catch (error) {
+      toast.error('Failed to save team member')
+    }
+  }
+
+  const handleDelete = async (id) => {
     if (window.confirm('Are you sure?')) {
-      setTeamMembers(teamMembers.filter(m => m.id !== id))
-      toast.success('Team member deleted!')
+      try {
+        await axios.delete(`${API_BASE}/${id}`)
+        toast.success('Team member deleted!')
+        fetchTeamMembers()
+      } catch (error) {
+        toast.error('Failed to delete team member')
+      }
     }
   }
 
@@ -85,7 +117,44 @@ const TeamManager = () => {
                 {errors.role && <span className="text-red-600 text-sm">{errors.role.message}</span>}
               </div>
 
-              <div className="col-span-2">
+              <div>
+                <label className="block font-bold mb-2">LinkedIn URL</label>
+                <input
+                  type="text"
+                  {...register('linkedin')}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                />
+              </div>
+
+              <div>
+                <label className="block font-bold mb-2">Twitter URL</label>
+                <input
+                  type="text"
+                  {...register('twitter')}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                />
+              </div>
+              
+              <div>
+                <label className="block font-bold mb-2">GitHub URL</label>
+                <input
+                  type="text"
+                  {...register('github')}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                />
+              </div>
+
+              <div>
+                <label className="block font-bold mb-2">Profile Image</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  {...register('image')}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                />
+              </div>
+
+              <div className="col-span-1 md:col-span-2">
                 <label className="block font-bold mb-2">Bio</label>
                 <textarea
                   {...register('bio', { required: 'Bio is required' })}

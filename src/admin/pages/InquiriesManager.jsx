@@ -3,7 +3,7 @@ import { FaEnvelope, FaCheck, FaTimes } from 'react-icons/fa'
 import { toast } from 'react-toastify'
 import axios from 'axios'
 
-const API_BASE = 'http://localhost:5000/inquiries'
+const API_BASE = '/api/inquiries'
 
 const InquiriesManager = () => {
   const [inquiries, setInquiries] = useState([])

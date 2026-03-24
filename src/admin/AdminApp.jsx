@@ -11,6 +11,7 @@ import TeamManager from './pages/TeamManager'
 import InquiriesManager from './pages/InquiriesManager'
 import SettingsPage from './pages/Settings'
 import LoginPage from './pages/Login'
+import BannersManager from './pages/BannersManager'
 
 function AdminApp() {
   const [isAuthenticated, setIsAuthenticated] = useState(
@@ -40,6 +41,7 @@ function AdminApp() {
           <Route path="/services" element={<ServicesManager />} />
           <Route path="/team" element={<TeamManager />} />
           <Route path="/inquiries" element={<InquiriesManager />} />
+          <Route path="/banners" element={<BannersManager />} />
           <Route path="/settings" element={<SettingsPage />} />
         </Routes>
       </AdminLayout>

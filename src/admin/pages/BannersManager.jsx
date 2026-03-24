@@ -4,24 +4,24 @@ import { toast } from 'react-toastify'
 import { useForm } from 'react-hook-form'
 import axios from 'axios'
 
-const API_BASE = '/api/projects'
+const API_BASE = '/api/banners'
 
-const ProjectsManager = () => {
-  const [projects, setProjects] = useState([])
+const BannersManager = () => {
+  const [banners, setBanners] = useState([])
   const [showForm, setShowForm] = useState(false)
   const [editingId, setEditingId] = useState(null)
   const { register, handleSubmit, reset, formState: { errors } } = useForm()
 
   useEffect(() => {
-    fetchProjects()
+    fetchBanners()
   }, [])
 
-  const fetchProjects = async () => {
+  const fetchBanners = async () => {
     try {
       const response = await axios.get(`${API_BASE}?_t=${new Date().getTime()}`)
-      setProjects(response.data)
+      setBanners(response.data)
     } catch (error) {
-      toast.error('Failed to fetch projects')
+      toast.error('Failed to fetch banners')
     }
   }
 
@@ -29,9 +29,10 @@ const ProjectsManager = () => {
     try {
       const formData = new FormData()
       formData.append('title', data.title)
-      formData.append('category', data.category)
-      formData.append('status', data.status)
       formData.append('description', data.description || '')
+      formData.append('cta_text', data.cta_text || '')
+      formData.append('cta_link', data.cta_link || '')
+      formData.append('cta_alt', data.cta_alt || '')
       if (data.image && data.image[0]) {
         formData.append('image', data.image[0])
       }
@@ -40,17 +41,17 @@ const ProjectsManager = () => {
 
       if (editingId) {
         await axios.put(`${API_BASE}/${editingId}`, formData, config)
-        toast.success('Project updated successfully!')
+        toast.success('Banner updated successfully!')
         setEditingId(null)
       } else {
         await axios.post(API_BASE, formData, config)
-        toast.success('Project added successfully!')
+        toast.success('Banner added successfully!')
       }
-      fetchProjects()
+      fetchBanners()
       reset()
       setShowForm(false)
     } catch (error) {
-      toast.error('Failed to save project')
+      toast.error('Failed to save banner')
     }
   }
 
@@ -58,24 +59,24 @@ const ProjectsManager = () => {
     if (window.confirm('Are you sure?')) {
       try {
         await axios.delete(`${API_BASE}/${id}`)
-        toast.success('Project deleted!')
-        fetchProjects()
+        toast.success('Banner deleted!')
+        fetchBanners()
       } catch (error) {
-        toast.error('Failed to delete project')
+        toast.error('Failed to delete banner')
       }
     }
   }
 
-  const handleEdit = (project) => {
-    setEditingId(project.id)
-    reset(project)
+  const handleEdit = (banner) => {
+    setEditingId(banner.id)
+    reset(banner)
     setShowForm(true)
   }
 
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-3xl font-bold">Projects</h2>
+        <h2 className="text-3xl font-bold">Home Banners</h2>
         <button
           onClick={() => {
             setEditingId(null)
@@ -84,17 +85,16 @@ const ProjectsManager = () => {
           }}
           className="btn bg-orange-600 hover:bg-orange-700 text-white flex items-center gap-2"
         >
-          <FaPlus /> Add Project
+          <FaPlus /> Add Banner
         </button>
       </div>
 
-      {/* Form */}
       {showForm && (
         <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-xl font-bold mb-4">{editingId ? 'Edit' : 'Add New'} Project</h3>
+          <h3 className="text-xl font-bold mb-4">{editingId ? 'Edit' : 'Add New'} Banner</h3>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
+              <div className="col-span-2">
                 <label className="block font-bold mb-2">Title</label>
                 <input
                   type="text"
@@ -104,35 +104,7 @@ const ProjectsManager = () => {
                 {errors.title && <span className="text-red-600 text-sm">{errors.title.message}</span>}
               </div>
 
-              <div>
-                <label className="block font-bold mb-2">Category</label>
-                <select
-                  {...register('category', { required: 'Category is required' })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-                >
-                  <option value="">Select Category</option>
-                  <option value="web-development">Web Development</option>
-                  <option value="mobile">Mobile Apps</option>
-                  <option value="design">Design</option>
-                </select>
-                {errors.category && <span className="text-red-600 text-sm">{errors.category.message}</span>}
-              </div>
-
-              <div>
-                <label className="block font-bold mb-2">Status</label>
-                <select
-                  {...register('status', { required: 'Status is required' })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-                >
-                  <option value="">Select Status</option>
-                  <option value="completed">Completed</option>
-                  <option value="in-progress">In Progress</option>
-                  <option value="pending">Pending</option>
-                </select>
-                {errors.status && <span className="text-red-600 text-sm">{errors.status.message}</span>}
-              </div>
-
-              <div>
+              <div className="col-span-2">
                 <label className="block font-bold mb-2">Description</label>
                 <input
                   type="text"
@@ -142,7 +114,34 @@ const ProjectsManager = () => {
               </div>
 
               <div>
-                <label className="block font-bold mb-2">Image</label>
+                <label className="block font-bold mb-2">CTA Text</label>
+                <input
+                  type="text"
+                  {...register('cta_text')}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                />
+              </div>
+
+              <div>
+                <label className="block font-bold mb-2">CTA Link (URL or #hash)</label>
+                <input
+                  type="text"
+                  {...register('cta_link')}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                />
+              </div>
+
+              <div>
+                <label className="block font-bold mb-2">CTA Alt Button Text</label>
+                <input
+                  type="text"
+                  {...register('cta_alt')}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                />
+              </div>
+
+              <div>
+                <label className="block font-bold mb-2">Background Image</label>
                 <input
                   type="file"
                   accept="image/*"
@@ -152,9 +151,9 @@ const ProjectsManager = () => {
               </div>
             </div>
 
-            <div className="flex gap-4">
+            <div className="flex gap-4 mt-4">
               <button type="submit" className="btn bg-orange-600 hover:bg-orange-700 text-white">
-                {editingId ? 'Update' : 'Add'} Project
+                {editingId ? 'Update' : 'Add'} Banner
               </button>
               <button
                 type="button"
@@ -168,40 +167,29 @@ const ProjectsManager = () => {
         </div>
       )}
 
-      {/* Table */}
       <div className="bg-white rounded-lg shadow overflow-hidden">
         <table className="w-full">
           <thead className="bg-gray-100 border-b">
             <tr>
               <th className="text-left py-3 px-4">Title</th>
-              <th className="text-left py-3 px-4">Category</th>
-              <th className="text-left py-3 px-4">Status</th>
+              <th className="text-left py-3 px-4">CTA Link</th>
               <th className="text-left py-3 px-4">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {projects.map((project) => (
-              <tr key={project.id} className="border-b hover:bg-gray-50">
-                <td className="py-3 px-4">{project.title}</td>
-                <td className="py-3 px-4">{project.category}</td>
-                <td className="py-3 px-4">
-                  <span className={`px-3 py-1 rounded-full text-sm font-bold ${
-                    project.status === 'completed' ? 'bg-green-100 text-green-800' :
-                    project.status === 'in-progress' ? 'bg-yellow-100 text-yellow-800' :
-                    'bg-gray-100 text-gray-800'
-                  }`}>
-                    {project.status.charAt(0).toUpperCase() + project.status.slice(1).replace('-', ' ')}
-                  </span>
-                </td>
-                <td className="py-3 px-4">
+            {banners.map((banner) => (
+              <tr key={banner.id} className="border-b hover:bg-gray-50">
+                <td className="py-3 px-4">{banner.title}</td>
+                <td className="py-3 px-4">{banner.cta_link}</td>
+                <td className="py-3 px-4 flex gap-2">
                   <button
-                    onClick={() => handleEdit(project)}
-                    className="text-blue-600 hover:text-blue-800 mr-4"
+                    onClick={() => handleEdit(banner)}
+                    className="text-blue-600 hover:text-blue-800"
                   >
                     <FaEdit />
                   </button>
                   <button
-                    onClick={() => handleDelete(project.id)}
+                    onClick={() => handleDelete(banner.id)}
                     className="text-red-600 hover:text-red-800"
                   >
                     <FaTrash />
@@ -216,4 +204,4 @@ const ProjectsManager = () => {
   )
 }
 
-export default ProjectsManager
+export default BannersManager
