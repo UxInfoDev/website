@@ -401,6 +401,31 @@ app.put('/api/settings', async (req, res) => {
   }
 });
 
-app.listen(5000, () => {
-  console.log('Server is running on port 5000');
+// Serve Production React SPA Bundles securely
+const frontendDist = path.join(__dirname, 'dist');
+const adminDist = path.join(__dirname, 'dist-admin');
+
+// Serve Admin Dashboard statically mapping /admin paths
+app.use('/admin', express.static(adminDist));
+app.get(/^\/admin(?:[/?#].*)?$/, (req, res) => {
+  if (fs.existsSync(path.join(adminDist, 'index.html'))) {
+    res.sendFile(path.join(adminDist, 'index.html'));
+  } else {
+    res.status(404).send('Admin dashboard not found. Please run npm run build first.');
+  }
+});
+
+// Serve Main Frontend Application natively dropping proxy reliance
+app.use(express.static(frontendDist));
+app.get(/(.*)/, (req, res) => {
+  if (fs.existsSync(path.join(frontendDist, 'index.html'))) {
+    res.sendFile(path.join(frontendDist, 'index.html'));
+  } else {
+    res.status(404).send('Frontend application not found. Please run npm run build first.');
+  }
+});
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
