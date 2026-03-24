@@ -1,0 +1,52 @@
+{
+  "projects": [
+    {
+      "id": "1",
+      "title": "E-Commerce Platform",
+      "category": "web-development",
+      "image": "/images/project-01.jpg",
+      "status": "completed",
+      "description": "Full-featured e-commerce platform with payment integration"
+    },
+    {
+      "id": "2",
+      "title": "Mobile Banking App",
+      "category": "mobile",
+      "image": "/images/project-02.jpg",
+      "status": "completed",
+      "description": "Secure banking application for iOS and Android"
+    },
+    {
+      "id": "3",
+      "title": "SaaS Dashboard",
+      "category": "web-development",
+      "image": "/images/project-03.jpg",
+      "status": "in-progress",
+      "description": "Analytics dashboard for enterprise SaaS product"
+    },
+    {
+      "id": "4",
+      "title": "Travel Booking App",
+      "category": "mobile",
+      "image": "/images/project-04.jpg",
+      "status": "pending",
+      "description": "Cross-platform travel booking and management app"
+    },
+    {
+      "id": "5",
+      "title": "Social Network Platform",
+      "category": "web-development",
+      "image": "/images/project-05.jpg",
+      "status": "pending",
+      "description": "Community-driven social networking platform"
+    },
+    {
+      "id": "6",
+      "title": "Fitness Tracking App",
+      "category": "mobile",
+      "image": "/images/project-06.jpg",
+      "status": "pending",
+      "description": "Health and fitness tracking application with wearable integration"
+    }
+  ]
+}
