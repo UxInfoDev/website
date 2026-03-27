@@ -33,7 +33,7 @@ function AdminApp() {
   }
 
   return (
-    <Router>
+    <Router basename="/admin">
       <AdminLayout onLogout={handleLogout}>
         <Routes>
           <Route path="/" element={<AdminDashboard />} />

@@ -408,8 +408,8 @@ const adminDist = path.join(__dirname, 'dist-admin');
 // Serve Admin Dashboard statically mapping /admin paths
 app.use('/admin', express.static(adminDist));
 app.get(/^\/admin(?:[/?#].*)?$/, (req, res) => {
-  if (fs.existsSync(path.join(adminDist, 'index.html'))) {
-    res.sendFile(path.join(adminDist, 'index.html'));
+  if (fs.existsSync(path.join(adminDist, 'admin.html'))) {
+    res.sendFile(path.join(adminDist, 'admin.html'));
   } else {
     res.status(404).send('Admin dashboard not found. Please run npm run build first.');
   }

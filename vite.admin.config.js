@@ -1,6 +1,8 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
+import { resolve } from 'path'
+
 export default defineConfig({
   base: '/admin/',
   plugins: [react()],
@@ -21,5 +23,10 @@ export default defineConfig({
   build: {
     outDir: 'dist-admin',
     sourcemap: false,
+    rollupOptions: {
+      input: {
+        main: resolve(__dirname, 'admin.html')
+      }
+    }
   }
 })
