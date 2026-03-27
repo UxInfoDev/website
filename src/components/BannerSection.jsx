@@ -59,7 +59,7 @@ const BannerSection = () => {
             {/* Content */}
             <div className="relative h-full flex items-center z-20">
               <div className="container">
-                <div className="max-w-2xl text-white slide-animation">
+                <div className="max-w-2xl sm:px-20 md:px-10  text-white slide-animation">
                   <h1 className="text-5xl md:text-7xl font-extrabold mb-6 tracking-tight" style={{ color: '#ffffff', textShadow: '2px 3px 12px rgba(0,0,0,0.9)' }}>{slide.title}</h1>
                   <p className="text-xl md:text-3xl mb-10 font-medium" style={{ color: '#f3f4f6', textShadow: '1px 2px 8px rgba(0,0,0,0.9)' }}>{slide.description}</p>
                   <div className="flex flex-col sm:flex-row gap-4">
@@ -84,7 +84,7 @@ const BannerSection = () => {
       {/* Navigation Buttons */}
       <button
         onClick={prevSlide}
-        className="absolute left-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-orange-600 text-white rounded-full flex items-center justify-center hover:bg-orange-700 transition"
+        className="absolute xs:invisible left-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-orange-600 text-white rounded-full flex items-center justify-center hover:bg-orange-700 transition"
       >
         <FaChevronLeft />
       </button>
@@ -92,7 +92,7 @@ const BannerSection = () => {
         onClick={nextSlide}
         className="absolute right-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-orange-600 text-white rounded-full flex items-center justify-center hover:bg-orange-700 transition"
       >
-        <FaChevronRight />
+        <FaChevronRight color='#fff' />
       </button>
 
       {/* Indicators */}
