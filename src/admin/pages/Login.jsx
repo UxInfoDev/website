@@ -11,14 +11,14 @@ const LoginPage = ({ onLogin }) => {
     try {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000))
-      
+
       // Simple authentication - in production, validate against backend
-      if (data.email === 'admin@uxinfotech.com' && data.password === 'admin123') {
+      if (data.email === 'admin@uxinfotech.com' && data.password === 'SatSuresh123$$') {
         const token = 'fake-jwt-token-' + Date.now()
         onLogin(token)
         toast.success('Logged in successfully!')
       } else {
-        toast.error('Invalid credentials. Use admin@uxinfotech.com / admin123')
+        toast.error('Invalid credentials. Use admin@uxinfotech.com ')
       }
     } catch (error) {
       toast.error('Login failed. Please try again.')
@@ -49,7 +49,7 @@ const LoginPage = ({ onLogin }) => {
               <input
                 type="email"
                 placeholder="admin@uxinfotech.com"
-                {...register('email', { 
+                {...register('email', {
                   required: 'Email is required',
                   pattern: {
                     value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
@@ -73,12 +73,12 @@ const LoginPage = ({ onLogin }) => {
               {errors.password && <span className="text-red-600 text-sm">{errors.password.message}</span>}
             </div>
 
-            {/* Demo Credentials */}
+            {/* Demo Credentials 
             <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg text-sm">
               <p className="font-bold text-blue-900 mb-2">Demo Credentials:</p>
               <p className="text-blue-800">Email: admin@uxinfotech.com</p>
-              <p className="text-blue-800">Password: admin123</p>
-            </div>
+              <p className="text-blue-800">Password: </p>
+            </div>*/}
 
             {/* Submit */}
             <button

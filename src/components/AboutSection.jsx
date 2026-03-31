@@ -35,7 +35,7 @@ const AboutSection = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           {/* Image */}
           <div>
-            <img loading="lazy" 
+            <img 
               src="/images/slider-02.jpg" 
               alt="About UX Infotech"
               className="rounded-lg shadow-lg w-full h-96 object-cover"

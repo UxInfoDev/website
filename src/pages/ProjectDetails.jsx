@@ -31,7 +31,7 @@ const ProjectDetails = () => {
         </Link>
         
         <div className="rounded-2xl overflow-hidden shadow-2xl mb-12">
-          <img loading="lazy" src={imageUrl || '/images/placeholder.jpg'} alt={project.title} className="w-full h-auto max-h-[600px] object-cover" />
+          <img src={imageUrl || '/images/placeholder.jpg'} alt={project.title} className="w-full h-auto max-h-[600px] object-cover" />
         </div>
         
         <div className="bg-gray-50 p-8 md:p-12 rounded-2xl shadow-sm border border-gray-100">

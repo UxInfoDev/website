@@ -27,13 +27,15 @@ const BackToTop = () => {
   return (
     <>
       {isVisible && (
-        <button
+        <div
+          role="button"
           onClick={scrollToTop}
-          className="fixed bottom-8 right-8 w-12 h-12 bg-orange-600 text-white rounded-full flex items-center justify-center hover:bg-orange-700 transition shadow-lg z-40"
+          className="fixed bottom-8 right-8 w-12 h-12 bg-orange-600 text-white rounded-full flex items-center justify-center hover:bg-orange-700 transition shadow-lg z-40 cursor-pointer"
+          style={{ padding: 0, margin: 0, border: 'none' }}
           aria-label="Back to top"
         >
-          <FaArrowUp />
-        </button>
+          <FaArrowUp size={20} />
+        </div>
       )}
     </>
   )

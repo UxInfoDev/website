@@ -41,9 +41,10 @@ const ServiceDetails = () => {
           </div>
         </div>
         
-        <div className="prose max-w-none text-2xl text-gray-700 leading-relaxed bg-gray-50 p-10 md:p-14 rounded-3xl border border-gray-100 shadow-sm">
-          <p>{service.description}</p>
-        </div>
+        <div 
+          className="prose max-w-none text-2xl text-gray-700 leading-relaxed bg-gray-50 p-10 md:p-14 rounded-3xl border border-gray-100 shadow-sm"
+          dangerouslySetInnerHTML={{ __html: service.description }}
+        />
 
         <div className="mt-16 text-center md:text-left bg-orange-600 p-10 rounded-3xl shadow-lg relative overflow-hidden">
           <div className="relative z-10">

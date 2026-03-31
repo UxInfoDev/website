@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import BannerWithForm from '../components/BannerWithForm'
+import BannerSection from '../components/BannerSection'
 import AboutSection from '../components/AboutSection'
 import ServicesSection from '../components/ServicesSection'
 import PortfolioSection from '../components/PortfolioSection'
@@ -14,7 +14,7 @@ const Home = () => {
 
   return (
     <div>
-      <BannerWithForm />
+      <BannerSection />
       <AboutSection />
       <ServicesSection />
       <PortfolioSection />

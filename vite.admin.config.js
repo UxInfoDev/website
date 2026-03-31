@@ -25,7 +25,7 @@ export default defineConfig({
     sourcemap: false,
     rollupOptions: {
       input: {
-        main: resolve(__dirname, 'admin.html')
+        index: resolve(__dirname, 'admin.html')
       }
     }
   }

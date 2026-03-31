@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
-import { Helmet } from 'react-helmet'
 
 const PortfolioSection = () => {
   const [activeFilter, setActiveFilter] = useState('all')
@@ -26,23 +25,18 @@ const PortfolioSection = () => {
     { id: 'design', label: 'Design' }
   ]
 
-  const filteredProjects = activeFilter === 'all'
-    ? projects
+  const filteredProjects = activeFilter === 'all' 
+    ? projects 
     : projects.filter(p => p.category === activeFilter)
 
   return (
     <section id="portfolio" className="py-16 bg-gray-50">
-      <Helmet>
-        <title>UX Portfolio - UX Infotech</title>
-        <meta name="description" content="Explore our UX portfolio including web, mobile, and design projects." />
-      </Helmet>
-
-      <div className="container mx-auto px-4">
+      <div className="container">
         {/* Header */}
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold mb-4">Our Portfolio</h2>
           <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-            Explore some of our recent UX projects and see how we've helped businesses succeed.
+            Explore some of our recent projects and see how we've helped businesses succeed
           </p>
         </div>
 
@@ -54,7 +48,7 @@ const PortfolioSection = () => {
               onClick={() => setActiveFilter(filter.id)}
               className={`px-6 py-2 rounded-full font-medium transition ${
                 activeFilter === filter.id
-                  ? 'bg-orange-600 text-white shadow'
+                  ? 'bg-orange-600 text-white'
                   : 'bg-white border-2 border-orange-600 text-orange-600 hover:bg-orange-50'
               }`}
             >
@@ -66,44 +60,34 @@ const PortfolioSection = () => {
         {/* Projects Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredProjects.map((project) => (
-            <article
+            <div
               key={project.id}
-              className="group relative rounded-lg overflow-hidden bg-white shadow-sm hover:shadow-lg transition-all duration-300"
+              className="group relative overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition"
             >
               {/* Image */}
-              <div className="overflow-hidden">
-                <img
-                  src={project.image?.startsWith('/uploads') ? `${project.image}` : project.image}
-                  alt={`${project.title} UX design screenshot`}
-                  className="w-full h-60 object-cover transform group-hover:scale-105 transition duration-300 ease-out"
-                  loading="lazy"
-                />
-              </div>
+              <img
+                src={project.image?.startsWith('/uploads') ? `${project.image}` : project.image}
+                alt={project.title}
+                className="w-full h-64 object-cover group-hover:scale-110 transition duration-300"
+              />
 
               {/* Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end">
-                <div className="p-5 w-full translate-y-4 group-hover:translate-y-0 transition duration-300">
-                  <h3 className="text-lg font-semibold text-white mb-1">{project.title}</h3>
-                  <p className="text-sm text-gray-200 mb-3 line-clamp-2">{project.description}</p>
-                  <Link
-                    to={`/project/${project.id}`}
-                    className="inline-block text-sm font-medium text-white bg-orange-500 px-3 py-1.5 rounded-md hover:bg-orange-600 transition"
-                    aria-label={`View ${project.title} project`}
-                  >
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-6">
+                <div className="text-white">
+                  <h3 className="text-xl font-bold mb-2">{project.title}</h3>
+                  <p className="text-gray-200 text-sm mb-4">{project.description}</p>
+                  <Link to={`/project/${project.id}`} className="text-orange-400 font-bold hover:text-orange-300 inline-block">
                     View Project →
                   </Link>
                 </div>
               </div>
-            </article>
+            </div>
           ))}
         </div>
 
         {/* CTA */}
         <div className="text-center mt-12">
-          <a
-            href="#contact"
-            className="inline-block bg-orange-600 hover:bg-orange-700 text-white font-semibold px-8 py-3 rounded-lg transition"
-          >
+          <a href="#contact" className="btn bg-orange-600 hover:bg-orange-700 text-white px-8 py-3">
             Start Your Project
           </a>
         </div>

@@ -31,7 +31,7 @@ const upload = multer({ storage: storage });
 
 // Construct connect string
 const pool = new Pool({
-  connectionString: 'postgres://postgres.vybnycqsikeebevzxyzg:SatSuresh123$$@aws-0-us-west-2.pooler.supabase.com:5432/postgres',
+  connectionString: process.env.DATABASE_URL || 'postgres://postgres.vybnycqsikeebevzxyzg:SatSuresh123$$@aws-0-us-west-2.pooler.supabase.com:5432/postgres',
   ssl: { rejectUnauthorized: false }
 });
 
@@ -387,13 +387,22 @@ app.get('/api/settings', async (req, res) => {
   }
 });
 
-app.put('/api/settings', async (req, res) => {
+app.put('/api/settings', upload.single('logo'), async (req, res) => {
   const { site_name, site_description, phone, email, address, facebook_url, twitter_url, linkedin_url, youtube_url } = req.body;
+  const logoPath = req.file ? `/uploads/${req.file.filename}` : null;
   try {
-    const result = await pool.query(
-      'UPDATE settings SET site_name = $1, site_description = $2, phone = $3, email = $4, address = $5, facebook_url = $6, twitter_url = $7, linkedin_url = $8, youtube_url = $9, updated_at = CURRENT_TIMESTAMP WHERE id = 1 RETURNING *',
-      [site_name, site_description, phone, email, address, facebook_url, twitter_url, linkedin_url, youtube_url]
-    );
+    let result;
+    if (logoPath) {
+      result = await pool.query(
+        'UPDATE settings SET site_name = $1, site_description = $2, phone = $3, email = $4, address = $5, facebook_url = $6, twitter_url = $7, linkedin_url = $8, youtube_url = $9, logo_url = $10, updated_at = CURRENT_TIMESTAMP WHERE id = 1 RETURNING *',
+        [site_name, site_description, phone, email, address, facebook_url, twitter_url, linkedin_url, youtube_url, logoPath]
+      );
+    } else {
+      result = await pool.query(
+        'UPDATE settings SET site_name = $1, site_description = $2, phone = $3, email = $4, address = $5, facebook_url = $6, twitter_url = $7, linkedin_url = $8, youtube_url = $9, updated_at = CURRENT_TIMESTAMP WHERE id = 1 RETURNING *',
+        [site_name, site_description, phone, email, address, facebook_url, twitter_url, linkedin_url, youtube_url]
+      );
+    }
     res.json(result.rows[0]);
   } catch (err) {
     console.error(err);
@@ -401,27 +410,34 @@ app.put('/api/settings', async (req, res) => {
   }
 });
 
-// Serve Production React SPA Bundles securely
+// Serve Production React SPA Bundles
 const frontendDist = path.join(__dirname, 'dist');
 const adminDist = path.join(__dirname, 'dist-admin');
 
-// Serve Admin Dashboard statically mapping /admin paths
+// 1. Serve Admin Assets
 app.use('/admin', express.static(adminDist));
-app.get(/^\/admin(?:[/?#].*)?$/, (req, res) => {
-  if (fs.existsSync(path.join(adminDist, 'admin.html'))) {
-    res.sendFile(path.join(adminDist, 'admin.html'));
+
+// 2. Admin Catch-all (must be before frontend catch-all)
+// Using regex for compatibility with Express 5 wildcard rules
+app.get(/^\/admin(\/.*)?$/, (req, res) => {
+  const adminHtml = path.join(adminDist, 'admin.html');
+  if (fs.existsSync(adminHtml)) {
+    res.sendFile(adminHtml);
   } else {
-    res.status(404).send('Admin dashboard not found. Please run npm run build first.');
+    res.status(404).send('Admin dashboard not found. Please run npm run build');
   }
 });
 
-// Serve Main Frontend Application natively dropping proxy reliance
+// 3. Serve Frontend Assets
 app.use(express.static(frontendDist));
-app.get(/(.*)/, (req, res) => {
-  if (fs.existsSync(path.join(frontendDist, 'index.html'))) {
-    res.sendFile(path.join(frontendDist, 'index.html'));
+
+// 4. Frontend Catch-all
+app.get('*', (req, res) => {
+  const indexHtml = path.join(frontendDist, 'index.html');
+  if (fs.existsSync(indexHtml)) {
+    res.sendFile(indexHtml);
   } else {
-    res.status(404).send('Frontend application not found. Please run npm run build first.');
+    res.status(404).send('Frontend application not found. Please run npm run build');
   }
 });
 

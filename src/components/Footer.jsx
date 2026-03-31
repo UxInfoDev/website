@@ -8,7 +8,7 @@ const Footer = () => {
     site_name: 'UX Infotech',
     address: 'Ahmedabad, Gujarat\nIndia',
     phone: '+91 98765 43210',
-    email: 'support@uxinfotech.com',
+    email: 'hello@uxinfotech.com',
     facebook_url: '#',
     twitter_url: '#',
     linkedin_url: '#',

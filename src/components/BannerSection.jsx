@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
+import QuoteForm from './QuoteForm'
+import ContactInfoBar from './ContactInfoBar'
 
 const BannerSection = () => {
   const [currentSlide, setCurrentSlide] = useState(0)
@@ -22,25 +24,22 @@ const BannerSection = () => {
   }, [])
 
   useEffect(() => {
-    if (slides.length === 0) return;
+    if (slides.length === 0) return
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length)
     }, 5000)
     return () => clearInterval(timer)
   }, [slides.length])
 
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % slides.length)
-  }
-
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length)
-  }
+  const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % slides.length)
+  const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length)
 
   return (
-    <section id="home" className="relative h-screen overflow-hidden">
-      {/* Slides */}
-      <div className="relative w-full h-full">
+    <>
+    <section id="home" className="relative overflow-hidden" style={{ height: '60vh', minHeight: '480px' }}>
+
+      {/* ── Background Slides ── */}
+      <div className="absolute inset-0">
         {slides.map((slide, index) => (
           <div
             key={slide.id}
@@ -48,66 +47,128 @@ const BannerSection = () => {
               index === currentSlide ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
             }`}
           >
-            {/* Background Image */}
             <div
               className="absolute inset-0 bg-cover bg-center"
               style={{
-                backgroundImage: `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('${slide.image?.startsWith('/uploads') ? `${slide.image}` : slide.image}')`
+                backgroundImage: `linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)), url('${
+                  slide.image?.startsWith('/uploads') ? slide.image : slide.image
+                }')`
               }}
             />
-
-            {/* Content */}
-            <div className="relative h-full flex items-center z-20">
-              <div className="container">
-                <div className="max-w-2xl sm:px-20 md:px-10  text-white slide-animation">
-                  <h1 className="text-5xl md:text-7xl font-extrabold mb-6 tracking-tight" style={{ color: '#ffffff', textShadow: '2px 3px 12px rgba(0,0,0,0.9)' }}>{slide.title}</h1>
-                  <p className="text-xl md:text-3xl mb-10 font-medium" style={{ color: '#f3f4f6', textShadow: '1px 2px 8px rgba(0,0,0,0.9)' }}>{slide.description}</p>
-                  <div className="flex flex-col sm:flex-row gap-4">
-                    {slide.cta_text && slide.cta_link && (
-                      <Link to={slide.cta_link.startsWith('#') || slide.cta_link.startsWith('/') ? slide.cta_link : `/${slide.cta_link}`} className="btn bg-blue-600 hover:bg-blue-700 text-white">
-                        {slide.cta_text}
-                      </Link>
-                    )}
-                    {slide.cta_alt && (
-                      <a href="#contact" className="btn border-2 border-white text-white hover:bg-white hover:text-gray-900">
-                        {slide.cta_alt}
-                      </a>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         ))}
       </div>
 
-      {/* Navigation Buttons */}
-      <button
-        onClick={prevSlide}
-        className="absolute xs:invisible left-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-orange-600 text-white rounded-full flex items-center justify-center hover:bg-orange-700 transition"
-      >
-        <FaChevronLeft />
-      </button>
-      <button
-        onClick={nextSlide}
-        className="absolute right-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-orange-600 text-white rounded-full flex items-center justify-center hover:bg-orange-700 transition"
-      >
-        <FaChevronRight color='#fff' />
-      </button>
+      {/* ── Main Content: stacked on mobile, side-by-side on desktop ── */}
+      <div className="relative z-20 container mx-auto px-4 py-8 lg:py-0 lg:h-full flex flex-col lg:flex-row items-center lg:items-center gap-6 lg:gap-10">
 
-      {/* Indicators */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 flex gap-2">
-        {slides.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => setCurrentSlide(index)}
-            className={`w-3 h-3 rounded-full transition ${
-              index === currentSlide ? 'bg-orange-600 w-8' : 'bg-white'
-            }`}
-          />
-        ))}
+        {/* Slide Text — full width on mobile, left half on desktop */}
+        <div className="w-full lg:w-1/2 text-white text-center lg:text-left">
+          {slides.length > 0 && (
+            <div key={currentSlide} className="slide-animation">
+              <h1
+                className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold mb-5 tracking-tight leading-tight text-white"
+                style={{ color: '#ffffff', textShadow: '2px 3px 12px rgba(0,0,0,0.9)' }}
+              >
+                {slides[currentSlide]?.title}
+              </h1>
+              <p
+                className="text-lg sm:text-xl lg:text-2xl mb-8 font-medium"
+                style={{ textShadow: '1px 2px 8px rgba(0,0,0,0.9)', color: '#f3f4f6' }}
+              >
+                {slides[currentSlide]?.description}
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                {slides[currentSlide]?.cta_text && slides[currentSlide]?.cta_link && (
+                  <Link
+                    to={
+                      slides[currentSlide].cta_link.startsWith('#') || slides[currentSlide].cta_link.startsWith('/')
+                        ? slides[currentSlide].cta_link
+                        : `/${slides[currentSlide].cta_link}`
+                    }
+                    className="btn bg-blue-600 hover:bg-blue-700 text-white"
+                  >
+                    {slides[currentSlide].cta_text}
+                  </Link>
+                )}
+                {slides[currentSlide]?.cta_alt && (
+                  <a href="#contact" className="btn border-2 border-white text-white hover:bg-white hover:text-gray-900">
+                    {slides[currentSlide].cta_alt}
+                  </a>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Quote Form — full width card below text on mobile, right half on desktop */}
+        <div className="w-full lg:w-5/12 xl:w-[420px] flex-shrink-0">
+          <QuoteForm compact />
+
+          {/* Indicators inline below form — mobile only */}
+          {slides.length > 1 && (
+            <div className="flex lg:hidden items-center justify-center gap-3 mt-4 pb-2">
+              {slides.map((_, index) => (
+                <div
+                  role="button"
+                  key={index}
+                  onClick={() => setCurrentSlide(index)}
+                  className={`rounded-full cursor-pointer transition-all duration-300 shadow ${
+                    index === currentSlide
+                      ? 'bg-orange-600 scale-125'
+                      : 'bg-white bg-opacity-70 hover:bg-opacity-100 hover:scale-110'
+                  }`}
+                  style={{ width: 12, height: 12 }}
+                  aria-label={`Go to slide ${index + 1}`}
+                />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
+
+      {/* ── Slide Navigation Arrows ── */}
+      {slides.length > 1 && (
+        <>
+          <div
+            role="button"
+            onClick={prevSlide}
+            className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-30 w-12 h-12 bg-orange-600 text-white rounded-full hidden lg:flex items-center justify-center hover:bg-orange-700 shadow-lg transition-transform hover:scale-110 cursor-pointer"
+          >
+            <FaChevronLeft size={20} />
+          </div>
+          <div
+            role="button"
+            onClick={nextSlide}
+            className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-30 w-12 h-12 bg-orange-600 text-white rounded-full hidden lg:flex items-center justify-center hover:bg-orange-700 shadow-lg transition-transform hover:scale-110 cursor-pointer"
+          >
+            <FaChevronRight size={20} />
+          </div>
+        </>
+      )}
+
+      {/* ── Slide Indicators — desktop only (absolute) ── */}
+      {slides.length > 1 && (
+        <div className="absolute bottom-6 left-10 z-30 hidden lg:flex items-center gap-4">
+          {slides.map((_, index) => (
+            <div
+              role="button"
+              key={index}
+              onClick={() => setCurrentSlide(index)}
+              className={`rounded-full cursor-pointer transition-all duration-300 shadow-md ${
+                index === currentSlide
+                  ? 'bg-orange-600 scale-125'
+                  : 'bg-white bg-opacity-80 hover:bg-opacity-100 hover:scale-110'
+              }`}
+              style={{ width: 16, height: 16 }}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
+        </div>
+      )}
     </section>
+    <ContactInfoBar />
+    </>
   )
 }
 

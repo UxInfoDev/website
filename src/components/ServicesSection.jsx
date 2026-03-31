@@ -43,7 +43,10 @@ const ServicesSection = () => {
                   <IconComponent className="text-4xl" />
                 </div>
                 <h3 className="text-2xl font-bold mb-3">{service.title}</h3>
-              <p className="text-gray-600">{service.description}</p>
+              <div 
+                className="text-gray-600 line-clamp-3 prose" 
+                dangerouslySetInnerHTML={{ __html: service.description }} 
+              />
               <Link to={`/service/${service.id}`} className="text-orange-600 font-bold mt-4 inline-block hover:text-orange-700">
                 Learn More →
               </Link>

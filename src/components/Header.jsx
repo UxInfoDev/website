@@ -1,178 +1,130 @@
 import React, { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { FaBars, FaTimes, FaSearch } from 'react-icons/fa'
+import axios from 'axios'
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
-  const [searchQuery, setSearchQuery] = useState('')
-  const [activeSection, setActiveSection] = useState('home')
-  const navigate = useNavigate()
+  const [logoUrl, setLogoUrl] = useState(null)
 
-  const navItems = [
-    { id: 'home', label: 'Home' },
-    { id: 'about', label: 'About' },
-    { id: 'services', label: 'Services' },
-    { id: 'portfolio', label: 'Portfolio' },
-    { id: 'contact', label: 'Contact' }
-  ]
+  useEffect(() => {
+    axios.get('/api/settings')
+      .then(res => {
+        if (res.data?.logo_url) setLogoUrl(res.data.logo_url)
+      })
+      .catch(() => {})
+  }, [])
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
   const toggleSearch = () => setIsSearchOpen(!isSearchOpen)
 
-  // ✅ Scroll Spy using IntersectionObserver
-  useEffect(() => {
-    const sections = navItems.map(item => document.getElementById(item.id))
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id)
-            window.history.replaceState(null, '', `#${entry.target.id}`)
-          }
-        })
-      },
-      {
-        root: null,
-        rootMargin: '-40% 0px -50% 0px',
-        threshold: 0
-      }
-    )
-
-    sections.forEach(section => {
-      if (section) observer.observe(section)
-    })
-
-    return () => {
-      sections.forEach(section => {
-        if (section) observer.unobserve(section)
-      })
-    }
-  }, [])
-
-  // Scroll to section
   const scrollToSection = (id) => {
     const element = document.getElementById(id)
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' })
-      setActiveSection(id)
-      window.history.replaceState(null, '', `#${id}`)
     }
     setIsMenuOpen(false)
   }
 
-  // Handle Search Submit
-  const handleSearchSubmit = (e) => {
-    e.preventDefault()
-    if (searchQuery.trim() !== '') {
-      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`)
-      setSearchQuery('')
-      setIsSearchOpen(false)
-    }
-  }
-
   return (
-    <header className="sticky top-0 z-50 bg-white shadow-sm">
-      <div className="max-w-7xl mx-auto px-4">
+    <header className="sticky top-0 z-50 bg-white shadow">
+      <div className="container">
         <div className="flex justify-between items-center py-4">
           {/* Logo */}
-          <Link to="/" className="flex flex-col leading-none pb-1">
-            <div className="flex items-baseline mb-1">
-              <span className="text-blue-500 text-[40px] font-black">U</span>
-              <span className="text-orange-500 text-[40px] font-black ml-[-2px]">X</span>
-              <span className="text-blue-500 text-[30px] font-light ml-3 uppercase">
-                INFOTECH
-              </span>
-            </div>
-            <span className="text-gray-500 text-[10px] tracking-[0.25em]">
-              DESIGN FOR YOUR SUCCESS
-            </span>
-          </Link>
+          <div className="flex items-center">
+            <Link to="/" className="flex flex-col items-start leading-none group pb-1">
+              {logoUrl ? (
+                <img
+                  src={logoUrl}
+                  alt="Site Logo"
+                  className="h-12 max-w-[180px] object-contain"
+                />
+              ) : (
+                <>
+                  <div className="flex items-baseline mb-1">
+                    <span className="text-[#3282C4] text-[42px] font-black tracking-tighter leading-none">U</span>
+                    <span className="text-[#F18835] text-[42px] font-black tracking-tighter leading-none ml-[-2px]">X</span>
+                    <span className="text-[#3282C4] text-[34px] font-light tracking-widest leading-none ml-3 uppercase">INFOTECH</span>
+                  </div>
+                  <span className="text-gray-500 text-[11px] tracking-[0.25em] font-medium mt-1">DESIGN FOR YOUR SUCCESS</span>
+                </>
+              )}
+            </Link>
+          </div>
 
-          {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-6">
-            {navItems.map((item) => {
-              const isActive = activeSection === item.id
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => scrollToSection(item.id)}
-                  className={`relative font-medium transition ${
-                    isActive
-                      ? 'text-orange-500'
-                      : 'text-gray-700 hover:text-orange-500'
-                  }`}
-                >
-                  {item.label}
-                  <span
-                    className={`absolute left-0 -bottom-1 h-[2px] bg-orange-500 transition-all duration-300 ${
-                      isActive ? 'w-full' : 'w-0'
-                    }`}
-                  />
-                </button>
-              )
-            })}
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center gap-8">
+            <button onClick={() => scrollToSection('home')} className="hover:text-orange-600 font-medium">
+              Home
+            </button>
+            <button onClick={() => scrollToSection('about')} className="hover:text-orange-600 font-medium">
+              About
+            </button>
+            <button onClick={() => scrollToSection('services')} className="hover:text-orange-600 font-medium">
+              Services
+            </button>
+            <button onClick={() => scrollToSection('portfolio')} className="hover:text-orange-600 font-medium">
+              Portfolio
+            </button>
+            <button onClick={() => scrollToSection('contact')} className="hover:text-orange-600 font-medium">
+              Contact
+            </button>
           </nav>
 
-          {/* Actions */}
+          {/* Search & Mobile Toggle */}
           <div className="flex items-center gap-4">
-            {/* Search Button */}
-            <button
+            <button 
               onClick={toggleSearch}
-              className="text-gray-600 hover:text-orange-500 transition text-xl"
+              className="text-gray-600 hover:text-orange-600 text-xl"
             >
               <FaSearch />
             </button>
-
-            {/* Mobile Menu Button */}
-            <button
+            <button 
               onClick={toggleMenu}
-              className="md:hidden text-gray-600 hover:text-orange-500 transition text-xl"
+              className="md:hidden text-gray-600 hover:text-orange-600 text-xl"
             >
               {isMenuOpen ? <FaTimes /> : <FaBars />}
             </button>
           </div>
         </div>
 
-        {/* Search Box */}
+        {/* Search Bar */}
         {isSearchOpen && (
-          <form onSubmit={handleSearchSubmit} className="pb-4 border-t flex gap-2">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search..."
-              className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 transition"
-            />
-            <button
-              type="submit"
-              className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition"
-            >
-              <FaSearch />
-            </button>
-          </form>
+          <div className="pb-4 border-t">
+            <div className="flex gap-2">
+              <input
+                type="search"
+                placeholder="Search here..."
+                className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:border-orange-600"
+              />
+              <button className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700">
+                <FaSearch />
+              </button>
+            </div>
+          </div>
         )}
 
-        {/* Mobile Nav */}
+        {/* Mobile Navigation */}
         {isMenuOpen && (
-          <nav className="md:hidden border-t pt-4 pb-4 flex flex-col gap-2">
-            {navItems.map((item) => {
-              const isActive = activeSection === item.id
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => scrollToSection(item.id)}
-                  className={`text-left px-3 py-2 rounded-md transition ${
-                    isActive
-                      ? 'bg-orange-50 text-orange-500'
-                      : 'text-gray-700 hover:bg-gray-100 hover:text-orange-500'
-                  }`}
-                >
-                  {item.label}
-                </button>
-              )
-            })}
+          <nav className="md:hidden pb-4 border-t">
+            <div className="flex flex-col gap-3">
+              <button onClick={() => scrollToSection('home')} className="text-left py-2 hover:text-orange-600">
+                Home
+              </button>
+              <button onClick={() => scrollToSection('about')} className="text-left py-2 hover:text-orange-600">
+                About
+              </button>
+              <button onClick={() => scrollToSection('services')} className="text-left py-2 hover:text-orange-600">
+                Services
+              </button>
+              <button onClick={() => scrollToSection('portfolio')} className="text-left py-2 hover:text-orange-600">
+                Portfolio
+              </button>
+              <button onClick={() => scrollToSection('contact')} className="text-left py-2 hover:text-orange-600">
+                Contact
+              </button>
+            </div>
           </nav>
         )}
       </div>
