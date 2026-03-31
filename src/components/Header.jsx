@@ -42,12 +42,14 @@ const Header = () => {
                 />
               ) : (
                 <>
-                  <div className="flex items-baseline mb-1">
+                <img src="/logo.png" alt="Site Logo" className="h-12 max-w-[180px] object-contain" />
+                  {/* <div className="flex items-baseline mb-1">
                     <span className="text-[#3282C4] text-[42px] font-black tracking-tighter leading-none">U</span>
                     <span className="text-[#F18835] text-[42px] font-black tracking-tighter leading-none ml-[-2px]">X</span>
                     <span className="text-[#3282C4] text-[34px] font-light tracking-widest leading-none ml-3 uppercase">INFOTECH</span>
                   </div>
-                  <span className="text-gray-500 text-[11px] tracking-[0.25em] font-medium mt-1">DESIGN FOR YOUR SUCCESS</span>
+                  <span className="text-gray-500 text-[11px] tracking-[0.25em] font-medium mt-1">DESIGN FOR YOUR SUCCESS</span> */}
+
                 </>
               )}
             </Link>
