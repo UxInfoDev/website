@@ -29,6 +29,16 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
+// Promisify multer callback middleware so we can await it in async handlers
+function runUpload(middleware, req, res) {
+  return new Promise((resolve, reject) => {
+    middleware(req, res, (err) => {
+      if (err) reject(err);
+      else resolve();
+    });
+  });
+}
+
 // Construct connect string
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL || 'postgres://postgres.vybnycqsikeebevzxyzg:SatSuresh123$$@aws-0-us-west-2.pooler.supabase.com:5432/postgres',
@@ -73,11 +83,11 @@ app.get('/api/projects/:id', async (req, res) => {
   }
 });
 
-app.post('/api/projects', upload.single('image'), async (req, res) => {
-  const { title, category, status, description } = req.body;
-  const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
-  
+app.post('/api/projects', async (req, res) => {
   try {
+    await runUpload(upload.single('image'), req, res);
+    const { title, category, status, description } = req.body;
+    const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
     const result = await pool.query(
       'INSERT INTO projects (title, category, image, status, description) VALUES ($1, $2, $3, $4, $5) RETURNING *',
       [title, category, imagePath, status, description]
@@ -89,12 +99,12 @@ app.post('/api/projects', upload.single('image'), async (req, res) => {
   }
 });
 
-app.put('/api/projects/:id', upload.single('image'), async (req, res) => {
-  const { id } = req.params;
-  const { title, category, status, description } = req.body;
-  const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
-  
+app.put('/api/projects/:id', async (req, res) => {
   try {
+    await runUpload(upload.single('image'), req, res);
+    const { id } = req.params;
+    const { title, category, status, description } = req.body;
+    const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
     if (imagePath) {
       const result = await pool.query(
         'UPDATE projects SET title = $1, category = $2, image = $3, status = $4, description = $5 WHERE id = $6 RETURNING *',
@@ -147,11 +157,11 @@ app.get('/api/services/:id', async (req, res) => {
   }
 });
 
-app.post('/api/services', upload.single('image'), async (req, res) => {
-  const { title, description, icon } = req.body;
-  const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
-  
+app.post('/api/services', async (req, res) => {
   try {
+    await runUpload(upload.single('image'), req, res);
+    const { title, description, icon } = req.body;
+    const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
     const result = await pool.query(
       'INSERT INTO services (title, description, icon, image) VALUES ($1, $2, $3, $4) RETURNING *',
       [title, description, icon, imagePath]
@@ -163,12 +173,12 @@ app.post('/api/services', upload.single('image'), async (req, res) => {
   }
 });
 
-app.put('/api/services/:id', upload.single('image'), async (req, res) => {
-  const { id } = req.params;
-  const { title, description, icon } = req.body;
-  const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
-  
+app.put('/api/services/:id', async (req, res) => {
   try {
+    await runUpload(upload.single('image'), req, res);
+    const { id } = req.params;
+    const { title, description, icon } = req.body;
+    const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
     if (imagePath) {
       const result = await pool.query(
         'UPDATE services SET title = $1, description = $2, icon = $3, image = $4 WHERE id = $5 RETURNING *',
@@ -261,11 +271,11 @@ app.get('/api/banners', async (req, res) => {
   }
 });
 
-app.post('/api/banners', upload.single('image'), async (req, res) => {
-  const { title, description, cta_text, cta_link, cta_alt } = req.body;
-  const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
-  
+app.post('/api/banners', async (req, res) => {
   try {
+    await runUpload(upload.single('image'), req, res);
+    const { title, description, cta_text, cta_link, cta_alt } = req.body;
+    const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
     const result = await pool.query(
       'INSERT INTO carousels (title, description, image, cta_text, cta_link, cta_alt) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
       [title, description, imagePath, cta_text, cta_link, cta_alt]
@@ -277,12 +287,12 @@ app.post('/api/banners', upload.single('image'), async (req, res) => {
   }
 });
 
-app.put('/api/banners/:id', upload.single('image'), async (req, res) => {
-  const { id } = req.params;
-  const { title, description, cta_text, cta_link, cta_alt } = req.body;
-  const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
-  
+app.put('/api/banners/:id', async (req, res) => {
   try {
+    await runUpload(upload.single('image'), req, res);
+    const { id } = req.params;
+    const { title, description, cta_text, cta_link, cta_alt } = req.body;
+    const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
     if (imagePath) {
       const result = await pool.query(
         'UPDATE carousels SET title = $1, description = $2, image = $3, cta_text = $4, cta_link = $5, cta_alt = $6 WHERE id = $7 RETURNING *',
@@ -324,11 +334,11 @@ app.get('/api/team', async (req, res) => {
   }
 });
 
-app.post('/api/team', upload.single('image'), async (req, res) => {
-  const { name, role, bio, linkedin, twitter, github } = req.body;
-  const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
-  
+app.post('/api/team', async (req, res) => {
   try {
+    await runUpload(upload.single('image'), req, res);
+    const { name, role, bio, linkedin, twitter, github } = req.body;
+    const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
     const result = await pool.query(
       'INSERT INTO team (name, role, bio, image, linkedin, twitter, github) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
       [name, role, bio, imagePath, linkedin, twitter, github]
@@ -340,12 +350,12 @@ app.post('/api/team', upload.single('image'), async (req, res) => {
   }
 });
 
-app.put('/api/team/:id', upload.single('image'), async (req, res) => {
-  const { id } = req.params;
-  const { name, role, bio, linkedin, twitter, github } = req.body;
-  const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
-  
+app.put('/api/team/:id', async (req, res) => {
   try {
+    await runUpload(upload.single('image'), req, res);
+    const { id } = req.params;
+    const { name, role, bio, linkedin, twitter, github } = req.body;
+    const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
     if (imagePath) {
       const result = await pool.query(
         'UPDATE team SET name = $1, role = $2, bio = $3, image = $4, linkedin = $5, twitter = $6, github = $7 WHERE id = $8 RETURNING *',
@@ -380,32 +390,45 @@ app.delete('/api/team/:id', async (req, res) => {
 app.get('/api/settings', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM settings WHERE id = 1');
-    res.json(result.rows[0]);
+    res.json(result.rows[0] || {});
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
 
-app.put('/api/settings', upload.single('logo'), async (req, res) => {
-  const { site_name, site_description, phone, email, address, facebook_url, twitter_url, linkedin_url, youtube_url } = req.body;
-  const logoPath = req.file ? `/uploads/${req.file.filename}` : null;
+app.put('/api/settings', async (req, res) => {
   try {
+    await runUpload(upload.single('logo'), req, res);
+    const { site_name, site_description, phone, email, address, facebook_url, twitter_url, linkedin_url, youtube_url } = req.body;
+    const logoPath = req.file ? `/uploads/${req.file.filename}` : null;
     let result;
     if (logoPath) {
       result = await pool.query(
-        'UPDATE settings SET site_name = $1, site_description = $2, phone = $3, email = $4, address = $5, facebook_url = $6, twitter_url = $7, linkedin_url = $8, youtube_url = $9, logo_url = $10, updated_at = CURRENT_TIMESTAMP WHERE id = 1 RETURNING *',
+        `INSERT INTO settings (id, site_name, site_description, phone, email, address, facebook_url, twitter_url, linkedin_url, youtube_url, logo_url, updated_at)
+         VALUES (1, $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, CURRENT_TIMESTAMP)
+         ON CONFLICT (id) DO UPDATE SET
+           site_name = $1, site_description = $2, phone = $3, email = $4, address = $5,
+           facebook_url = $6, twitter_url = $7, linkedin_url = $8, youtube_url = $9,
+           logo_url = $10, updated_at = CURRENT_TIMESTAMP
+         RETURNING *`,
         [site_name, site_description, phone, email, address, facebook_url, twitter_url, linkedin_url, youtube_url, logoPath]
       );
     } else {
       result = await pool.query(
-        'UPDATE settings SET site_name = $1, site_description = $2, phone = $3, email = $4, address = $5, facebook_url = $6, twitter_url = $7, linkedin_url = $8, youtube_url = $9, updated_at = CURRENT_TIMESTAMP WHERE id = 1 RETURNING *',
+        `INSERT INTO settings (id, site_name, site_description, phone, email, address, facebook_url, twitter_url, linkedin_url, youtube_url, updated_at)
+         VALUES (1, $1, $2, $3, $4, $5, $6, $7, $8, $9, CURRENT_TIMESTAMP)
+         ON CONFLICT (id) DO UPDATE SET
+           site_name = $1, site_description = $2, phone = $3, email = $4, address = $5,
+           facebook_url = $6, twitter_url = $7, linkedin_url = $8, youtube_url = $9,
+           updated_at = CURRENT_TIMESTAMP
+         RETURNING *`,
         [site_name, site_description, phone, email, address, facebook_url, twitter_url, linkedin_url, youtube_url]
       );
     }
     res.json(result.rows[0]);
   } catch (err) {
-    console.error(err);
+    console.error('Settings PUT error:', err);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
@@ -418,7 +441,6 @@ const adminDist = path.join(__dirname, 'dist-admin');
 app.use('/admin', express.static(adminDist));
 
 // 2. Admin Catch-all (must be before frontend catch-all)
-// Using regex for compatibility with Express 5 wildcard rules
 app.get(/^\/admin(\/.*)?$/, (req, res) => {
   const adminHtml = path.join(adminDist, 'admin.html');
   if (fs.existsSync(adminHtml)) {
@@ -432,7 +454,7 @@ app.get(/^\/admin(\/.*)?$/, (req, res) => {
 app.use(express.static(frontendDist));
 
 // 4. Frontend Catch-all
-app.get('*', (req, res) => {
+app.get('/{*path}', (req, res) => {
   const indexHtml = path.join(frontendDist, 'index.html');
   if (fs.existsSync(indexHtml)) {
     res.sendFile(indexHtml);

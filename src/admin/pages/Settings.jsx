@@ -49,22 +49,28 @@ const SettingsPage = () => {
   /* ── Save ── */
   const onSubmit = async (data) => {
     try {
+      // Only send the fields the server PUT handler expects
+      // (exclude id, updated_at, logo_url which come from reset())
+      const allowedFields = [
+        'site_name', 'site_description', 'phone', 'email',
+        'address', 'facebook_url', 'twitter_url', 'linkedin_url', 'youtube_url'
+      ]
       const formData = new FormData()
-      Object.entries(data).forEach(([key, value]) => {
-        if (value !== undefined && value !== null) formData.append(key, value)
+      allowedFields.forEach((key) => {
+        const value = data[key]
+        formData.append(key, value ?? '')
       })
       if (logoFile) formData.append('logo', logoFile)
 
-      const response = await axios.put('/api/settings', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      })
+      const response = await axios.put('/api/settings', formData)
       if (response.data?.logo_url) {
         setCurrentLogo(response.data.logo_url)
       }
       setLogoPreview(null)
       setLogoFile(null)
       toast.success('Settings saved successfully!')
-    } catch {
+    } catch (err) {
+      console.error('Settings save error:', err?.response?.data || err.message)
       toast.error('Failed to save settings')
     }
   }
