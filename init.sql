@@ -68,6 +68,9 @@ CREATE TABLE IF NOT EXISTS settings (
 -- Add logo_url column if upgrading from older schema
 ALTER TABLE settings ADD COLUMN IF NOT EXISTS logo_url VARCHAR(255);
 
+-- Add short_description column to services if upgrading from older schema
+ALTER TABLE services ADD COLUMN IF NOT EXISTS short_description VARCHAR(500);
+
 INSERT INTO settings (id, site_name, site_description, phone, email, address, facebook_url, twitter_url, linkedin_url, youtube_url)
 SELECT 1, 'UX Infotech', 'UX Design & Web Development Agency', '+91 98765 43210', 'hello@uxinfotech.com', 'Ahmedabad, Gujarat, India', '#', '#', '#', '#'
 WHERE NOT EXISTS (SELECT 1 FROM settings WHERE id = 1);

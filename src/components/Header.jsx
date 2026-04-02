@@ -1,12 +1,18 @@
-import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState, useEffect, useRef } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { FaBars, FaTimes, FaSearch } from 'react-icons/fa'
 import axios from 'axios'
+
+const NAV_SECTIONS = ['home', 'about', 'services', 'portfolio', 'contact']
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [logoUrl, setLogoUrl] = useState(null)
+  const [activeSection, setActiveSection] = useState('home')
+  const location = useLocation()
+  const navigate = useNavigate()
+  const observerRef = useRef(null)
 
   useEffect(() => {
     axios.get('/api/settings')
@@ -16,16 +22,58 @@ const Header = () => {
       .catch(() => {})
   }, [])
 
+  // Track active section via IntersectionObserver — only on home page
+  useEffect(() => {
+    if (location.pathname !== '/') return
+
+    const observers = []
+
+    NAV_SECTIONS.forEach((id) => {
+      const el = document.getElementById(id)
+      if (!el) return
+
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            setActiveSection(id)
+          }
+        },
+        { threshold: 0.4, rootMargin: '-80px 0px 0px 0px' }
+      )
+      observer.observe(el)
+      observers.push(observer)
+    })
+
+    return () => observers.forEach((obs) => obs.disconnect())
+  }, [location.pathname])
+
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
   const toggleSearch = () => setIsSearchOpen(!isSearchOpen)
 
   const scrollToSection = (id) => {
-    const element = document.getElementById(id)
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' })
-    }
     setIsMenuOpen(false)
+    setActiveSection(id)
+    if (location.pathname === '/') {
+      const element = document.getElementById(id)
+      if (element) element.scrollIntoView({ behavior: 'smooth' })
+    } else {
+      navigate('/#' + id)
+    }
   }
+
+  const navClass = (id) =>
+    `font-medium transition-colors duration-200 ${
+      activeSection === id && location.pathname === '/'
+        ? 'text-orange-600 border-b-2 border-orange-600 pb-0.5'
+        : 'hover:text-orange-600'
+    }`
+
+  const mobileNavClass = (id) =>
+    `text-left py-2 transition-colors duration-200 font-medium ${
+      activeSection === id && location.pathname === '/'
+        ? 'text-orange-600'
+        : 'hover:text-orange-600'
+    }`
 
   return (
     <header className="sticky top-0 z-50 bg-white shadow">
@@ -42,14 +90,7 @@ const Header = () => {
                 />
               ) : (
                 <>
-                <img src="/logo.png" alt="Site Logo" className="h-12 max-w-[180px] object-contain" />
-                  {/* <div className="flex items-baseline mb-1">
-                    <span className="text-[#3282C4] text-[42px] font-black tracking-tighter leading-none">U</span>
-                    <span className="text-[#F18835] text-[42px] font-black tracking-tighter leading-none ml-[-2px]">X</span>
-                    <span className="text-[#3282C4] text-[34px] font-light tracking-widest leading-none ml-3 uppercase">INFOTECH</span>
-                  </div>
-                  <span className="text-gray-500 text-[11px] tracking-[0.25em] font-medium mt-1">DESIGN FOR YOUR SUCCESS</span> */}
-
+                  <img src="/logo.png" alt="Site Logo" className="h-12 max-w-[180px] object-contain" />
                 </>
               )}
             </Link>
@@ -57,32 +98,32 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">
-            <button onClick={() => scrollToSection('home')} className="hover:text-orange-600 font-medium">
+            <button onClick={() => scrollToSection('home')} className={navClass('home')}>
               Home
             </button>
-            <button onClick={() => scrollToSection('about')} className="hover:text-orange-600 font-medium">
+            <button onClick={() => scrollToSection('about')} className={navClass('about')}>
               About
             </button>
-            <button onClick={() => scrollToSection('services')} className="hover:text-orange-600 font-medium">
+            <button onClick={() => scrollToSection('services')} className={navClass('services')}>
               Services
             </button>
-            <button onClick={() => scrollToSection('portfolio')} className="hover:text-orange-600 font-medium">
+            <button onClick={() => scrollToSection('portfolio')} className={navClass('portfolio')}>
               Portfolio
             </button>
-            <button onClick={() => scrollToSection('contact')} className="hover:text-orange-600 font-medium">
+            <button onClick={() => scrollToSection('contact')} className={navClass('contact')}>
               Contact
             </button>
           </nav>
 
           {/* Search & Mobile Toggle */}
           <div className="flex items-center gap-4">
-            <button 
+            <button
               onClick={toggleSearch}
               className="text-gray-600 hover:text-orange-600 text-xl"
             >
               <FaSearch />
             </button>
-            <button 
+            <button
               onClick={toggleMenu}
               className="md:hidden text-gray-600 hover:text-orange-600 text-xl"
             >
@@ -111,19 +152,19 @@ const Header = () => {
         {isMenuOpen && (
           <nav className="md:hidden pb-4 border-t">
             <div className="flex flex-col gap-3">
-              <button onClick={() => scrollToSection('home')} className="text-left py-2 hover:text-orange-600">
+              <button onClick={() => scrollToSection('home')} className={mobileNavClass('home')}>
                 Home
               </button>
-              <button onClick={() => scrollToSection('about')} className="text-left py-2 hover:text-orange-600">
+              <button onClick={() => scrollToSection('about')} className={mobileNavClass('about')}>
                 About
               </button>
-              <button onClick={() => scrollToSection('services')} className="text-left py-2 hover:text-orange-600">
+              <button onClick={() => scrollToSection('services')} className={mobileNavClass('services')}>
                 Services
               </button>
-              <button onClick={() => scrollToSection('portfolio')} className="text-left py-2 hover:text-orange-600">
+              <button onClick={() => scrollToSection('portfolio')} className={mobileNavClass('portfolio')}>
                 Portfolio
               </button>
-              <button onClick={() => scrollToSection('contact')} className="text-left py-2 hover:text-orange-600">
+              <button onClick={() => scrollToSection('contact')} className={mobileNavClass('contact')}>
                 Contact
               </button>
             </div>

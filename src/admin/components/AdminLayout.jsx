@@ -21,7 +21,7 @@ const AdminLayout = ({ children, onLogout }) => {
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
-      <aside className={`bg-gray-900 text-white transition-all duration-300 ${
+      <aside className={`bg-gray-900 text-white transition-all duration-300 flex flex-col ${
         isSidebarOpen ? 'w-64' : 'w-20'
       }`}>
         <div className="p-4 flex items-center justify-between">
@@ -42,32 +42,34 @@ const AdminLayout = ({ children, onLogout }) => {
           </button>
         </div>
 
-        <nav className="mt-8">
+        <nav className="mt-8 flex-1">
           {menuItems.map((item) => (
             <Link
               key={item.path}
               to={item.path}
-              className={`flex items-center gap-4 px-4 py-3 transition ${
+              className={`flex items-center gap-4 py-3 transition text-white ${
                 isActive(item.path)
-                  ? 'bg-orange-600 border-l-4 border-orange-400'
-                  : 'hover:bg-gray-800'
+                  ? 'bg-orange-600 border-l-4 border-orange-400 pl-3 pr-4'
+                  : 'hover:bg-gray-800 px-4'
               }`}
               title={!isSidebarOpen ? item.label : ''}
             >
-              <span className="text-xl">{item.icon}</span>
-              {isSidebarOpen && <span>{item.label}</span>}
+              <span className="text-xl flex-shrink-0">{item.icon}</span>
+              {isSidebarOpen && <span className="truncate">{item.label}</span>}
             </Link>
           ))}
         </nav>
 
         {/* Logout */}
-        <div className="absolute bottom-4 left-4 right-4">
+        <div className="p-4">
           <button
             onClick={onLogout}
-            className="w-full flex items-center gap-4 px-4 py-3 bg-red-600 hover:bg-red-700 rounded transition"
+            className={`flex items-center gap-4 px-4 py-3 bg-red-600 hover:bg-red-700 rounded transition text-white ${
+              isSidebarOpen ? 'w-full' : 'w-12 justify-center px-0'
+            }`}
             title={!isSidebarOpen ? 'Logout' : ''}
           >
-            <span className="text-xl"><FaSignOutAlt /></span>
+            <span className="text-xl flex-shrink-0"><FaSignOutAlt /></span>
             {isSidebarOpen && <span>Logout</span>}
           </button>
         </div>

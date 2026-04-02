@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { FaFacebook, FaTwitter, FaYoutube, FaLinkedin, FaMapMarkerAlt, FaPhone, FaEnvelope } from 'react-icons/fa'
 import axios from 'axios'
 
@@ -36,9 +37,9 @@ const Footer = () => {
         <div className="container">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <h3 className="text-2xl font-bold">Ready to Transform Your Digital Product?</h3>
-            <a href="#contact" className="btn bg-white text-orange-600 hover:bg-gray-100">
+                    <Link to="/#contact" className="btn bg-white text-orange-600 hover:bg-gray-100">
               Start Your Project
-            </a>
+            </Link>
           </div>
         </div>
       </div>
@@ -52,10 +53,10 @@ const Footer = () => {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <ul className="space-y-2">
-                  <li><a href="#home" className="hover:text-orange-600">Home</a></li>
-                  <li><a href="#about" className="hover:text-orange-600">About</a></li>
-                  <li><a href="#services" className="hover:text-orange-600">Services</a></li>
-                  <li><a href="#portfolio" className="hover:text-orange-600">Portfolio</a></li>
+                  <li><Link to="/#home" className="hover:text-orange-600">Home</Link></li>
+                  <li><Link to="/#about" className="hover:text-orange-600">About</Link></li>
+                  <li><Link to="/#services" className="hover:text-orange-600">Services</Link></li>
+                  <li><Link to="/#portfolio" className="hover:text-orange-600">Portfolio</Link></li>
                 </ul>
               </div>
               <div>
