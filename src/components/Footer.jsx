@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { FaFacebook, FaTwitter, FaYoutube, FaLinkedin, FaMapMarkerAlt, FaPhone, FaEnvelope } from 'react-icons/fa'
 import axios from 'axios'
+import QuoteForm from './QuoteForm'
 
 const Footer = () => {
   const currentYear = new Date().getFullYear()
@@ -15,6 +16,7 @@ const Footer = () => {
     linkedin_url: '#',
     youtube_url: '#'
   })
+  const [isInquiryOpen, setIsInquiryOpen] = useState(false)
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -53,26 +55,23 @@ const Footer = () => {
 
   return (
     <footer className="bg-gray-900 text-white">
-      {/* CTA Section */}
       <div className="bg-orange-600 py-8">
         <div className="container">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <h3 className="text-2xl font-bold">Ready to Transform Your Digital Product?</h3>
-            <a
-              href="/#contact"
-              onClick={(e) => goToSection('contact', e)}
+            <button
+              type="button"
+              onClick={() => setIsInquiryOpen(true)}
               className="btn bg-white text-orange-600 hover:bg-gray-100"
             >
               Start Your Project
-            </a>
+            </button>
           </div>
         </div>
       </div>
 
-      {/* Footer Content */}
       <div className="container py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-          {/* Navigation */}
           <div>
             <h4 className="text-lg font-bold mb-4">Navigation</h4>
             <div className="grid grid-cols-2 gap-4">
@@ -95,7 +94,6 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Contact Information */}
           <div>
             <h4 className="text-lg font-bold mb-4">Contact Information</h4>
             <div className="space-y-4">
@@ -123,7 +121,6 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Newsletter */}
           <div>
             <h4 className="text-lg font-bold mb-4">Newsletter</h4>
             <div className="mb-4">
@@ -166,11 +163,26 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Copyright */}
         <div className="border-t border-gray-700 pt-8 text-center text-gray-400">
           <p>&copy; {currentYear} {settings.site_name}. All Rights Reserved. | Crafting Digital Experiences</p>
         </div>
       </div>
+
+      {isInquiryOpen && (
+        <div className="fixed inset-0 z-50 bg-black/50 p-4 flex items-center justify-center">
+          <div className="relative w-full max-w-[560px]">
+            <button
+              type="button"
+              onClick={() => setIsInquiryOpen(false)}
+              className="absolute -top-10 right-0 text-white/90 hover:text-white text-2xl leading-none"
+              aria-label="Close"
+            >
+              x
+            </button>
+            <QuoteForm compact onAutoClose={() => setIsInquiryOpen(false)} />
+          </div>
+        </div>
+      )}
     </footer>
   )
 }
