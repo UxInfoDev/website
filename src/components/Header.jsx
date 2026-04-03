@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { FaBars, FaTimes, FaSearch } from 'react-icons/fa'
 import axios from 'axios'
 
@@ -7,6 +7,8 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [logoUrl, setLogoUrl] = useState(null)
+  const navigate = useNavigate()
+  const location = useLocation()
 
   useEffect(() => {
     axios.get('/api/settings')
@@ -19,10 +21,22 @@ const Header = () => {
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
   const toggleSearch = () => setIsSearchOpen(!isSearchOpen)
 
-  const scrollToSection = (id) => {
+  const scrollWithHeaderOffset = (id, behavior = 'smooth') => {
     const element = document.getElementById(id)
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' })
+    if (!element) return false
+
+    const headerEl = document.querySelector('header')
+    const headerHeight = headerEl ? headerEl.getBoundingClientRect().height : 0
+    const gap = 10
+    const targetTop = element.getBoundingClientRect().top + window.scrollY - headerHeight - gap
+    window.scrollTo({ top: Math.max(0, targetTop), behavior })
+    return true
+  }
+
+  const scrollToSection = (id) => {
+    const hasScrolled = scrollWithHeaderOffset(id)
+    if (!hasScrolled) {
+      navigate(`/#${id}`)
     }
     setIsMenuOpen(false)
   }
@@ -57,7 +71,14 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">
-            <button onClick={() => scrollToSection('home')} className="hover:text-orange-600 font-medium">
+            <button
+              onClick={() => {
+                if (location.pathname === '/') window.scrollTo({ top: 0, behavior: 'smooth' })
+                else navigate('/')
+                setIsMenuOpen(false)
+              }}
+              className="hover:text-orange-600 font-medium"
+            >
               Home
             </button>
             <button onClick={() => scrollToSection('about')} className="hover:text-orange-600 font-medium">
@@ -111,7 +132,14 @@ const Header = () => {
         {isMenuOpen && (
           <nav className="md:hidden pb-4 border-t">
             <div className="flex flex-col gap-3">
-              <button onClick={() => scrollToSection('home')} className="text-left py-2 hover:text-orange-600">
+              <button
+                onClick={() => {
+                  if (location.pathname === '/') window.scrollTo({ top: 0, behavior: 'smooth' })
+                  else navigate('/')
+                  setIsMenuOpen(false)
+                }}
+                className="text-left py-2 hover:text-orange-600"
+              >
                 Home
               </button>
               <button onClick={() => scrollToSection('about')} className="text-left py-2 hover:text-orange-600">

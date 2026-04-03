@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { FaFacebook, FaTwitter, FaYoutube, FaLinkedin, FaMapMarkerAlt, FaPhone, FaEnvelope } from 'react-icons/fa'
 import axios from 'axios'
 
@@ -14,6 +15,8 @@ const Footer = () => {
     linkedin_url: '#',
     youtube_url: '#'
   })
+  const navigate = useNavigate()
+  const location = useLocation()
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -29,6 +32,25 @@ const Footer = () => {
     fetchSettings()
   }, [])
 
+  const goToSection = (id, e) => {
+    if (e) e.preventDefault()
+    const el = document.getElementById(id)
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' })
+      return
+    }
+    navigate(`/#${id}`)
+  }
+
+  const goHome = (e) => {
+    e.preventDefault()
+    if (location.pathname === '/') {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+      return
+    }
+    navigate('/')
+  }
+
   return (
     <footer className="bg-gray-900 text-white">
       {/* CTA Section */}
@@ -36,7 +58,11 @@ const Footer = () => {
         <div className="container">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <h3 className="text-2xl font-bold">Ready to Transform Your Digital Product?</h3>
-            <a href="#contact" className="btn bg-white text-orange-600 hover:bg-gray-100">
+            <a
+              href="/#contact"
+              onClick={(e) => goToSection('contact', e)}
+              className="btn bg-white text-orange-600 hover:bg-gray-100"
+            >
               Start Your Project
             </a>
           </div>
@@ -52,18 +78,18 @@ const Footer = () => {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <ul className="space-y-2">
-                  <li><a href="#home" className="hover:text-orange-600">Home</a></li>
-                  <li><a href="#about" className="hover:text-orange-600">About</a></li>
-                  <li><a href="#services" className="hover:text-orange-600">Services</a></li>
-                  <li><a href="#portfolio" className="hover:text-orange-600">Portfolio</a></li>
+                  <li><a href="/" onClick={goHome} className="hover:text-orange-600">Home</a></li>
+                  <li><a href="/#about" onClick={(e) => goToSection('about', e)} className="hover:text-orange-600">About</a></li>
+                  <li><a href="/#services" onClick={(e) => goToSection('services', e)} className="hover:text-orange-600">Services</a></li>
+                  <li><a href="/#portfolio" onClick={(e) => goToSection('portfolio', e)} className="hover:text-orange-600">Portfolio</a></li>
                 </ul>
               </div>
               <div>
                 <ul className="space-y-2">
-                  <li><a href="#legal" className="hover:text-orange-600">Legal</a></li>
-                  <li><a href="#privacy" className="hover:text-orange-600">Privacy</a></li>
-                  <li><a href="#terms" className="hover:text-orange-600">Terms</a></li>
-                  <li><a href="#sitemap" className="hover:text-orange-600">Sitemap</a></li>
+                  <li><a href="/#contact" onClick={(e) => goToSection('contact', e)} className="hover:text-orange-600">Legal</a></li>
+                  <li><a href="/#contact" onClick={(e) => goToSection('contact', e)} className="hover:text-orange-600">Privacy</a></li>
+                  <li><a href="/#contact" onClick={(e) => goToSection('contact', e)} className="hover:text-orange-600">Terms</a></li>
+                  <li><a href="/" onClick={goHome} className="hover:text-orange-600">Sitemap</a></li>
                 </ul>
               </div>
             </div>

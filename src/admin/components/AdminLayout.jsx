@@ -1,10 +1,19 @@
 import React, { useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import { FaBars, FaTimes, FaHome, FaProjectDiagram, FaTools, FaUsers, FaEnvelope, FaCog, FaSignOutAlt } from 'react-icons/fa'
+import axios from 'axios'
 
 const AdminLayout = ({ children, onLogout }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
-  const location = useLocation()
+  const [logoUrl, setLogoUrl] = useState(null)
+
+  React.useEffect(() => {
+    axios.get('/api/settings')
+      .then((res) => {
+        if (res.data?.logo_url) setLogoUrl(res.data.logo_url)
+      })
+      .catch(() => {})
+  }, [])
 
   const menuItems = [
     { path: '/', label: 'Dashboard', icon: <FaHome /> },
@@ -16,22 +25,28 @@ const AdminLayout = ({ children, onLogout }) => {
     { path: '/settings', label: 'Settings', icon: <FaCog /> }
   ]
 
-  const isActive = (path) => location.pathname === path
-
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
-      <aside className={`bg-gray-900 text-white transition-all duration-300 ${
+      <aside className={`relative flex flex-col bg-gray-900 text-white transition-all duration-300 ${
         isSidebarOpen ? 'w-64' : 'w-20'
       }`}>
         <div className="p-4 flex items-center justify-between">
           {isSidebarOpen && (
             <div className="flex flex-col items-start leading-none group">
-              <div className="flex items-baseline mb-1">
-                <span className="text-[#3282C4] text-[28px] font-black tracking-tighter leading-none">U</span>
-                <span className="text-[#F18835] text-[28px] font-black tracking-tighter leading-none ml-[-2px]">X</span>
-                <span className="text-[#3282C4] text-[22px] font-light tracking-widest leading-none ml-2 uppercase">ADMIN</span>
-              </div>
+              {logoUrl ? (
+                <img
+                  src={logoUrl}
+                  alt="Site Logo"
+                  className="h-10 max-w-[170px] object-contain"
+                />
+              ) : (
+                <div className="flex items-baseline mb-1">
+                  <span className="text-[#3282C4] text-[28px] font-black tracking-tighter leading-none">U</span>
+                  <span className="text-[#F18835] text-[28px] font-black tracking-tighter leading-none ml-[-2px]">X</span>
+                  <span className="text-[#3282C4] text-[22px] font-light tracking-widest leading-none ml-2 uppercase">ADMIN</span>
+                </div>
+              )}
             </div>
           )}
           <button
@@ -42,26 +57,29 @@ const AdminLayout = ({ children, onLogout }) => {
           </button>
         </div>
 
-        <nav className="mt-8">
+        <nav className="mt-8 flex-1 overflow-y-auto">
           {menuItems.map((item) => (
-            <Link
+            <NavLink
               key={item.path}
               to={item.path}
-              className={`flex items-center gap-4 px-4 py-3 transition ${
-                isActive(item.path)
-                  ? 'bg-orange-600 border-l-4 border-orange-400'
-                  : 'hover:bg-gray-800'
-              }`}
+              end={item.path === '/'}
+              className={({ isActive }) =>
+                `flex items-center gap-4 px-4 py-3 transition border-l-4 ${
+                  isActive
+                    ? 'bg-orange-600 border-orange-300 text-white'
+                    : 'border-transparent hover:bg-gray-800 text-gray-100'
+                }`
+              }
               title={!isSidebarOpen ? item.label : ''}
             >
               <span className="text-xl">{item.icon}</span>
               {isSidebarOpen && <span>{item.label}</span>}
-            </Link>
+            </NavLink>
           ))}
         </nav>
 
         {/* Logout */}
-        <div className="absolute bottom-4 left-4 right-4">
+        <div className="p-4 border-t border-gray-800">
           <button
             onClick={onLogout}
             className="w-full flex items-center gap-4 px-4 py-3 bg-red-600 hover:bg-red-700 rounded transition"

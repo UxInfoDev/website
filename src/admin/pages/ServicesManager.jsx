@@ -14,6 +14,7 @@ const ServicesManager = () => {
   const [showForm, setShowForm] = useState(false)
   const [editingId, setEditingId] = useState(null)
   const [viewMode, setViewMode] = useState('design')
+  const [imagePreview, setImagePreview] = useState('')
   const { register, handleSubmit, reset, setValue, watch, formState: { errors } } = useForm()
 
   useEffect(() => {
@@ -33,8 +34,12 @@ const ServicesManager = () => {
     try {
       const formData = new FormData()
       formData.append('title', data.title)
+      formData.append('short_description', data.short_description || '')
       formData.append('description', data.description)
       formData.append('icon', data.icon || '')
+      if (data.image?.[0]) {
+        formData.append('image', data.image[0])
+      }
       
       const config = { headers: { 'Content-Type': 'multipart/form-data' } }
 
@@ -48,6 +53,7 @@ const ServicesManager = () => {
       }
       fetchServices()
       reset()
+      setImagePreview('')
       setShowForm(false)
     } catch (error) {
       toast.error('Failed to save service')
@@ -68,7 +74,12 @@ const ServicesManager = () => {
 
   const handleEdit = (service) => {
     setEditingId(service.id)
-    reset(service)
+    reset({
+      ...service,
+      image: null,
+      short_description: service.short_description || ''
+    })
+    setImagePreview(service.image || '')
     setShowForm(true)
   }
 
@@ -80,6 +91,7 @@ const ServicesManager = () => {
           onClick={() => {
             setEditingId(null)
             reset()
+            setImagePreview('')
             setShowForm(!showForm)
           }}
           className="btn bg-orange-600 hover:bg-orange-700 text-white flex items-center gap-2"
@@ -95,7 +107,10 @@ const ServicesManager = () => {
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-2xl font-bold text-gray-900">{editingId ? 'Edit' : 'Add New'} Service</h3>
               <button 
-                onClick={() => setShowForm(false)} 
+                onClick={() => {
+                  setShowForm(false)
+                  setImagePreview('')
+                }} 
                 className="text-gray-400 hover:text-gray-800 transition-colors p-2 text-xl"
                 type="button"
               >
@@ -123,6 +138,40 @@ const ServicesManager = () => {
                   maxLength="2"
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg"
                 />
+              </div>
+
+              <div className="col-span-2">
+                <label className="block font-bold mb-2">Short Description</label>
+                <textarea
+                  {...register('short_description', { required: 'Short description is required' })}
+                  rows={3}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                  placeholder="Short summary shown on home page service cards"
+                />
+                {errors.short_description && <span className="text-red-600 text-sm">{errors.short_description.message}</span>}
+              </div>
+
+              <div className="col-span-2">
+                <label className="block font-bold mb-2">Service Image</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  {...register('image')}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0]
+                    if (file) {
+                      setImagePreview(URL.createObjectURL(file))
+                    }
+                  }}
+                />
+                {imagePreview && (
+                  <img
+                    src={imagePreview}
+                    alt="Service preview"
+                    className="mt-3 w-full max-w-sm h-40 object-cover rounded-lg border border-gray-200"
+                  />
+                )}
               </div>
 
               <div className="col-span-2">
@@ -186,7 +235,10 @@ const ServicesManager = () => {
                 </button>
                 <button
                   type="button"
-                  onClick={() => setShowForm(false)}
+                  onClick={() => {
+                    setShowForm(false)
+                    setImagePreview('')
+                  }}
                   className="btn border-2 border-gray-300 hover:bg-gray-50 flex-1 md:flex-none"
                 >
                   Cancel
@@ -205,6 +257,16 @@ const ServicesManager = () => {
             <div key={service.id} className="bg-white rounded-lg shadow p-6">
               <div className="text-4xl mb-4 text-orange-600"><IconComponent /></div>
               <h3 className="text-xl font-bold mb-2">{service.title}</h3>
+              {service.image && (
+                <img
+                  src={service.image}
+                  alt={service.title}
+                  className="w-full h-36 object-cover rounded mb-3"
+                />
+              )}
+              {service.short_description && (
+                <p className="text-gray-700 mb-3">{service.short_description}</p>
+              )}
               <div 
                 className="text-gray-600 mb-4 prose line-clamp-3" 
                 dangerouslySetInnerHTML={{ __html: service.description }}

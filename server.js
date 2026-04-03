@@ -29,6 +29,17 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
+// Dedicated upload handler for settings logo: keep original filename
+const logoStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/uploads/');
+  },
+  filename: function (req, file, cb) {
+    cb(null, path.basename(file.originalname));
+  }
+});
+const logoUpload = multer({ storage: logoStorage });
+
 // Promisify multer callback middleware so we can await it in async handlers
 function runUpload(middleware, req, res) {
   return new Promise((resolve, reject) => {
@@ -160,11 +171,11 @@ app.get('/api/services/:id', async (req, res) => {
 app.post('/api/services', async (req, res) => {
   try {
     await runUpload(upload.single('image'), req, res);
-    const { title, description, icon } = req.body;
+    const { title, short_description, description, icon } = req.body;
     const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
     const result = await pool.query(
-      'INSERT INTO services (title, description, icon, image) VALUES ($1, $2, $3, $4) RETURNING *',
-      [title, description, icon, imagePath]
+      'INSERT INTO services (title, short_description, description, icon, image) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+      [title, short_description, description, icon, imagePath]
     );
     res.json(result.rows[0]);
   } catch (err) {
@@ -177,18 +188,18 @@ app.put('/api/services/:id', async (req, res) => {
   try {
     await runUpload(upload.single('image'), req, res);
     const { id } = req.params;
-    const { title, description, icon } = req.body;
+    const { title, short_description, description, icon } = req.body;
     const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
     if (imagePath) {
       const result = await pool.query(
-        'UPDATE services SET title = $1, description = $2, icon = $3, image = $4 WHERE id = $5 RETURNING *',
-        [title, description, icon, imagePath, id]
+        'UPDATE services SET title = $1, short_description = $2, description = $3, icon = $4, image = $5 WHERE id = $6 RETURNING *',
+        [title, short_description, description, icon, imagePath, id]
       );
       res.json(result.rows[0]);
     } else {
       const result = await pool.query(
-        'UPDATE services SET title = $1, description = $2, icon = $3 WHERE id = $4 RETURNING *',
-        [title, description, icon, id]
+        'UPDATE services SET title = $1, short_description = $2, description = $3, icon = $4 WHERE id = $5 RETURNING *',
+        [title, short_description, description, icon, id]
       );
       res.json(result.rows[0]);
     }
@@ -399,7 +410,7 @@ app.get('/api/settings', async (req, res) => {
 
 app.put('/api/settings', async (req, res) => {
   try {
-    await runUpload(upload.single('logo'), req, res);
+    await runUpload(logoUpload.single('logo'), req, res);
     const { site_name, site_description, phone, email, address, facebook_url, twitter_url, linkedin_url, youtube_url } = req.body;
     const logoPath = req.file ? `/uploads/${req.file.filename}` : null;
     let result;
