@@ -1,9 +1,26 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
+import { FaArrowRight } from 'react-icons/fa'
 
 const ServicesSection = () => {
   const [services, setServices] = useState([])
+
+  const getShortDescription = (service) => {
+    const source = service?.short_description || service?.description || ''
+    const plainText = source.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
+    const decoded = decodeHtmlEntities(plainText)
+    if (!decoded) return 'Learn more about this service.'
+    if (decoded.length <= 140) return decoded
+    return `${decoded.slice(0, 140).trim()}...`
+  }
+
+  const decodeHtmlEntities = (text = '') => {
+    if (typeof window === 'undefined') return text
+    const txt = document.createElement('textarea')
+    txt.innerHTML = text
+    return txt.value
+  }
 
   useEffect(() => {
     const fetchServices = async () => {
@@ -30,38 +47,40 @@ const ServicesSection = () => {
         </div>
 
         {/* Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {services.map((service) => (
-            <Link
+            <div
               key={service.id}
-              to={`/service/${service.id}`}
-              className="flex flex-col border border-gray-200 rounded-xl hover:shadow-md hover:border-orange-400 transition-all duration-200 group cursor-pointer overflow-hidden"
+              className="border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition bg-white"
             >
-              {/* Image */}
-              {service.image ? (
-                <img
-                  src={service.image}
-                  alt={service.title}
-                  className="w-full h-40 object-cover"
-                />
-              ) : (
-                <div className="w-full h-40 bg-orange-50 flex items-center justify-center text-orange-300 text-5xl">
-                  <span>🖼️</span>
-                </div>
-              )}
-
-              {/* Title + Short Description */}
-              <div className="p-4">
-                <h3 className="text-base font-bold text-gray-900 group-hover:text-orange-600 transition-colors duration-200 leading-snug mb-1">
-                  {service.title}
-                </h3>
-                {service.short_description && (
-                  <p className="text-gray-400 text-xs line-clamp-2 leading-relaxed">
-                    {service.short_description}
-                  </p>
+              <div className="h-52 bg-gray-100">
+                {service.image ? (
+                  <img
+                    src={service.image}
+                    alt={service.title}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-sm text-gray-500">
+                    No image available
+                  </div>
                 )}
               </div>
-            </Link>
+              <div className="p-8">
+                <h3 className="text-2xl font-bold mb-3">{service.title}</h3>
+                <p className="text-gray-600 mb-4">{getShortDescription(service)}</p>
+                <Link
+                  to={`/service/${service.id}`}
+                  className="inline-flex items-center gap-2 text-orange-600 font-bold hover:text-orange-700 group"
+                >
+                  Learn More
+                  <span className="w-7 h-7 rounded-full border border-orange-300 flex items-center justify-center group-hover:bg-orange-600 group-hover:border-orange-600 group-hover:text-white transition">
+                    <FaArrowRight size={11} />
+                  </span>
+                </Link>
+              </div>
+            </div>
           ))}
         </div>
       </div>

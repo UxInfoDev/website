@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS projects (
 CREATE TABLE IF NOT EXISTS services (
     id SERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
+    short_description TEXT,
     description TEXT,
     icon VARCHAR(100),
     image VARCHAR(255),
@@ -67,6 +68,7 @@ CREATE TABLE IF NOT EXISTS settings (
 
 -- Add logo_url column if upgrading from older schema
 ALTER TABLE settings ADD COLUMN IF NOT EXISTS logo_url VARCHAR(255);
+ALTER TABLE services ADD COLUMN IF NOT EXISTS short_description TEXT;
 
 -- Add short_description column to services if upgrading from older schema
 ALTER TABLE services ADD COLUMN IF NOT EXISTS short_description VARCHAR(500);

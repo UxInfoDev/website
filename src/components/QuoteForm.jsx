@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 
 const THANK_YOU_DURATION = 5000 // ms
 
-const QuoteForm = ({ compact = false }) => {
+const QuoteForm = ({ compact = false, onAutoClose }) => {
   const { register, handleSubmit, reset, formState: { errors } } = useForm()
   const [loading, setLoading] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
@@ -45,6 +45,7 @@ const QuoteForm = ({ compact = false }) => {
       setIsSubmitted(false)
       setIsDismissed(true)
       sessionStorage.setItem('formDismissed', 'true')
+      if (onAutoClose) onAutoClose()
       // Clean up submission keys too
       sessionStorage.removeItem('quoteSubmitted')
       sessionStorage.removeItem('quoteName')
@@ -55,6 +56,10 @@ const QuoteForm = ({ compact = false }) => {
       clearInterval(countdownRef.current)
     }
   }, [isSubmitted])
+
+  useEffect(() => {
+    if (isDismissed && onAutoClose) onAutoClose()
+  }, [isDismissed, onAutoClose])
 
   const onSubmit = async (data) => {
     setLoading(true)

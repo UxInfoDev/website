@@ -167,8 +167,8 @@ const BannersManager = () => {
         </div>
       )}
 
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        <table className="w-full">
+      <div className="bg-white rounded-lg shadow overflow-x-auto">
+        <table className="w-full min-w-[700px]">
           <thead className="bg-gray-100 border-b">
             <tr>
               <th className="text-left py-3 px-4">Title</th>

@@ -36,7 +36,10 @@ const BannerSection = () => {
 
   return (
     <>
-    <section id="home" className="relative overflow-hidden lg:h-[60vh]" style={{ minHeight: '480px' }}>
+    <section
+      id="home"
+      className="relative overflow-visible lg:overflow-hidden min-h-[760px] lg:min-h-[480px] lg:h-[60vh]"
+    >
 
       {/* ── Background Slides ── */}
       <div className="absolute inset-0">
@@ -60,7 +63,7 @@ const BannerSection = () => {
       </div>
 
       {/* ── Main Content: stacked on mobile, side-by-side on desktop ── */}
-      <div className="relative z-20 container mx-auto px-4 py-8 lg:py-0 lg:h-full flex flex-col lg:flex-row items-center gap-6 lg:gap-10">
+      <div className="relative z-20 container mx-auto px-4 py-8 lg:py-0 lg:h-full flex flex-col lg:flex-row items-start lg:items-center gap-6 lg:gap-10">
 
         {/* Slide Text — full width on mobile, left half on desktop */}
         <div className="w-full lg:w-1/2 text-white text-center lg:text-left">

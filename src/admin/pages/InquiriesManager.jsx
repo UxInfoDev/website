@@ -34,7 +34,20 @@ const InquiriesManager = () => {
   const fetchInquiries = async () => {
     try {
       const res = await axios.get(`${API_BASE}?_t=${new Date().getTime()}`)
-      setInquiries(res.data)
+      const data = Array.isArray(res.data) ? res.data : []
+      setInquiries(data)
+
+      // Default selection: most recent inquiry
+      if (data.length > 0) {
+        const mostRecent = [...data].sort(
+          (a, b) => new Date(b.created_at) - new Date(a.created_at)
+        )[0]
+        setSelectedInquiry(mostRecent)
+        setReply('')
+        setPage(1)
+      } else {
+        setSelectedInquiry(null)
+      }
     } catch {
       toast.error('Failed to fetch inquiries')
     }
@@ -122,17 +135,17 @@ const InquiriesManager = () => {
   return (
     <div className="space-y-3">
 
-      <div className="grid grid-cols-[3fr_2fr] gap-4 items-start">
+      <div className="grid grid-cols-1 xl:grid-cols-[3fr_2fr] gap-4 items-start">
 
         {/* ══ LEFT — List ══ */}
         <div className="min-w-0">
-          <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
+          <div className="bg-white rounded-xl shadow-sm overflow-x-auto border border-gray-100">
 
             {/* Table header — sortable */}
-            <div className="grid grid-cols-[2fr_2fr_auto_auto] gap-2 px-3 py-2 bg-gray-50 border-b">
+            <div className="grid grid-cols-[1.3fr_1.6fr_110px_90px] gap-2 px-3 py-2 bg-gray-50 border-b min-w-[640px]">
               {[
                 { key: 'name',       label: 'Name',   align: 'left'   },
-                { key: 'email',      label: 'Email',  align: 'center' },
+                { key: 'email',      label: 'Email',  align: 'left' },
                 { key: 'status',     label: 'Status', align: 'center' },
                 { key: 'created_at', label: 'Date',   align: 'center' },
               ].map(({ key, label, align }) => (
@@ -162,7 +175,7 @@ const InquiriesManager = () => {
                   <div
                     key={inq.id}
                     onClick={() => { setSelectedInquiry(inq); setReply('') }}
-                    className={`grid grid-cols-[2fr_2fr_auto_auto] gap-2 px-3 py-2.5 border-b cursor-pointer transition-colors items-center
+                    className={`grid grid-cols-[1.3fr_1.6fr_110px_90px] gap-2 px-3 py-2.5 border-b cursor-pointer transition-colors items-center min-w-[640px]
                       ${isSelected
                         ? 'bg-orange-50 border-l-[3px] border-l-orange-500'
                         : 'hover:bg-gray-50 border-l-[3px] border-l-transparent'
@@ -175,8 +188,8 @@ const InquiriesManager = () => {
                       </p>
                     </div>
 
-                    {/* Email — centered */}
-                    <p className="text-xs text-gray-500 truncate text-center">{inq.email}</p>
+                    {/* Email */}
+                    <p className="text-sm text-gray-600 truncate">{inq.email}</p>
 
                     {/* Status — centered */}
                     <div className="flex justify-center">
@@ -245,7 +258,7 @@ const InquiriesManager = () => {
         {/* ══ RIGHT — Detail Panel ══ */}
         <div className="min-w-0">
           {selectedInquiry ? (
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col" style={{ maxHeight: 'calc(100vh - 160px)' }}>
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col max-h-[75vh] xl:max-h-[calc(100vh-160px)]">
 
               {/* Detail header — title + badge on same line */}
               <div className="flex-shrink-0 px-4 py-3 border-b bg-gradient-to-r from-orange-50 to-white">

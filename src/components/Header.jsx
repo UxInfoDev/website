@@ -1,18 +1,15 @@
-import React, { useState, useEffect, useRef } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { FaBars, FaTimes, FaSearch } from 'react-icons/fa'
 import axios from 'axios'
-
-const NAV_SECTIONS = ['home', 'about', 'services', 'portfolio', 'contact']
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [logoUrl, setLogoUrl] = useState(null)
-  const [activeSection, setActiveSection] = useState('home')
-  const location = useLocation()
+  const [searchQuery, setSearchQuery] = useState('')
   const navigate = useNavigate()
-  const observerRef = useRef(null)
+  const location = useLocation()
 
   useEffect(() => {
     axios.get('/api/settings')
@@ -22,58 +19,37 @@ const Header = () => {
       .catch(() => {})
   }, [])
 
-  // Track active section via IntersectionObserver — only on home page
-  useEffect(() => {
-    if (location.pathname !== '/') return
-
-    const observers = []
-
-    NAV_SECTIONS.forEach((id) => {
-      const el = document.getElementById(id)
-      if (!el) return
-
-      const observer = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) {
-            setActiveSection(id)
-          }
-        },
-        { threshold: 0.4, rootMargin: '-80px 0px 0px 0px' }
-      )
-      observer.observe(el)
-      observers.push(observer)
-    })
-
-    return () => observers.forEach((obs) => obs.disconnect())
-  }, [location.pathname])
-
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
   const toggleSearch = () => setIsSearchOpen(!isSearchOpen)
 
-  const scrollToSection = (id) => {
-    setIsMenuOpen(false)
-    setActiveSection(id)
-    if (location.pathname === '/') {
-      const element = document.getElementById(id)
-      if (element) element.scrollIntoView({ behavior: 'smooth' })
-    } else {
-      navigate('/#' + id)
-    }
+  const scrollWithHeaderOffset = (id, behavior = 'smooth') => {
+    const element = document.getElementById(id)
+    if (!element) return false
+
+    const headerEl = document.querySelector('header')
+    const headerHeight = headerEl ? headerEl.getBoundingClientRect().height : 0
+    const gap = 10
+    const targetTop = element.getBoundingClientRect().top + window.scrollY - headerHeight - gap
+    window.scrollTo({ top: Math.max(0, targetTop), behavior })
+    return true
   }
 
-  const navClass = (id) =>
-    `font-medium transition-colors duration-200 ${
-      activeSection === id && location.pathname === '/'
-        ? 'text-orange-600 border-b-2 border-orange-600 pb-0.5'
-        : 'hover:text-orange-600'
-    }`
+  const handleSearchSubmit = (e) => {
+    e.preventDefault()
+    const q = searchQuery.trim()
+    if (!q) return
+    navigate(`/search?q=${encodeURIComponent(q)}`)
+    setIsSearchOpen(false)
+    setIsMenuOpen(false)
+  }
 
-  const mobileNavClass = (id) =>
-    `text-left py-2 transition-colors duration-200 font-medium ${
-      activeSection === id && location.pathname === '/'
-        ? 'text-orange-600'
-        : 'hover:text-orange-600'
-    }`
+  const scrollToSection = (id) => {
+    const hasScrolled = scrollWithHeaderOffset(id)
+    if (!hasScrolled) {
+      navigate(`/#${id}`)
+    }
+    setIsMenuOpen(false)
+  }
 
   return (
     <header className="sticky top-0 z-50 bg-white shadow">
@@ -90,7 +66,14 @@ const Header = () => {
                 />
               ) : (
                 <>
-                  <img src="/logo.png" alt="Site Logo" className="h-12 max-w-[180px] object-contain" />
+                <img src="/logo.png" alt="Site Logo" className="h-12 max-w-[180px] object-contain" />
+                  {/* <div className="flex items-baseline mb-1">
+                    <span className="text-[#3282C4] text-[42px] font-black tracking-tighter leading-none">U</span>
+                    <span className="text-[#F18835] text-[42px] font-black tracking-tighter leading-none ml-[-2px]">X</span>
+                    <span className="text-[#3282C4] text-[34px] font-light tracking-widest leading-none ml-3 uppercase">INFOTECH</span>
+                  </div>
+                  <span className="text-gray-500 text-[11px] tracking-[0.25em] font-medium mt-1">DESIGN FOR YOUR SUCCESS</span> */}
+
                 </>
               )}
             </Link>
@@ -98,32 +81,39 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">
-            <button onClick={() => scrollToSection('home')} className={navClass('home')}>
+            <button
+              onClick={() => {
+                if (location.pathname === '/') window.scrollTo({ top: 0, behavior: 'smooth' })
+                else navigate('/')
+                setIsMenuOpen(false)
+              }}
+              className="hover:text-orange-600 font-medium"
+            >
               Home
             </button>
-            <button onClick={() => scrollToSection('about')} className={navClass('about')}>
+            <button onClick={() => scrollToSection('about')} className="hover:text-orange-600 font-medium">
               About
             </button>
-            <button onClick={() => scrollToSection('services')} className={navClass('services')}>
+            <button onClick={() => scrollToSection('services')} className="hover:text-orange-600 font-medium">
               Services
             </button>
-            <button onClick={() => scrollToSection('portfolio')} className={navClass('portfolio')}>
+            <button onClick={() => scrollToSection('portfolio')} className="hover:text-orange-600 font-medium">
               Portfolio
             </button>
-            <button onClick={() => scrollToSection('contact')} className={navClass('contact')}>
+            <button onClick={() => scrollToSection('contact')} className="hover:text-orange-600 font-medium">
               Contact
             </button>
           </nav>
 
           {/* Search & Mobile Toggle */}
           <div className="flex items-center gap-4">
-            <button
+            <button 
               onClick={toggleSearch}
               className="text-gray-600 hover:text-orange-600 text-xl"
             >
               <FaSearch />
             </button>
-            <button
+            <button 
               onClick={toggleMenu}
               className="md:hidden text-gray-600 hover:text-orange-600 text-xl"
             >
@@ -135,16 +125,18 @@ const Header = () => {
         {/* Search Bar */}
         {isSearchOpen && (
           <div className="pb-4 border-t">
-            <div className="flex gap-2">
+            <form onSubmit={handleSearchSubmit} className="flex gap-2">
               <input
                 type="search"
                 placeholder="Search here..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:border-orange-600"
               />
-              <button className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700">
+              <button type="submit" className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700">
                 <FaSearch />
               </button>
-            </div>
+            </form>
           </div>
         )}
 
@@ -152,19 +144,26 @@ const Header = () => {
         {isMenuOpen && (
           <nav className="md:hidden pb-4 border-t">
             <div className="flex flex-col gap-3">
-              <button onClick={() => scrollToSection('home')} className={mobileNavClass('home')}>
+              <button
+                onClick={() => {
+                  if (location.pathname === '/') window.scrollTo({ top: 0, behavior: 'smooth' })
+                  else navigate('/')
+                  setIsMenuOpen(false)
+                }}
+                className="text-left py-2 hover:text-orange-600"
+              >
                 Home
               </button>
-              <button onClick={() => scrollToSection('about')} className={mobileNavClass('about')}>
+              <button onClick={() => scrollToSection('about')} className="text-left py-2 hover:text-orange-600">
                 About
               </button>
-              <button onClick={() => scrollToSection('services')} className={mobileNavClass('services')}>
+              <button onClick={() => scrollToSection('services')} className="text-left py-2 hover:text-orange-600">
                 Services
               </button>
-              <button onClick={() => scrollToSection('portfolio')} className={mobileNavClass('portfolio')}>
+              <button onClick={() => scrollToSection('portfolio')} className="text-left py-2 hover:text-orange-600">
                 Portfolio
               </button>
-              <button onClick={() => scrollToSection('contact')} className={mobileNavClass('contact')}>
+              <button onClick={() => scrollToSection('contact')} className="text-left py-2 hover:text-orange-600">
                 Contact
               </button>
             </div>
