@@ -7,6 +7,7 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [logoUrl, setLogoUrl] = useState(null)
+  const [searchQuery, setSearchQuery] = useState('')
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -31,6 +32,15 @@ const Header = () => {
     const targetTop = element.getBoundingClientRect().top + window.scrollY - headerHeight - gap
     window.scrollTo({ top: Math.max(0, targetTop), behavior })
     return true
+  }
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault()
+    const q = searchQuery.trim()
+    if (!q) return
+    navigate(`/search?q=${encodeURIComponent(q)}`)
+    setIsSearchOpen(false)
+    setIsMenuOpen(false)
   }
 
   const scrollToSection = (id) => {
@@ -115,16 +125,18 @@ const Header = () => {
         {/* Search Bar */}
         {isSearchOpen && (
           <div className="pb-4 border-t">
-            <div className="flex gap-2">
+            <form onSubmit={handleSearchSubmit} className="flex gap-2">
               <input
                 type="search"
                 placeholder="Search here..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:border-orange-600"
               />
-              <button className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700">
+              <button type="submit" className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700">
                 <FaSearch />
               </button>
-            </div>
+            </form>
           </div>
         )}
 

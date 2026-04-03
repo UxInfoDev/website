@@ -10,6 +10,7 @@ import Home from './pages/Home'
 import NotFound from './pages/NotFound'
 import ServiceDetails from './pages/ServiceDetails'
 import ProjectDetails from './pages/ProjectDetails'
+import SearchResults from './pages/SearchResults'
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
         <main className="flex-grow">
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/search" element={<SearchResults />} />
             <Route path="/service/:id" element={<ServiceDetails />} />
             <Route path="/project/:id" element={<ProjectDetails />} />
             <Route path="*" element={<NotFound />} />
