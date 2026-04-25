@@ -8,6 +8,7 @@ const Header = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [logoUrl, setLogoUrl] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
+  const [activeTab, setActiveTab] = useState('home')
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -21,6 +22,23 @@ const Header = () => {
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
   const toggleSearch = () => setIsSearchOpen(!isSearchOpen)
+
+  const sectionIds = ['about', 'services', 'portfolio', 'contact']
+
+  const getActiveSectionFromScroll = () => {
+    const headerEl = document.querySelector('header')
+    const headerHeight = headerEl ? headerEl.getBoundingClientRect().height : 0
+    const thresholdY = window.scrollY + headerHeight + 40
+
+    let current = 'home'
+    sectionIds.forEach((id) => {
+      const el = document.getElementById(id)
+      if (!el) return
+      if (el.offsetTop <= thresholdY) current = id
+    })
+
+    return current
+  }
 
   const scrollWithHeaderOffset = (id, behavior = 'smooth') => {
     const element = document.getElementById(id)
@@ -44,12 +62,48 @@ const Header = () => {
   }
 
   const scrollToSection = (id) => {
-    const hasScrolled = scrollWithHeaderOffset(id)
-    if (!hasScrolled) {
+    setActiveTab(id)
+    if (location.pathname === '/') {
+      const hasScrolled = scrollWithHeaderOffset(id)
+      navigate(`/#${id}`, { replace: true })
+      if (!hasScrolled) {
+        setTimeout(() => scrollWithHeaderOffset(id), 120)
+      }
+    } else {
       navigate(`/#${id}`)
     }
     setIsMenuOpen(false)
   }
+
+  useEffect(() => {
+    if (location.pathname !== '/') {
+      setActiveTab('')
+      return
+    }
+
+    if (location.hash) {
+      setActiveTab(location.hash.replace('#', ''))
+      return
+    }
+
+    setActiveTab(getActiveSectionFromScroll())
+  }, [location.pathname, location.hash])
+
+  useEffect(() => {
+    if (location.pathname !== '/') return undefined
+
+    const onScroll = () => setActiveTab(getActiveSectionFromScroll())
+    window.addEventListener('scroll', onScroll, { passive: true })
+    onScroll()
+
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [location.pathname])
+
+  const desktopNavClass = (tab) =>
+    `font-medium border-b-2 pb-1 transition ${activeTab === tab ? 'text-orange-600 border-orange-600' : 'border-transparent hover:text-orange-600'}`
+
+  const mobileNavClass = (tab) =>
+    `text-left py-2 transition ${activeTab === tab ? 'text-orange-600 font-semibold' : 'hover:text-orange-600'}`
 
   return (
     <header className="sticky top-0 z-50 bg-white shadow">
@@ -85,22 +139,23 @@ const Header = () => {
               onClick={() => {
                 if (location.pathname === '/') window.scrollTo({ top: 0, behavior: 'smooth' })
                 else navigate('/')
+                setActiveTab('home')
                 setIsMenuOpen(false)
               }}
-              className="hover:text-orange-600 font-medium"
+              className={desktopNavClass('home')}
             >
               Home
             </button>
-            <button onClick={() => scrollToSection('about')} className="hover:text-orange-600 font-medium">
+            <button onClick={() => scrollToSection('about')} className={desktopNavClass('about')}>
               About
             </button>
-            <button onClick={() => scrollToSection('services')} className="hover:text-orange-600 font-medium">
+            <button onClick={() => scrollToSection('services')} className={desktopNavClass('services')}>
               Services
             </button>
-            <button onClick={() => scrollToSection('portfolio')} className="hover:text-orange-600 font-medium">
+            <button onClick={() => scrollToSection('portfolio')} className={desktopNavClass('portfolio')}>
               Portfolio
             </button>
-            <button onClick={() => scrollToSection('contact')} className="hover:text-orange-600 font-medium">
+            <button onClick={() => scrollToSection('contact')} className={desktopNavClass('contact')}>
               Contact
             </button>
           </nav>
@@ -148,22 +203,23 @@ const Header = () => {
                 onClick={() => {
                   if (location.pathname === '/') window.scrollTo({ top: 0, behavior: 'smooth' })
                   else navigate('/')
+                  setActiveTab('home')
                   setIsMenuOpen(false)
                 }}
-                className="text-left py-2 hover:text-orange-600"
+                className={mobileNavClass('home')}
               >
                 Home
               </button>
-              <button onClick={() => scrollToSection('about')} className="text-left py-2 hover:text-orange-600">
+              <button onClick={() => scrollToSection('about')} className={mobileNavClass('about')}>
                 About
               </button>
-              <button onClick={() => scrollToSection('services')} className="text-left py-2 hover:text-orange-600">
+              <button onClick={() => scrollToSection('services')} className={mobileNavClass('services')}>
                 Services
               </button>
-              <button onClick={() => scrollToSection('portfolio')} className="text-left py-2 hover:text-orange-600">
+              <button onClick={() => scrollToSection('portfolio')} className={mobileNavClass('portfolio')}>
                 Portfolio
               </button>
-              <button onClick={() => scrollToSection('contact')} className="text-left py-2 hover:text-orange-600">
+              <button onClick={() => scrollToSection('contact')} className={mobileNavClass('contact')}>
                 Contact
               </button>
             </div>

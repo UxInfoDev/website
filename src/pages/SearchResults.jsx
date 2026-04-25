@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import axios from 'axios'
 import { FaSearch, FaArrowRight } from 'react-icons/fa'
+import { resolveServiceImageUrl } from '../utils/media'
 
 const SearchResults = () => {
   const location = useLocation()
@@ -83,27 +84,30 @@ const SearchResults = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {results.map((service) => (
-              <article key={service.id} className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition">
-                <div className="h-48 bg-gray-100">
-                  {service.image ? (
-                    <img src={service.image} alt={service.title} className="w-full h-full object-cover" loading="lazy" />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">No image available</div>
-                  )}
-                </div>
-                <div className="p-6">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-3">{service.title}</h2>
-                  <p className="text-gray-600 mb-5">{getSnippet(service)}</p>
-                  <Link to={`/service/${service.id}`} className="inline-flex items-center gap-2 text-orange-600 font-bold hover:text-orange-700 group">
-                    View Service
-                    <span className="w-7 h-7 rounded-full border border-orange-300 flex items-center justify-center group-hover:bg-orange-600 group-hover:border-orange-600 group-hover:text-white transition">
-                      <FaArrowRight size={11} />
-                    </span>
-                  </Link>
-                </div>
-              </article>
-            ))}
+            {results.map((service) => {
+              const imageUrl = resolveServiceImageUrl(service)
+              return (
+                <article key={service.id} className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition">
+                  <div className="h-48 bg-gray-100">
+                    {imageUrl ? (
+                      <img src={imageUrl} alt={service.title} className="w-full h-full object-cover" loading="lazy" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">No image available</div>
+                    )}
+                  </div>
+                  <div className="p-6">
+                    <h2 className="text-2xl font-bold text-gray-900 mb-3">{service.title}</h2>
+                    <p className="text-gray-600 mb-5">{getSnippet(service)}</p>
+                    <Link to={`/service/${service.id}`} className="inline-flex items-center gap-2 text-orange-600 font-bold hover:text-orange-700 group">
+                      View Service
+                      <span className="w-7 h-7 rounded-full border border-orange-300 flex items-center justify-center group-hover:bg-orange-600 group-hover:border-orange-600 group-hover:text-white transition">
+                        <FaArrowRight size={11} />
+                      </span>
+                    </Link>
+                  </div>
+                </article>
+              )
+            })}
           </div>
         )}
       </div>

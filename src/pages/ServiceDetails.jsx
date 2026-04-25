@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom'
 import axios from 'axios'
 import * as Icons from 'react-icons/fa'
 import { FaArrowLeft, FaCheckCircle } from 'react-icons/fa'
+import { resolveServiceImageUrl } from '../utils/media'
 
 const ServiceDetails = () => {
   const { id } = useParams()
@@ -26,6 +27,7 @@ const ServiceDetails = () => {
   if (!service) return <div className="py-32 text-center text-xl font-bold">Loading Service...</div>
 
   const IconComponent = Icons[service.icon] || Icons.FaCog
+  const imageUrl = resolveServiceImageUrl(service)
   const hasHtml = /<[^>]+>/.test(service.description || '')
   const normalizedDescription = hasHtml
     ? service.description
@@ -54,9 +56,9 @@ const ServiceDetails = () => {
         <div className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
           <div className="grid grid-cols-1 md:grid-cols-[260px_1fr]">
             <div className="bg-gray-100 h-56 md:h-full">
-              {service.image ? (
+              {imageUrl ? (
                 <img
-                  src={service.image}
+                  src={imageUrl}
                   alt={service.title}
                   className="w-full h-full object-cover"
                 />

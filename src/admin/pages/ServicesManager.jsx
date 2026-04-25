@@ -6,6 +6,7 @@ import axios from 'axios'
 import * as Icons from 'react-icons/fa'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
+import { resolveServiceImageUrl } from '../../utils/media'
 
 const API_BASE = '/api/services'
 
@@ -16,6 +17,7 @@ const ServicesManager = () => {
   const [viewMode, setViewMode] = useState('design')
   const [imagePreview, setImagePreview] = useState('')
   const { register, handleSubmit, reset, setValue, watch, formState: { errors } } = useForm()
+  const imageRegister = register('image')
 
   useEffect(() => {
     fetchServices()
@@ -79,7 +81,7 @@ const ServicesManager = () => {
       image: null,
       short_description: service.short_description || ''
     })
-    setImagePreview(service.image || '')
+    setImagePreview(resolveServiceImageUrl(service))
     setShowForm(true)
   }
 
@@ -156,12 +158,15 @@ const ServicesManager = () => {
                 <input
                   type="file"
                   accept="image/*"
-                  {...register('image')}
+                  {...imageRegister}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg"
                   onChange={(e) => {
+                    imageRegister.onChange(e)
                     const file = e.target.files?.[0]
                     if (file) {
                       setImagePreview(URL.createObjectURL(file))
+                    } else {
+                      setImagePreview('')
                     }
                   }}
                 />
@@ -253,13 +258,14 @@ const ServicesManager = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {services.map((service) => {
           const IconComponent = Icons[service.icon] || Icons.FaCog
+          const imageUrl = resolveServiceImageUrl(service)
           return (
             <div key={service.id} className="bg-white rounded-lg shadow p-6">
               <div className="text-4xl mb-4 text-orange-600"><IconComponent /></div>
               <h3 className="text-xl font-bold mb-2">{service.title}</h3>
-              {service.image && (
+              {imageUrl && (
                 <img
-                  src={service.image}
+                  src={imageUrl}
                   alt={service.title}
                   className="w-full h-36 object-cover rounded mb-3"
                 />
