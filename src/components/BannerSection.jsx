@@ -63,15 +63,19 @@ const BannerSection = () => {
       </div>
 
       {/* ── Main Content: stacked on mobile, side-by-side on desktop ── */}
-      <div className="relative z-20 container mx-auto px-4 py-8 lg:py-0 lg:h-full flex flex-col lg:flex-row items-start lg:items-center gap-6 lg:gap-10">
+      <div className="relative z-20 container-fluid mx-auto px-4 py-8 lg:py-0 lg:h-full flex flex-col lg:flex-row items-start lg:items-center gap-6 lg:gap-10">
 
         {/* Slide Text — full width on mobile, left half on desktop */}
         <div className="w-full lg:w-1/2 text-white text-center lg:text-left">
           {slides.length > 0 && (
             <div key={currentSlide} className="slide-animation">
               <h1
-                className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold mb-5 tracking-tight leading-tight text-white"
-                style={{ color: '#ffffff', textShadow: '2px 3px 12px rgba(0,0,0,0.9)' }}
+                 className="text-4xl sm:text-5xl lg:text-6xl xl:text-6xl mb-4 tracking-tight leading-tight 
+             bg-clip-text text-transparent"
+  style={{
+    backgroundImage: 'linear-gradient(90deg, #38BDF8, #8B5CF6, #FB7185)',
+    textShadow: '0 2px 8px rgba(0,0,0,0.35)'
+  }}
               >
                 {slides[currentSlide]?.title}
               </h1>
@@ -89,7 +93,7 @@ const BannerSection = () => {
                         ? slides[currentSlide].cta_link
                         : `/${slides[currentSlide].cta_link}`
                     }
-                    className="btn bg-blue-600 hover:bg-blue-700 text-white"
+                    className="btn bg-blue-600 hover:bg-blue-700 text-white "
                   >
                     {slides[currentSlide].cta_text}
                   </Link>
@@ -136,14 +140,14 @@ const BannerSection = () => {
           <div
             role="button"
             onClick={prevSlide}
-            className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-30 w-12 h-12 bg-orange-600 text-white rounded-full hidden lg:flex items-center justify-center hover:bg-orange-700 shadow-lg transition-transform hover:scale-110 cursor-pointer"
+            className="absolute right-4 md:right-8 top-1/2 mt-6 -translate-y-1/2 z-30 w-12 h-12 bg-orange-600 text-white rounded-full hidden lg:flex items-center justify-center hover:bg-orange-700 shadow-lg transition-transform hover:scale-110 cursor-pointer"
           >
             <FaChevronLeft size={20} />
           </div>
           <div
             role="button"
             onClick={nextSlide}
-            className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-30 w-12 h-12 bg-orange-600 text-white rounded-full hidden lg:flex items-center justify-center hover:bg-orange-700 shadow-lg transition-transform hover:scale-110 cursor-pointer"
+            className="absolute right-4 md:right-8 top-1/2 -mt-6 -translate-y-1/2 z-30 w-12 h-12 bg-orange-600 text-white rounded-full hidden lg:flex items-center justify-center hover:bg-orange-700 shadow-lg transition-transform hover:scale-110 cursor-pointer"
           >
             <FaChevronRight size={20} />
           </div>

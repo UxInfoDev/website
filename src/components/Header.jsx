@@ -115,12 +115,12 @@ const Header = () => {
               {logoUrl ? (
                 <img
                   src={logoUrl}
-                  alt="Site Logo"
+                  alt="UX Infotech"
                   className="h-12 max-w-[180px] object-contain"
                 />
               ) : (
                 <>
-                <img src="/logo.png" alt="Site Logo" className="h-12 max-w-[180px] object-contain" />
+                <img src="/logo.png" alt="UX Infotech" className="h-12 max-w-[180px] object-contain" />
                   {/* <div className="flex items-baseline mb-1">
                     <span className="text-[#3282C4] text-[42px] font-black tracking-tighter leading-none">U</span>
                     <span className="text-[#F18835] text-[42px] font-black tracking-tighter leading-none ml-[-2px]">X</span>

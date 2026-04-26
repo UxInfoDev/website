@@ -34,7 +34,7 @@ const PortfolioSection = () => {
       <div className="container">
         {/* Header */}
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold mb-4">Our Portfolio</h2>
+          <h2 className="text-6xl font-bold mb-4">Our Portfolio</h2>
           <p className="text-gray-600 text-lg max-w-2xl mx-auto">
             Explore some of our recent projects and see how we've helped businesses succeed
           </p>
@@ -46,10 +46,10 @@ const PortfolioSection = () => {
             <button
               key={filter.id}
               onClick={() => setActiveFilter(filter.id)}
-              className={`px-6 py-2 rounded-full font-medium transition ${
+              className={`px-6 py-2 rounded-1 font-medium transition ${
                 activeFilter === filter.id
                   ? 'bg-orange-600 text-white'
-                  : 'bg-white border-2 border-orange-600 text-orange-600 hover:bg-orange-50'
+                  : 'bg-white border-1 border-orange-600 text-orange-600 hover:bg-orange-50'
               }`}
             >
               {filter.label}
@@ -74,7 +74,9 @@ const PortfolioSection = () => {
               {/* Overlay */}
               <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-6">
                 <div className="text-white">
-                  <h3 className="text-xl font-bold mb-2">{project.title}</h3>
+                  <h3 className="text-2xl font-bold mb-2 text-white text-shadow">
+                    {project.title}
+                  </h3>
                   <p className="text-gray-200 text-sm mb-4">{project.description}</p>
                   <Link to={`/project/${project.id}`} className="text-orange-400 font-bold hover:text-orange-300 inline-block">
                     View Project →

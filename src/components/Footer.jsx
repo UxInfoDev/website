@@ -62,7 +62,7 @@ const Footer = () => {
             <button
               type="button"
               onClick={() => setIsInquiryOpen(true)}
-              className="btn bg-white text-orange-600 hover:bg-gray-100"
+              className="btn bg-white text-orange-600 hover:text-orange bg-orange-600 hover:bg-orange-700"
             >
               Start Your Project
             </button>
@@ -164,7 +164,7 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-gray-700 pt-8 text-center text-gray-400">
-          <p>&copy; {currentYear} {settings.site_name}. All Rights Reserved. | Crafting Digital Experiences</p>
+          <p>&copy; {currentYear} {settings.site_name}. All Rights Reserved. | Directions to your success</p>
         </div>
       </div>
 

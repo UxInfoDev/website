@@ -75,7 +75,7 @@ const AdminLayout = ({ children, onLogout }) => {
               {logoUrl ? (
                 <img
                   src={logoUrl}
-                  alt="Site Logo"
+                  alt="UX Infotech"
                   className="h-10 max-w-[170px] object-contain"
                 />
               ) : (
