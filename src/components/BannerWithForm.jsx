@@ -127,8 +127,14 @@ const BannerWithForm = () => {
               {/* Animated slide content */}
               <div key={currentSlide} className="slide-animation">
                 <h1
-                  className="text-4xl md:text-6xl font-extrabold mb-5 leading-tight tracking-tight text-white"
-                  style={{ textShadow: '2px 3px 12px rgba(0,0,0,0.8)' }}
+                  className="text-4xl md:text-6xl font-extrabold mb-5 leading-tight tracking-tight"
+                  style={{
+                    textShadow: '2px 3px 12px rgba(0,0,0,0.8)',
+                    background: 'linear-gradient(135deg, #a78bfa 0%, #60a5fa 50%, #38bdf8 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text',
+                  }}
                 >
                   {slides[currentSlide]?.title || 'Transforming Digital Experiences'}
                 </h1>

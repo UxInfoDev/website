@@ -10,6 +10,9 @@ const BannersManager = () => {
   const [banners, setBanners] = useState([])
   const [showForm, setShowForm] = useState(false)
   const [editingId, setEditingId] = useState(null)
+  const [imageFile, setImageFile] = useState(null)
+  const [imagePreview, setImagePreview] = useState(null)
+  const [currentImage, setCurrentImage] = useState(null)
   const { register, handleSubmit, reset, formState: { errors } } = useForm()
 
   useEffect(() => {
@@ -33,8 +36,8 @@ const BannersManager = () => {
       formData.append('cta_text', data.cta_text || '')
       formData.append('cta_link', data.cta_link || '')
       formData.append('cta_alt', data.cta_alt || '')
-      if (data.image && data.image[0]) {
-        formData.append('image', data.image[0])
+      if (imageFile) {
+        formData.append('image', imageFile)
       }
       
       const config = { headers: { 'Content-Type': 'multipart/form-data' } }
@@ -69,6 +72,9 @@ const BannersManager = () => {
 
   const handleEdit = (banner) => {
     setEditingId(banner.id)
+    setCurrentImage(banner.image)
+    setImagePreview(null)
+    setImageFile(null)
     reset(banner)
     setShowForm(true)
   }
@@ -80,7 +86,10 @@ const BannersManager = () => {
         <button
           onClick={() => {
             setEditingId(null)
-            reset()
+            setCurrentImage(null)
+            setImagePreview(null)
+            setImageFile(null)
+            reset({})
             setShowForm(!showForm)
           }}
           className="btn bg-orange-600 hover:bg-orange-700 text-white flex items-center gap-2"
@@ -142,10 +151,25 @@ const BannersManager = () => {
 
               <div>
                 <label className="block font-bold mb-2">Background Image</label>
+                {(imagePreview || currentImage) && (
+                  <div className="mb-3 border rounded-lg p-2 bg-gray-50 flex items-center justify-center h-32 overflow-hidden">
+                    <img 
+                      src={imagePreview || currentImage} 
+                      alt="Banner Preview" 
+                      className="max-h-full object-contain"
+                    />
+                  </div>
+                )}
                 <input
                   type="file"
                   accept="image/*"
-                  {...register('image')}
+                  onChange={(e) => {
+                    const file = e.target.files[0]
+                    if (file) {
+                      setImageFile(file)
+                      setImagePreview(URL.createObjectURL(file))
+                    }
+                  }}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg"
                 />
               </div>

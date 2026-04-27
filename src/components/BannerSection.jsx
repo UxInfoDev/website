@@ -70,11 +70,13 @@ const BannerSection = () => {
           {slides.length > 0 && (
             <div key={currentSlide} className="slide-animation">
               <h1
-                 className="text-4xl sm:text-5xl lg:text-6xl xl:text-6xl mb-4 tracking-tight leading-tight 
-             bg-clip-text text-transparent"
+                 className="text-4xl sm:text-5xl lg:text-6xl xl:text-6xl mb-4 tracking-tight leading-tight"
   style={{
     backgroundImage: 'linear-gradient(90deg, #38BDF8, #8B5CF6, #FB7185)',
-    textShadow: '0 2px 8px rgba(0,0,0,0.35)'
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    backgroundClip: 'text',
+    color: 'transparent'
   }}
               >
                 {slides[currentSlide]?.title}
