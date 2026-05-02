@@ -67,7 +67,7 @@ const AboutSection = () => {
               ))}
             </div>
 
-            <button className="btn bg-orange-600 hover:bg-orange-700 text-white mt-8">
+            <button className="px-8 py-4 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-lg transition-all duration-300 text-[12px] tracking-widest uppercase shadow-md hover:shadow-lg hover:-translate-y-0.5 mt-8">
               Learn More About Us
             </button>
           </div>

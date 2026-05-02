@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 
 const THANK_YOU_DURATION = 5000 // ms
 
-const QuoteForm = ({ compact = false, onAutoClose }) => {
+const QuoteForm = ({ compact = false, onAutoClose, onClose }) => {
   const { register, handleSubmit, reset, formState: { errors } } = useForm()
   const [loading, setLoading] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
@@ -136,8 +136,18 @@ const QuoteForm = ({ compact = false, onAutoClose }) => {
             animate={{ rotateY: 0, opacity: 1 }}
             exit={{ rotateY: 90, opacity: 0 }}
             transition={{ duration: 0.5, ease: 'easeIn' }}
-            className={`w-full bg-white rounded-2xl shadow-2xl ${compact ? 'p-5' : 'p-8'}`}
+            className={`w-full bg-white rounded-2xl shadow-2xl relative ${compact ? 'p-5' : 'p-8'}`}
           >
+            {onClose && (
+              <button
+                type="button"
+                onClick={onClose}
+                className="absolute top-4 right-4 text-gray-400 hover:text-gray-800 hover:bg-gray-100 rounded-full w-8 h-8 flex items-center justify-center transition-colors"
+                title="Close"
+              >
+                ✕
+              </button>
+            )}
             <div className="flex items-center gap-2 text-xs text-gray-500 font-medium mb-2">
               <span className="text-orange-500">⚡</span> 100+ projects delivered · Response within 24 hours
             </div>
@@ -184,7 +194,7 @@ const QuoteForm = ({ compact = false, onAutoClose }) => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-4 mt-2 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all disabled:opacity-70 flex justify-center items-center gap-2 transform hover:-translate-y-0.5"
+                className="w-full py-4 mt-2 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-lg transition-all duration-300 text-[12px] tracking-widest uppercase shadow-md hover:shadow-lg hover:-translate-y-0.5 disabled:opacity-70 flex justify-center items-center gap-2"
               >
                 {loading ? 'Sending...' : <>👉 Get Free Quote</>}
               </button>

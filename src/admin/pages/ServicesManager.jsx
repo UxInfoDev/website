@@ -4,8 +4,7 @@ import { toast } from 'react-toastify'
 import { useForm } from 'react-hook-form'
 import axios from 'axios'
 import * as Icons from 'react-icons/fa'
-import ReactQuill from 'react-quill'
-import 'react-quill/dist/quill.snow.css'
+import RichTextEditor from '../components/RichTextEditor'
 import { resolveServiceImageUrl } from '../../utils/media'
 
 const API_BASE = '/api/services'
@@ -14,7 +13,7 @@ const ServicesManager = () => {
   const [services, setServices] = useState([])
   const [showForm, setShowForm] = useState(false)
   const [editingId, setEditingId] = useState(null)
-  const [viewMode, setViewMode] = useState('design')
+
   const [imagePreview, setImagePreview] = useState('')
   const { register, handleSubmit, reset, setValue, watch, formState: { errors } } = useForm()
   const imageRegister = register('image')
@@ -180,57 +179,14 @@ const ServicesManager = () => {
               </div>
 
               <div className="col-span-2">
-                <div className="flex justify-between items-center mb-2">
-                  <label className="block font-bold">Description</label>
-                  <div className="flex bg-gray-100 rounded-lg p-1 border border-gray-200">
-                    <button
-                      type="button"
-                      onClick={() => setViewMode('design')}
-                      className={`px-4 py-1 text-sm font-semibold rounded-md transition-colors ${viewMode === 'design' ? 'bg-white shadow text-orange-600 pointer-events-none' : 'text-gray-500 hover:text-gray-800'}`}
-                    >
-                      Design
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setViewMode('html')}
-                      className={`px-4 py-1 text-sm font-semibold rounded-md transition-colors ${viewMode === 'html' ? 'bg-white shadow text-orange-600 pointer-events-none' : 'text-gray-500 hover:text-gray-800'}`}
-                    >
-                      HTML
-                    </button>
-                  </div>
-                </div>
-                
                 <input type="hidden" {...register('description', { required: 'Description is required' })} />
-                
-                <div className="bg-white rounded-lg">
-                  {viewMode === 'design' ? (
-                    <ReactQuill 
-                      theme="snow"
-                      modules={{
-                        toolbar: [
-                          [{ 'header': [1, 2, false] }],
-                          ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-                          [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}],
-                          ['link', 'image'],
-                          ['clean']
-                        ],
-                      }}
-                      value={watch('description') || ''}
-                      onChange={(val) => {
-                        setValue('description', val === '<p><br></p>' ? '' : val, { shouldValidate: true })
-                      }}
-                      className="h-64 mb-12"
-                    />
-                  ) : (
-                    <textarea 
-                      value={watch('description') || ''}
-                      onChange={(e) => setValue('description', e.target.value, { shouldValidate: true })}
-                      className="w-full h-[304px] p-4 font-mono text-sm bg-gray-50 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent rounded-lg resize-y leading-relaxed text-gray-800 shadow-inner"
-                      placeholder="<p>Enter raw HTML here...</p>"
-                    />
-                  )}
-                </div>
-                {errors.description && <span className="text-red-600 text-sm mt-1 block">{errors.description.message}</span>}
+                <RichTextEditor
+                  label="Description"
+                  required
+                  value={watch('description') || ''}
+                  onChange={(val) => setValue('description', val, { shouldValidate: true })}
+                  error={errors.description?.message}
+                />
               </div>
             </div>
 

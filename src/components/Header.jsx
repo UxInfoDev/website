@@ -134,7 +134,7 @@ const Header = () => {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-8">
+          <nav className="hidden lg:flex items-center gap-8">
             <button
               onClick={() => {
                 if (location.pathname === '/') window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -159,6 +159,32 @@ const Header = () => {
               Contact
             </button>
           </nav>
+
+          {/* Action Buttons */}
+          <div className="hidden lg:flex items-center gap-3">
+            <button 
+              onClick={() => {
+                if (location.pathname !== '/') navigate('/#contact')
+                else scrollToSection('contact')
+              }} 
+              className="px-6 py-2.5 border-2 border-[#0b3b60] text-[#0b3b60] hover:bg-[#0b3b60] hover:text-white font-bold rounded-lg transition-all duration-300 text-[11px] tracking-widest uppercase hover:shadow-md hover:-translate-y-0.5"
+            >
+              Book Consultation
+            </button>
+            <button 
+              onClick={() => {
+                if (location.pathname !== '/') {
+                  navigate('/')
+                  setTimeout(() => window.dispatchEvent(new Event('openQuoteModal')), 300)
+                } else {
+                  window.dispatchEvent(new Event('openQuoteModal'))
+                }
+              }} 
+              className="px-6 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-lg transition-all duration-300 text-[11px] tracking-widest uppercase shadow hover:shadow-md hover:-translate-y-0.5"
+            >
+              Get a Quote
+            </button>
+          </div>
 
           {/* Search & Mobile Toggle */}
           <div className="flex items-center gap-4">

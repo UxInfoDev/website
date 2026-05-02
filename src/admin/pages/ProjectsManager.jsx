@@ -32,6 +32,8 @@ const ProjectsManager = () => {
       formData.append('category', data.category)
       formData.append('status', data.status)
       formData.append('description', data.description || '')
+      formData.append('is_active', data.is_active === false ? 'false' : 'true')
+      formData.append('website_link', data.website_link || '')
       if (data.image && data.image[0]) {
         formData.append('image', data.image[0])
       }
@@ -72,6 +74,18 @@ const ProjectsManager = () => {
     setShowForm(true)
   }
 
+  const handleToggleActive = async (project) => {
+    try {
+      await axios.patch(`${API_BASE}/${project.id}/toggle-active`, {
+        is_active: !project.is_active
+      });
+      toast.success(`Project ${!project.is_active ? 'activated' : 'deactivated'}!`);
+      fetchProjects();
+    } catch (error) {
+      toast.error('Failed to update project status');
+    }
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -79,7 +93,7 @@ const ProjectsManager = () => {
         <button
           onClick={() => {
             setEditingId(null)
-            reset()
+            reset({ is_active: true })
             setShowForm(!showForm)
           }}
           className="btn bg-orange-600 hover:bg-orange-700 text-white flex items-center gap-2"
@@ -150,6 +164,25 @@ const ProjectsManager = () => {
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg"
                 />
               </div>
+
+              <div>
+                <label className="block font-bold mb-2">Website Link (CTA)</label>
+                <input
+                  type="url"
+                  {...register('website_link')}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                  placeholder="https://example.com"
+                />
+              </div>
+
+              <div className="flex items-center mt-8">
+                <input
+                  type="checkbox"
+                  {...register('is_active')}
+                  className="w-5 h-5 mr-2 text-orange-600 rounded focus:ring-orange-500"
+                />
+                <label className="font-bold">Active Project</label>
+              </div>
             </div>
 
             <div className="flex gap-4">
@@ -176,6 +209,7 @@ const ProjectsManager = () => {
               <th className="text-left py-3 px-4">Title</th>
               <th className="text-left py-3 px-4">Category</th>
               <th className="text-left py-3 px-4">Status</th>
+              <th className="text-left py-3 px-4">Active</th>
               <th className="text-left py-3 px-4">Actions</th>
             </tr>
           </thead>
@@ -192,6 +226,27 @@ const ProjectsManager = () => {
                   }`}>
                     {project.status.charAt(0).toUpperCase() + project.status.slice(1).replace('-', ' ')}
                   </span>
+                </td>
+                <td className="py-3 px-4">
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => handleToggleActive(project)}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
+                        project.is_active ? 'bg-green-500' : 'bg-gray-300'
+                      }`}
+                      title={project.is_active ? 'Deactivate Project' : 'Activate Project'}
+                    >
+                      <span className="sr-only">Toggle Active</span>
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                          project.is_active ? 'translate-x-6' : 'translate-x-1'
+                        }`}
+                      />
+                    </button>
+                    <span className={`text-sm font-bold ${project.is_active ? 'text-green-700' : 'text-gray-500'}`}>
+                      {project.is_active ? 'Active' : 'Inactive'}
+                    </span>
+                  </div>
                 </td>
                 <td className="py-3 px-4">
                   <button

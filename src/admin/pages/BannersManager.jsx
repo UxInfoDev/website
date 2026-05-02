@@ -3,6 +3,7 @@ import { FaEdit, FaTrash, FaPlus } from 'react-icons/fa'
 import { toast } from 'react-toastify'
 import { useForm } from 'react-hook-form'
 import axios from 'axios'
+import RichTextEditor from '../components/RichTextEditor'
 
 const API_BASE = '/api/banners'
 
@@ -13,7 +14,8 @@ const BannersManager = () => {
   const [imageFile, setImageFile] = useState(null)
   const [imagePreview, setImagePreview] = useState(null)
   const [currentImage, setCurrentImage] = useState(null)
-  const { register, handleSubmit, reset, formState: { errors } } = useForm()
+  const [descriptionHtml, setDescriptionHtml] = useState('')
+  const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm()
 
   useEffect(() => {
     fetchBanners()
@@ -32,14 +34,16 @@ const BannersManager = () => {
     try {
       const formData = new FormData()
       formData.append('title', data.title)
-      formData.append('description', data.description || '')
+      formData.append('subtitle', data.subtitle || '')
+      formData.append('description', descriptionHtml || '')
       formData.append('cta_text', data.cta_text || '')
       formData.append('cta_link', data.cta_link || '')
       formData.append('cta_alt', data.cta_alt || '')
+      formData.append('is_active', data.is_active === false ? 'false' : 'true')
       if (imageFile) {
         formData.append('image', imageFile)
       }
-      
+       
       const config = { headers: { 'Content-Type': 'multipart/form-data' } }
 
       if (editingId) {
@@ -52,6 +56,7 @@ const BannersManager = () => {
       }
       fetchBanners()
       reset()
+      setDescriptionHtml('')
       setShowForm(false)
     } catch (error) {
       toast.error('Failed to save banner')
@@ -75,8 +80,21 @@ const BannersManager = () => {
     setCurrentImage(banner.image)
     setImagePreview(null)
     setImageFile(null)
+    setDescriptionHtml(banner.description || '')
     reset(banner)
     setShowForm(true)
+  }
+
+  const handleToggleActive = async (banner) => {
+    try {
+      await axios.patch(`${API_BASE}/${banner.id}/toggle-active`, {
+        is_active: !banner.is_active
+      });
+      toast.success(`Banner ${!banner.is_active ? 'activated' : 'deactivated'}!`);
+      fetchBanners();
+    } catch (error) {
+      toast.error('Failed to update banner status');
+    }
   }
 
   return (
@@ -89,7 +107,8 @@ const BannersManager = () => {
             setCurrentImage(null)
             setImagePreview(null)
             setImageFile(null)
-            reset({})
+            setDescriptionHtml('')
+            reset({ is_active: true })
             setShowForm(!showForm)
           }}
           className="btn bg-orange-600 hover:bg-orange-700 text-white flex items-center gap-2"
@@ -114,11 +133,21 @@ const BannersManager = () => {
               </div>
 
               <div className="col-span-2">
-                <label className="block font-bold mb-2">Description</label>
+                <label className="block font-bold mb-2">Subtitle / Tagline</label>
                 <input
                   type="text"
-                  {...register('description')}
+                  {...register('subtitle')}
+                  placeholder="e.g. Trusted Ontario Home Comfort Experts"
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                />
+              </div>
+
+              <div className="col-span-2">
+                <RichTextEditor
+                  label="Description"
+                  value={descriptionHtml}
+                  onChange={setDescriptionHtml}
+                  placeholder="Enter banner description with formatting..."
                 />
               </div>
 
@@ -173,6 +202,15 @@ const BannersManager = () => {
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg"
                 />
               </div>
+
+              <div className="flex items-center mt-4">
+                <input
+                  type="checkbox"
+                  {...register('is_active')}
+                  className="w-5 h-5 mr-2 text-orange-600 rounded focus:ring-orange-500"
+                />
+                <label className="font-bold">Active Banner</label>
+              </div>
             </div>
 
             <div className="flex gap-4 mt-4">
@@ -192,11 +230,13 @@ const BannersManager = () => {
       )}
 
       <div className="bg-white rounded-lg shadow overflow-x-auto">
-        <table className="w-full min-w-[700px]">
+        <table className="w-full min-w-[800px]">
           <thead className="bg-gray-100 border-b">
             <tr>
               <th className="text-left py-3 px-4">Title</th>
+              <th className="text-left py-3 px-4">Subtitle</th>
               <th className="text-left py-3 px-4">CTA Link</th>
+              <th className="text-left py-3 px-4">Active</th>
               <th className="text-left py-3 px-4">Actions</th>
             </tr>
           </thead>
@@ -204,7 +244,29 @@ const BannersManager = () => {
             {banners.map((banner) => (
               <tr key={banner.id} className="border-b hover:bg-gray-50">
                 <td className="py-3 px-4">{banner.title}</td>
+                <td className="py-3 px-4 text-sm text-gray-500">{banner.subtitle || '—'}</td>
                 <td className="py-3 px-4">{banner.cta_link}</td>
+                <td className="py-3 px-4">
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => handleToggleActive(banner)}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
+                        banner.is_active ? 'bg-green-500' : 'bg-gray-300'
+                      }`}
+                      title={banner.is_active ? 'Deactivate Banner' : 'Activate Banner'}
+                    >
+                      <span className="sr-only">Toggle Active</span>
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                          banner.is_active ? 'translate-x-6' : 'translate-x-1'
+                        }`}
+                      />
+                    </button>
+                    <span className={`text-sm font-bold ${banner.is_active ? 'text-green-700' : 'text-gray-500'}`}>
+                      {banner.is_active ? 'Active' : 'Inactive'}
+                    </span>
+                  </div>
+                </td>
                 <td className="py-3 px-4 flex gap-2">
                   <button
                     onClick={() => handleEdit(banner)}

@@ -133,11 +133,11 @@ const InquiriesManager = () => {
   }) : '—'
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-6">
 
-      <div className="grid grid-cols-1 xl:grid-cols-[3fr_2fr] gap-4 items-start">
+      <div className="flex flex-col gap-6">
 
-        {/* ══ LEFT — List ══ */}
+        {/* ══ TOP — List ══ */}
         <div className="min-w-0">
           <div className="bg-white rounded-xl shadow-sm overflow-x-auto border border-gray-100">
 
@@ -174,7 +174,11 @@ const InquiriesManager = () => {
                 return (
                   <div
                     key={inq.id}
-                    onClick={() => { setSelectedInquiry(inq); setReply('') }}
+                    onClick={() => { 
+                      setSelectedInquiry(inq); 
+                      setReply('');
+                      setTimeout(() => document.getElementById('inquiry-detail')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
+                    }}
                     className={`grid grid-cols-[1.3fr_1.6fr_110px_90px] gap-2 px-3 py-2.5 border-b cursor-pointer transition-colors items-center min-w-[640px]
                       ${isSelected
                         ? 'bg-orange-50 border-l-[3px] border-l-orange-500'
@@ -255,19 +259,26 @@ const InquiriesManager = () => {
           </div>
         </div>
 
-        {/* ══ RIGHT — Detail Panel ══ */}
-        <div className="min-w-0">
-          {selectedInquiry ? (
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col max-h-[75vh] xl:max-h-[calc(100vh-160px)]">
+        {/* ══ BOTTOM — Detail Panel ══ */}
+        {selectedInquiry ? (
+          <>
+            {/* Mobile Backdrop */}
+            <div 
+              className="fixed inset-0 z-40 bg-gray-900/50 backdrop-blur-sm xl:hidden animate-fade-in"
+              onClick={() => setSelectedInquiry(null)}
+            />
+            
+            <div id="inquiry-detail" className="fixed inset-x-0 bottom-0 z-50 xl:relative xl:inset-auto xl:z-0 xl:min-w-0">
+              <div className="bg-white w-full rounded-t-3xl xl:rounded-xl shadow-[0_-10px_40px_rgba(0,0,0,0.1)] xl:shadow-sm border-t xl:border border-gray-100 overflow-hidden flex flex-col max-h-[90vh] xl:max-h-none animate-fade-in-up xl:animate-none">
 
               {/* Detail header — title + badge on same line */}
-              <div className="flex-shrink-0 px-4 py-3 border-b bg-gradient-to-r from-orange-50 to-white">
+              <div className="flex-shrink-0 px-4 py-2 border-b bg-gradient-to-r from-orange-50 to-white">
                 <div className="flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-2 min-w-0">
-                    <h3 className="font-semibold text-base text-gray-800 leading-snug truncate">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <h3 className="font-semibold text-lg text-gray-800 leading-none truncate">
                       {selectedInquiry.subject || '(no subject)'}
                     </h3>
-                    <div className="flex-shrink-0"><StatusBadge status={selectedInquiry.status} /></div>
+                    <div className="flex-shrink-0 flex items-center pt-0.5"><StatusBadge status={selectedInquiry.status} /></div>
                   </div>
                   <button
                     onClick={() => setSelectedInquiry(null)}
@@ -282,14 +293,14 @@ const InquiriesManager = () => {
               <div className="flex-1 overflow-y-auto p-4 space-y-3">
 
                 {/* Meta */}
-                <div className="space-y-1.5">
+                <div className="flex flex-wrap items-center gap-x-6 gap-y-2 pb-2">
                   <div className="flex items-center gap-2 text-sm text-gray-600">
                     <FaUser className="text-gray-400 flex-shrink-0" size={12} />
                     <span className="font-medium">{selectedInquiry.name}</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-gray-600">
                     <FaEnvelope className="text-gray-400 flex-shrink-0" size={12} />
-                    <span className="text-xs break-all">{selectedInquiry.email}</span>
+                    <span className="text-xs">{selectedInquiry.email}</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-gray-600">
                     <FaCalendarAlt className="text-gray-400 flex-shrink-0" size={12} />
@@ -308,7 +319,7 @@ const InquiriesManager = () => {
                 {/* Message */}
                 <div>
                   <p className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Message</p>
-                  <div className="p-3 bg-gray-50 rounded-lg border text-sm text-gray-700 leading-relaxed max-h-36 overflow-y-auto">
+                  <div className="p-4 bg-gray-50 rounded-xl border border-gray-200 text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">
                     {selectedInquiry.message}
                   </div>
                 </div>
@@ -366,13 +377,16 @@ const InquiriesManager = () => {
                 </div>
               </div>
             </div>
-          ) : (
+            </div>
+          </>
+        ) : (
+          <div className="hidden xl:block min-w-0">
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 py-16 text-center">
               <FaEnvelope className="text-4xl text-gray-200 mx-auto mb-3" />
               <p className="text-sm text-gray-400">Select a row to view details</p>
             </div>
-          )}
-        </div>
+          </div>
+        )}
 
       </div>
     </div>

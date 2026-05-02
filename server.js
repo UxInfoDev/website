@@ -97,11 +97,12 @@ app.get('/api/projects/:id', async (req, res) => {
 app.post('/api/projects', async (req, res) => {
   try {
     await runUpload(upload.single('image'), req, res);
-    const { title, category, status, description } = req.body;
+    const { title, category, status, description, is_active, website_link } = req.body;
     const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
+    const isActive = is_active === 'false' ? false : true;
     const result = await pool.query(
-      'INSERT INTO projects (title, category, image, status, description) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-      [title, category, imagePath, status, description]
+      'INSERT INTO projects (title, category, image, status, description, is_active, website_link) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+      [title, category, imagePath, status, description, isActive, website_link]
     );
     res.json(result.rows[0]);
   } catch (err) {
@@ -114,21 +115,37 @@ app.put('/api/projects/:id', async (req, res) => {
   try {
     await runUpload(upload.single('image'), req, res);
     const { id } = req.params;
-    const { title, category, status, description } = req.body;
+    const { title, category, status, description, is_active, website_link } = req.body;
     const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
+    const isActive = is_active === 'false' ? false : true;
     if (imagePath) {
       const result = await pool.query(
-        'UPDATE projects SET title = $1, category = $2, image = $3, status = $4, description = $5 WHERE id = $6 RETURNING *',
-        [title, category, imagePath, status, description, id]
+        'UPDATE projects SET title = $1, category = $2, image = $3, status = $4, description = $5, is_active = $6, website_link = $7 WHERE id = $8 RETURNING *',
+        [title, category, imagePath, status, description, isActive, website_link, id]
       );
       res.json(result.rows[0]);
     } else {
       const result = await pool.query(
-        'UPDATE projects SET title = $1, category = $2, status = $3, description = $4 WHERE id = $5 RETURNING *',
-        [title, category, status, description, id]
+        'UPDATE projects SET title = $1, category = $2, status = $3, description = $4, is_active = $5, website_link = $6 WHERE id = $7 RETURNING *',
+        [title, category, status, description, isActive, website_link, id]
       );
       res.json(result.rows[0]);
     }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.patch('/api/projects/:id/toggle-active', async (req, res) => {
+  const { id } = req.params;
+  const { is_active } = req.body;
+  try {
+    const result = await pool.query(
+      'UPDATE projects SET is_active = $1 WHERE id = $2 RETURNING *',
+      [is_active, id]
+    );
+    res.json(result.rows[0]);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Internal server error' });
@@ -274,7 +291,12 @@ app.delete('/api/inquiries/:id', async (req, res) => {
 // Banners API -----------------------------------------
 app.get('/api/banners', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM carousels ORDER BY created_at ASC');
+    let query = 'SELECT * FROM carousels';
+    if (req.query.active === 'true') {
+      query += ' WHERE is_active = true';
+    }
+    query += ' ORDER BY created_at ASC';
+    const result = await pool.query(query);
     res.json(result.rows);
   } catch (err) {
     console.error(err);
@@ -285,11 +307,11 @@ app.get('/api/banners', async (req, res) => {
 app.post('/api/banners', async (req, res) => {
   try {
     await runUpload(upload.single('image'), req, res);
-    const { title, description, cta_text, cta_link, cta_alt } = req.body;
+    const { title, subtitle, description, cta_text, cta_link, cta_alt, is_active } = req.body;
     const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
     const result = await pool.query(
-      'INSERT INTO carousels (title, description, image, cta_text, cta_link, cta_alt) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-      [title, description, imagePath, cta_text, cta_link, cta_alt]
+      'INSERT INTO carousels (title, subtitle, description, image, cta_text, cta_link, cta_alt, is_active) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
+      [title, subtitle || '', description, imagePath, cta_text, cta_link, cta_alt, is_active !== 'false']
     );
     res.json(result.rows[0]);
   } catch (err) {
@@ -302,21 +324,36 @@ app.put('/api/banners/:id', async (req, res) => {
   try {
     await runUpload(upload.single('image'), req, res);
     const { id } = req.params;
-    const { title, description, cta_text, cta_link, cta_alt } = req.body;
+    const { title, subtitle, description, cta_text, cta_link, cta_alt, is_active } = req.body;
     const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
     if (imagePath) {
       const result = await pool.query(
-        'UPDATE carousels SET title = $1, description = $2, image = $3, cta_text = $4, cta_link = $5, cta_alt = $6 WHERE id = $7 RETURNING *',
-        [title, description, imagePath, cta_text, cta_link, cta_alt, id]
+        'UPDATE carousels SET title = $1, subtitle = $2, description = $3, image = $4, cta_text = $5, cta_link = $6, cta_alt = $7, is_active = $8 WHERE id = $9 RETURNING *',
+        [title, subtitle || '', description, imagePath, cta_text, cta_link, cta_alt, is_active !== 'false', id]
       );
       res.json(result.rows[0]);
     } else {
       const result = await pool.query(
-        'UPDATE carousels SET title = $1, description = $2, cta_text = $3, cta_link = $4, cta_alt = $5 WHERE id = $6 RETURNING *',
-        [title, description, cta_text, cta_link, cta_alt, id]
+        'UPDATE carousels SET title = $1, subtitle = $2, description = $3, cta_text = $4, cta_link = $5, cta_alt = $6, is_active = $7 WHERE id = $8 RETURNING *',
+        [title, subtitle || '', description, cta_text, cta_link, cta_alt, is_active !== 'false', id]
       );
       res.json(result.rows[0]);
     }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.patch('/api/banners/:id/toggle-active', async (req, res) => {
+  const { id } = req.params;
+  const { is_active } = req.body;
+  try {
+    const result = await pool.query(
+      'UPDATE carousels SET is_active = $1 WHERE id = $2 RETURNING *',
+      [is_active, id]
+    );
+    res.json(result.rows[0]);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Internal server error' });

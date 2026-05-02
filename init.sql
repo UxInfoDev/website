@@ -5,6 +5,8 @@ CREATE TABLE IF NOT EXISTS projects (
     image VARCHAR(255),
     status VARCHAR(50) NOT NULL,
     description TEXT,
+    is_active BOOLEAN DEFAULT TRUE,
+    website_link VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -36,6 +38,7 @@ CREATE TABLE IF NOT EXISTS carousels (
     cta_text VARCHAR(100),
     cta_link VARCHAR(255),
     cta_alt VARCHAR(100),
+    is_active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -76,3 +79,13 @@ ALTER TABLE services ADD COLUMN IF NOT EXISTS short_description VARCHAR(500);
 INSERT INTO settings (id, site_name, site_description, phone, email, address, facebook_url, twitter_url, linkedin_url, youtube_url)
 SELECT 1, 'UX Infotech', 'UX Design & Web Development Agency', '+91 98765 43210', 'hello@uxinfotech.com', 'Ahmedabad, Gujarat, India', '#', '#', '#', '#'
 WHERE NOT EXISTS (SELECT 1 FROM settings WHERE id = 1);
+
+-- Add is_active and website_link columns to projects if upgrading from older schema
+ALTER TABLE projects ADD COLUMN IF NOT EXISTS is_active BOOLEAN DEFAULT TRUE;
+ALTER TABLE projects ADD COLUMN IF NOT EXISTS website_link VARCHAR(255);
+
+-- Add is_active column to carousels if upgrading from older schema
+ALTER TABLE carousels ADD COLUMN IF NOT EXISTS is_active BOOLEAN DEFAULT TRUE;
+
+-- Add subtitle column to carousels for the tagline above banner title
+ALTER TABLE carousels ADD COLUMN IF NOT EXISTS subtitle VARCHAR(255);

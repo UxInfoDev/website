@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'
 import axios from 'axios'
-import { Link } from 'react-router-dom'
-import QuoteForm from './QuoteForm'
 import ContactInfoBar from './ContactInfoBar'
 
 const BannerSection = () => {
@@ -12,7 +10,7 @@ const BannerSection = () => {
   useEffect(() => {
     const fetchBanners = async () => {
       try {
-        const response = await axios.get(`/api/banners?_t=${new Date().getTime()}`)
+        const response = await axios.get(`/api/banners?active=true&_t=${new Date().getTime()}`)
         if (response.data && response.data.length > 0) {
           setSlides(response.data)
         }
@@ -27,7 +25,7 @@ const BannerSection = () => {
     if (slides.length === 0) return
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length)
-    }, 5000)
+    }, 8000)
     return () => clearInterval(timer)
   }, [slides.length])
 
@@ -36,147 +34,123 @@ const BannerSection = () => {
 
   return (
     <>
-    <section
-      id="home"
-      className="relative overflow-visible lg:overflow-hidden min-h-[760px] lg:min-h-[480px] lg:h-[60vh]"
-    >
+      <section id="home" className="relative bg-white pt-4 pb-20 lg:pt-8 lg:pb-28 overflow-hidden">
+        {/* CSS Grid Stacking forces the container height to match the tallest slide, enabling perfect crossfade */}
+        <div className="container mx-auto px-4 lg:px-8 relative grid grid-cols-1 grid-rows-1 items-center">
+          
+          {slides.length > 0 && slides.map((slide, index) => {
+            const isActive = index === currentSlide;
+            const isReversed = index % 2 !== 0;
 
-      {/* ── Background Slides ── */}
-      <div className="absolute inset-0">
-        {slides.map((slide, index) => (
-          <div
-            key={slide.id}
-            className={`absolute w-full h-full transition-opacity duration-1000 ${
-              index === currentSlide ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
-            }`}
-          >
-            <div
-              className="absolute inset-0 bg-cover bg-center"
-              style={{
-                backgroundImage: `linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)), url('${
-                  slide.image?.startsWith('/uploads') ? slide.image : slide.image
-                }')`
-              }}
-            />
-          </div>
-        ))}
-      </div>
-
-      {/* ── Main Content: stacked on mobile, side-by-side on desktop ── */}
-      <div className="relative z-20 container-fluid mx-auto px-4 py-8 lg:py-0 lg:h-full flex flex-col lg:flex-row items-start lg:items-center gap-6 lg:gap-10">
-
-        {/* Slide Text — full width on mobile, left half on desktop */}
-        <div className="w-full lg:w-1/2 text-white text-center lg:text-left">
-          {slides.length > 0 && (
-            <div key={currentSlide} className="slide-animation">
-              <h1
-                 className="text-4xl sm:text-5xl lg:text-6xl xl:text-6xl mb-4 tracking-tight leading-tight"
-  style={{
-    backgroundImage: 'linear-gradient(90deg, #38BDF8, #8B5CF6, #FB7185)',
-    WebkitBackgroundClip: 'text',
-    WebkitTextFillColor: 'transparent',
-    backgroundClip: 'text',
-    color: 'transparent'
-  }}
+            return (
+              <div 
+                key={slide.id || index} 
+                style={{ gridArea: '1 / 1 / 2 / 2' }}
+                className={`w-full flex flex-col lg:flex-row items-center gap-12 lg:gap-20 transition-all duration-1000 ease-[cubic-bezier(0.4,0.0,0.2,1)] py-4 ${
+                  isReversed ? 'lg:flex-row-reverse' : ''
+                } ${
+                  isActive 
+                    ? 'opacity-100 z-20 pointer-events-auto transform-none' 
+                    : 'opacity-0 z-0 pointer-events-none scale-[0.98] translate-y-4'
+                }`}
               >
-                {slides[currentSlide]?.title}
-              </h1>
-              <p
-                className="text-lg sm:text-xl lg:text-2xl mb-8 font-medium"
-                style={{ textShadow: '1px 2px 8px rgba(0,0,0,0.9)', color: '#f3f4f6' }}
-              >
-                {slides[currentSlide]?.description}
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                {slides[currentSlide]?.cta_text && slides[currentSlide]?.cta_link && (
-                  <Link
-                    to={
-                      slides[currentSlide].cta_link.startsWith('#') || slides[currentSlide].cta_link.startsWith('/')
-                        ? slides[currentSlide].cta_link
-                        : `/${slides[currentSlide].cta_link}`
-                    }
-                    className="btn bg-blue-600 hover:bg-blue-700 text-white "
-                  >
-                    {slides[currentSlide].cta_text}
-                  </Link>
-                )}
-                {slides[currentSlide]?.cta_alt && (
-                  <a href="#contact" className="btn border-2 border-white text-white hover:bg-white hover:text-gray-900">
-                    {slides[currentSlide].cta_alt}
-                  </a>
-                )}
+                {/* ── Text Content ── */}
+                <div className="w-full lg:w-1/2 flex flex-col items-start text-left font-sans">
+                  {slide.subtitle && (
+                    <div className="flex items-center gap-3 text-[#00a0dc] font-bold tracking-widest text-[10px] sm:text-[11px] mb-6 uppercase">
+                      <span className="w-6 h-0.5 bg-[#00a0dc] inline-block"></span>
+                      {slide.subtitle}
+                    </div>
+                  )}
+                  
+                  <h1 className="text-4xl sm:text-5xl lg:text-5xl xl:text-6xl font-extrabold text-[#0b3b60] leading-[1.1] tracking-tight mb-6">
+                    {slide.title}
+                  </h1>
+                  
+                  {slide.description && (
+                    <div 
+                      className="text-base sm:text-lg text-gray-600 mb-10 max-w-xl leading-relaxed banner-rich-text"
+                      dangerouslySetInnerHTML={{ __html: slide.description }}
+                    />
+                  )}
+
+                  {(slide.cta_text || slide.cta_alt) && (
+                    <div className="flex flex-col sm:flex-row gap-4 mb-12 w-full sm:w-auto">
+                      {slide.cta_text && (
+                        <button
+                          onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event('openQuoteModal')); }}
+                          className="px-8 py-4 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-lg transition-all duration-300 text-[12px] tracking-widest uppercase shadow-md hover:shadow-lg hover:-translate-y-0.5 w-full sm:w-auto text-center"
+                        >
+                          {slide.cta_text}
+                        </button>
+                      )}
+                      {slide.cta_alt && (
+                        <a
+                          href={slide.cta_link || '#contact'}
+                          className="px-8 py-4 border-2 border-[#0b3b60] text-[#0b3b60] hover:bg-[#0b3b60] hover:text-white font-bold rounded-lg transition-all duration-300 text-[12px] tracking-widest uppercase hover:shadow-md hover:-translate-y-0.5 w-full sm:w-auto text-center flex items-center justify-center"
+                        >
+                          {slide.cta_alt}
+                        </a>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                {/* ── Image Content ── */}
+                <div className="w-full lg:w-1/2 relative mt-4 lg:mt-0 flex justify-center">
+                  <div className="w-full aspect-[4/3] sm:aspect-video lg:aspect-[4/3] xl:aspect-[1.4/1] relative">
+                    <img 
+                      src={slide.image} 
+                      alt={slide.title}
+                      className="w-full h-full object-cover rounded-[20px] shadow-lg relative z-10"
+                    />
+                  </div>
+                </div>
               </div>
-            </div>
-          )}
+            );
+          })}
         </div>
 
-        {/* Quote Form — full width card below text on mobile, right half on desktop */}
-        <div className="w-full lg:w-5/12 xl:w-[420px] flex-shrink-0">
-          <QuoteForm compact />
-
-          {/* Indicators inline below form — mobile only */}
-          {slides.length > 1 && (
-            <div className="flex lg:hidden items-center justify-center gap-3 mt-4 pb-2">
-              {slides.map((_, index) => (
-                <div
-                  role="button"
-                  key={index}
-                  onClick={() => setCurrentSlide(index)}
-                  className={`rounded-full cursor-pointer transition-all duration-300 shadow ${
-                    index === currentSlide
-                      ? 'bg-orange-600 scale-125'
-                      : 'bg-white bg-opacity-70 hover:bg-opacity-100 hover:scale-110'
-                  }`}
-                  style={{ width: 12, height: 12 }}
-                  aria-label={`Go to slide ${index + 1}`}
-                />
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* ── Slide Navigation Arrows ── */}
-      {slides.length > 1 && (
-        <>
-          <div
-            role="button"
-            onClick={prevSlide}
-            className="absolute right-4 md:right-8 top-1/2 mt-6 -translate-y-1/2 z-30 w-12 h-12 bg-orange-600 text-white rounded-full hidden lg:flex items-center justify-center hover:bg-orange-700 shadow-lg transition-transform hover:scale-110 cursor-pointer"
-          >
-            <FaChevronLeft size={20} />
-          </div>
-          <div
-            role="button"
-            onClick={nextSlide}
-            className="absolute right-4 md:right-8 top-1/2 -mt-6 -translate-y-1/2 z-30 w-12 h-12 bg-orange-600 text-white rounded-full hidden lg:flex items-center justify-center hover:bg-orange-700 shadow-lg transition-transform hover:scale-110 cursor-pointer"
-          >
-            <FaChevronRight size={20} />
-          </div>
-        </>
-      )}
-
-      {/* ── Slide Indicators — desktop only (absolute) ── */}
-      {slides.length > 1 && (
-        <div className="absolute bottom-6 left-10 z-30 hidden lg:flex items-center gap-4">
-          {slides.map((_, index) => (
+        {/* ── Slide Navigation Arrows (Desktop) ── */}
+        {slides.length > 1 && (
+          <>
             <div
               role="button"
-              key={index}
-              onClick={() => setCurrentSlide(index)}
-              className={`rounded-full cursor-pointer transition-all duration-300 shadow-md ${
-                index === currentSlide
-                  ? 'bg-orange-600 scale-125'
-                  : 'bg-white bg-opacity-80 hover:bg-opacity-100 hover:scale-110'
-              }`}
-              style={{ width: 16, height: 16 }}
-              aria-label={`Go to slide ${index + 1}`}
-            />
-          ))}
-        </div>
-      )}
-    </section>
-    <ContactInfoBar />
+              onClick={prevSlide}
+              className="absolute left-4 lg:left-8 top-1/2 -translate-y-1/2 z-30 w-12 h-12 bg-white/90 backdrop-blur text-[#0b3b60] rounded-full hidden lg:flex items-center justify-center hover:bg-gray-50 shadow-xl transition-transform hover:scale-110 cursor-pointer border border-gray-100"
+            >
+              <FaChevronLeft size={18} />
+            </div>
+            <div
+              role="button"
+              onClick={nextSlide}
+              className="absolute right-4 lg:right-8 top-1/2 -translate-y-1/2 z-30 w-12 h-12 bg-white/90 backdrop-blur text-[#0b3b60] rounded-full hidden lg:flex items-center justify-center hover:bg-gray-50 shadow-xl transition-transform hover:scale-110 cursor-pointer border border-gray-100"
+            >
+              <FaChevronRight size={18} />
+            </div>
+          </>
+        )}
+
+        {/* ── Slide Indicators ── */}
+        {slides.length > 1 && (
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 flex items-center gap-3">
+            {slides.map((_, index) => (
+              <div
+                role="button"
+                key={index}
+                onClick={() => setCurrentSlide(index)}
+                className={`rounded-full cursor-pointer transition-all duration-300 shadow-sm ${
+                  index === currentSlide
+                    ? 'bg-[#0b3b60] w-3 h-3 scale-125'
+                    : 'bg-gray-300 hover:bg-gray-400 w-3 h-3'
+                }`}
+                aria-label={`Go to slide ${index + 1}`}
+              />
+            ))}
+          </div>
+        )}
+      </section>
+      <ContactInfoBar />
     </>
   )
 }

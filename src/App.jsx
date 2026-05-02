@@ -11,6 +11,7 @@ import NotFound from './pages/NotFound'
 import ServiceDetails from './pages/ServiceDetails'
 import ProjectDetails from './pages/ProjectDetails'
 import SearchResults from './pages/SearchResults'
+import QuoteModal from './components/QuoteModal'
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
         </main>
 
         <Footer />
+        <QuoteModal />
 
         <ToastContainer
           position="bottom-right"
