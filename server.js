@@ -459,9 +459,15 @@ app.get('/api/settings', async (req, res) => {
 
 app.put('/api/settings', async (req, res) => {
   try {
+    console.log('--- Settings Update Start ---');
     await runUpload(logoUpload.single('logo'), req, res);
+    console.log('Upload handled. File:', req.file);
+    console.log('Body:', req.body);
+
     const { site_name, site_description, phone, email, address, facebook_url, twitter_url, linkedin_url, youtube_url } = req.body;
     const logoPath = req.file ? `/uploads/${req.file.filename}` : null;
+    console.log('Logo Path to save:', logoPath);
+    
     let result;
     if (logoPath) {
       result = await pool.query(
