@@ -40,8 +40,8 @@ const ServicesSection = () => {
       <div className="container">
         {/* Header */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold mb-4">Our Services</h2>
-          <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+          <h2 className="text-4xl font-extrabold text-[#0b3b60] tracking-tight mb-4">Our Services</h2>
+          <p className="text-gray-700 text-lg max-w-2xl mx-auto leading-relaxed">
             We offer a comprehensive range of digital design and development services
             tailored to meet your unique business needs
           </p>
@@ -71,15 +71,15 @@ const ServicesSection = () => {
                   )}
                 </div>
                 <div className="p-8">
-                  <h3 className="text-2xl font-bold mb-3">{service.title}</h3>
-                  <p className="text-gray-600 mb-4">{getShortDescription(service)}</p>
+                  <h3 className="text-2xl font-extrabold text-[#0b3b60] tracking-tight mb-3">{service.title}</h3>
+                  <p className="text-gray-700 mb-6 leading-relaxed">{getShortDescription(service)}</p>
                   <Link
                     to={`/service/${service.id}`}
-                    className="inline-flex items-center gap-2 text-orange-600 font-bold hover:text-orange-700 group"
+                    className="inline-flex items-center gap-2 text-orange-600 font-bold hover:text-orange-700 transition-all uppercase tracking-widest text-[11px] group"
                   >
                     Learn More
-                    <span className="w-7 h-7 rounded-full border border-orange-300 flex items-center justify-center group-hover:bg-orange-600 group-hover:border-orange-600 group-hover:text-white transition">
-                      <FaArrowRight size={11} />
+                    <span className="w-7 h-7 rounded-full border-2 border-orange-200 flex items-center justify-center group-hover:bg-orange-600 group-hover:border-orange-600 group-hover:text-white transition-all shadow-sm group-hover:shadow-md">
+                      <FaArrowRight size={10} />
                     </span>
                   </Link>
                 </div>

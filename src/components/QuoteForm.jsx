@@ -111,14 +111,14 @@ const QuoteForm = ({ compact = false, onAutoClose, onClose }) => {
               <h2 className={`font-extrabold text-gray-900 mb-2 ${compact ? 'text-xl' : 'text-2xl'}`}>
                 Thanks, {submittedName}! 🎉
               </h2>
-              <p className="text-gray-600 text-sm mb-1">Your inquiry has been sent successfully.</p>
-              <p className="text-gray-600 text-sm font-medium mb-5">
+              <p className="text-gray-700 text-sm mb-1">Your inquiry has been sent successfully.</p>
+              <p className="text-gray-700 text-sm font-medium mb-5">
                 We'll get back to you <span className="text-gray-900 font-bold">within 24 hours</span>.
               </p>
 
               <div className="w-full space-y-2 text-left mb-5 pl-2">
                 {['Inquiry logged to our CRM', 'Confirmation email on its way', 'Expert assigned within 2 hours'].map((item) => (
-                  <div key={item} className="flex items-center gap-3 text-gray-600 text-sm font-medium">
+                  <div key={item} className="flex items-center gap-3 text-gray-700 text-sm font-medium">
                     <span className="text-green-500">✓</span> {item}
                   </div>
                 ))}
@@ -148,11 +148,11 @@ const QuoteForm = ({ compact = false, onAutoClose, onClose }) => {
                 ✕
               </button>
             )}
-            <div className="flex items-center gap-2 text-xs text-gray-500 font-medium mb-2">
+            <div className="flex items-center gap-2 text-xs text-gray-600 font-medium mb-2">
               <span className="text-orange-500">⚡</span> 100+ projects delivered · Response within 24 hours
             </div>
-            <h2 className={`font-extrabold text-gray-900 tracking-tight mb-1 ${compact ? 'text-xl' : 'text-3xl'}`}>Get a Free Quote</h2>
-            <p className={`text-gray-500 ${compact ? 'text-sm mb-4' : 'mb-6'}`}>Tell us about your project — we'll respond fast.</p>
+            <h2 className={`font-extrabold text-[#0b3b60] tracking-tight mb-1 ${compact ? 'text-xl' : 'text-3xl'}`}>Get a Free Quote</h2>
+            <p className={`text-gray-700 ${compact ? 'text-sm mb-4' : 'mb-6'} leading-relaxed`}>Tell us about your project — we'll respond fast.</p>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div>

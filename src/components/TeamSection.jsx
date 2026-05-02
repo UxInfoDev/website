@@ -22,8 +22,8 @@ const TeamSection = () => {
       <div className="container">
         {/* Header */}
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold mb-4">Meet Our Team</h2>
-          <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+          <h2 className="text-4xl font-extrabold text-[#0b3b60] tracking-tight mb-4">Meet Our Team</h2>
+          <p className="text-gray-700 text-lg max-w-2xl mx-auto leading-relaxed">
             Talented professionals dedicated to creating exceptional digital experiences
           </p>
         </div>
@@ -53,9 +53,9 @@ const TeamSection = () => {
               </div>
 
               {/* Info */}
-              <h3 className="text-2xl font-bold mb-2">{member.name}</h3>
-              <p className="text-orange-600 font-bold mb-2">{member.role}</p>
-              <p className="text-gray-600">{member.bio}</p>
+              <h3 className="text-2xl font-extrabold text-[#0b3b60] tracking-tight mb-2">{member.name}</h3>
+              <p className="text-orange-600 font-bold mb-2 uppercase tracking-wide text-sm">{member.role}</p>
+              <p className="text-gray-700 leading-relaxed">{member.bio}</p>
             </div>
           ))}
         </div>

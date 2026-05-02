@@ -69,7 +69,7 @@ const BannerSection = () => {
                   
                   {slide.description && (
                     <div 
-                      className="text-base sm:text-lg text-gray-600 mb-10 max-w-xl leading-relaxed banner-rich-text"
+                      className="text-base sm:text-lg text-gray-700 mb-10 max-w-xl leading-relaxed banner-rich-text"
                       dangerouslySetInnerHTML={{ __html: slide.description }}
                     />
                   )}

@@ -126,7 +126,7 @@ const Header = () => {
                     <span className="text-[#F18835] text-[42px] font-black tracking-tighter leading-none ml-[-2px]">X</span>
                     <span className="text-[#3282C4] text-[34px] font-light tracking-widest leading-none ml-3 uppercase">INFOTECH</span>
                   </div>
-                  <span className="text-gray-500 text-[11px] tracking-[0.25em] font-medium mt-1">DESIGN FOR YOUR SUCCESS</span> */}
+                  <span className="text-gray-600 text-[11px] tracking-[0.25em] font-medium mt-1">DESIGN FOR YOUR SUCCESS</span> */}
 
                 </>
               )}
@@ -190,13 +190,13 @@ const Header = () => {
           <div className="flex items-center gap-4">
             <button 
               onClick={toggleSearch}
-              className="text-gray-600 hover:text-orange-600 text-xl"
+              className="text-gray-700 hover:text-orange-600 text-xl"
             >
               <FaSearch />
             </button>
             <button 
               onClick={toggleMenu}
-              className="md:hidden text-gray-600 hover:text-orange-600 text-xl"
+              className="md:hidden text-gray-700 hover:text-orange-600 text-xl"
             >
               {isMenuOpen ? <FaTimes /> : <FaBars />}
             </button>

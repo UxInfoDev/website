@@ -44,12 +44,12 @@ const AboutSection = () => {
 
           {/* Content */}
           <div>
-            <h2 className="text-4xl font-bold mb-6">About UX Infotech</h2>
-            <p className="text-gray-600 text-lg mb-4">
+            <h2 className="text-4xl font-extrabold text-[#0b3b60] tracking-tight mb-6">About UX Infotech</h2>
+            <p className="text-gray-700 text-lg mb-4 leading-relaxed">
               We are an award-winning UX design and web development agency dedicated to creating 
               user-centered digital products and experiences that delight.
             </p>
-            <p className="text-gray-600 text-lg mb-8">
+            <p className="text-gray-700 text-lg mb-8 leading-relaxed">
               With over a decade of experience, we've helped startups and enterprises transform 
               their digital presence through innovative design and cutting-edge technology.
             </p>
@@ -60,8 +60,8 @@ const AboutSection = () => {
                 <div key={feature.id} className="flex gap-4 items-start">
                   <div className="text-orange-600 text-2xl mt-1">{feature.icon}</div>
                   <div>
-                    <h4 className="font-bold text-lg mb-1">{feature.title}</h4>
-                    <p className="text-gray-600">{feature.description}</p>
+                    <h4 className="font-extrabold text-[#0b3b60] text-lg mb-1">{feature.title}</h4>
+                    <p className="text-gray-700 leading-relaxed">{feature.description}</p>
                   </div>
                 </div>
               ))}

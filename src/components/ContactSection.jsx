@@ -28,8 +28,8 @@ const ContactSection = () => {
       <div className="container mx-auto px-4 max-w-6xl">
         {/* Header */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-extrabold mb-4 text-gray-900">Get In Touch</h2>
-          <p className="text-gray-500 text-lg md:text-xl max-w-2xl mx-auto">
+          <h2 className="text-4xl md:text-5xl font-extrabold mb-4 text-[#0b3b60] tracking-tight">Get In Touch</h2>
+          <p className="text-gray-700 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
             Have a project in mind? Let's talk about how we can help transform your digital presence.
           </p>
         </div>
@@ -41,8 +41,8 @@ const ContactSection = () => {
             <div className="w-16 h-16 bg-orange-50 text-orange-600 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl">
               <FaMapMarkerAlt />
             </div>
-            <h3 className="text-2xl font-bold mb-4 text-gray-900">Address</h3>
-            <p className="text-gray-500 leading-relaxed whitespace-pre-line">
+            <h3 className="text-2xl font-extrabold mb-4 text-[#0b3b60] tracking-tight">Address</h3>
+            <p className="text-gray-700 leading-relaxed whitespace-pre-line">
               {settings.address}
             </p>
           </div>
@@ -52,7 +52,7 @@ const ContactSection = () => {
             <div className="w-16 h-16 bg-orange-50 text-orange-600 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl">
               <FaPhoneAlt />
             </div>
-            <h3 className="text-2xl font-bold mb-4 text-gray-900">Phone</h3>
+            <h3 className="text-2xl font-extrabold mb-4 text-[#0b3b60] tracking-tight">Phone</h3>
             <a href={`tel:${settings.phone}`} className="text-orange-600 font-bold text-lg hover:text-orange-700 block transition-colors mt-2">
               {settings.phone}
             </a>
@@ -63,7 +63,7 @@ const ContactSection = () => {
             <div className="w-16 h-16 bg-orange-50 text-orange-600 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl">
               <FaEnvelope />
             </div>
-            <h3 className="text-2xl font-bold mb-4 text-gray-900">Email</h3>
+            <h3 className="text-2xl font-extrabold mb-4 text-[#0b3b60] tracking-tight">Email</h3>
             <a href={`mailto:${settings.email}`} className="text-orange-600 font-bold text-lg hover:text-orange-700 block transition-colors mt-2">
               {settings.email}
             </a>

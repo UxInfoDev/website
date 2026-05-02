@@ -213,10 +213,10 @@ const Footer = () => {
         <div className="border-t border-white/[0.06]">
           <div className="container py-6">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-              <p className="text-gray-500 text-xs tracking-wide">
+              <p className="text-gray-400 text-xs tracking-wide">
                 &copy; {currentYear} {settings.site_name}. All rights reserved.
               </p>
-              <p className="text-gray-600 text-xs tracking-wide italic">
+              <p className="text-gray-400 text-xs tracking-wide italic">
                 Directions to your success
               </p>
             </div>
