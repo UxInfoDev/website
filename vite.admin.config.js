@@ -26,6 +26,13 @@ export default defineConfig({
     rollupOptions: {
       input: {
         index: resolve(__dirname, 'admin.html')
+      },
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom', 'react-router-dom'],
+          editor: ['react-quill'],
+          ui: ['react-icons', 'react-hook-form', 'react-toastify']
+        }
       }
     }
   }

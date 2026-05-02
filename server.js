@@ -1,12 +1,24 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const helmet = require('helmet');
+const compression = require('compression');
+const morgan = require('morgan');
 const { Pool } = require('pg');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
 const app = express();
+
+// Security and Optimization Middleware
+app.use(helmet({
+  contentSecurityPolicy: false, // Disabled for local development / dynamic scripts
+  crossOriginEmbedderPolicy: false
+}));
+app.use(compression());
+app.use(morgan('combined'));
+
 app.use(cors());
 app.use(express.json());
 
@@ -50,9 +62,9 @@ function runUpload(middleware, req, res) {
   });
 }
 
-// Construct connect string
+// Construct connect string - strictly rely on environment variable in production
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL || 'postgres://postgres.vybnycqsikeebevzxyzg:SatSuresh123$$@aws-0-us-west-2.pooler.supabase.com:5432/postgres',
+  connectionString: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false }
 });
 
@@ -509,6 +521,12 @@ app.get('/{*path}', (req, res) => {
   } else {
     res.status(404).send('Frontend application not found. Please run npm run build');
   }
+});
+
+// 5. Global Error Handler
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: 'Internal Server Error' });
 });
 
 const PORT = process.env.PORT || 5000;
