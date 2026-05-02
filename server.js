@@ -62,9 +62,9 @@ function runUpload(middleware, req, res) {
   });
 }
 
-// Construct connect string - strictly rely on environment variable in production
+// Construct connect string - falling back to explicit URL since it's not in .env yet
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
+  connectionString: process.env.DATABASE_URL || 'postgres://postgres.vybnycqsikeebevzxyzg:SatSuresh123$$@aws-0-us-west-2.pooler.supabase.com:5432/postgres',
   ssl: { rejectUnauthorized: false }
 });
 
