@@ -32,7 +32,7 @@ app.use('/uploads', express.static(uploadDir));
 // Setup multer for physical path storage
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'public/uploads/');
+    cb(null, uploadDir);
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
@@ -44,7 +44,7 @@ const upload = multer({ storage: storage });
 // Dedicated upload handler for settings logo: keep original filename
 const logoStorage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'public/uploads/');
+    cb(null, uploadDir);
   },
   filename: function (req, file, cb) {
     cb(null, path.basename(file.originalname));
