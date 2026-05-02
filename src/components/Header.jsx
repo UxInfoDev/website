@@ -13,9 +13,9 @@ const Header = () => {
   const location = useLocation()
 
   useEffect(() => {
-    axios.get('/api/settings')
+    axios.get(`/api/settings?_t=${Date.now()}`)
       .then(res => {
-        if (res.data?.logo_url) setLogoUrl(res.data.logo_url)
+        if (res.data?.logo_url) setLogoUrl(res.data.logo_url + `?_t=${Date.now()}`)
       })
       .catch(() => {})
   }, [])

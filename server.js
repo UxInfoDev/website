@@ -47,7 +47,8 @@ const logoStorage = multer.diskStorage({
     cb(null, uploadDir);
   },
   filename: function (req, file, cb) {
-    cb(null, path.basename(file.originalname));
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, uniqueSuffix + path.extname(file.originalname));
   }
 });
 const logoUpload = multer({ storage: logoStorage });
@@ -62,14 +63,18 @@ function runUpload(middleware, req, res) {
   });
 }
 
-// Construct connect string - falling back to explicit URL since it's not in .env yet
+// Database connection - use explicit credentials (Supabase pooler)
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL || 'postgres://postgres.vybnycqsikeebevzxyzg:SatSuresh123$$@aws-0-us-west-2.pooler.supabase.com:5432/postgres',
-  ssl: { rejectUnauthorized: false }
+  ssl: { rejectUnauthorized: false },
+  max: 3,                    // Small pool size for Supabase PgBouncer compatibility
+  idleTimeoutMillis: 10000,  // Close idle connections after 10s (before Supabase times them out)
+  connectionTimeoutMillis: 5000,
 });
 
 pool.on('error', (err) => {
-  console.error('Unexpected error on idle client', err);
+  // Log but don't crash - pool will create new connections automatically
+  console.error('DB pool idle client error (auto-recovering):', err.message);
 });
 
 // Initialize DB schema automatically
@@ -79,7 +84,8 @@ const initDb = async () => {
         await pool.query(sql);
         console.log('Database initialized successfully.');
     } catch (err) {
-        console.error('Error initializing database', err);
+        // Schema init errors are non-fatal (tables may already exist)
+        console.error('DB schema init warning (non-fatal):', err.message);
     }
 };
 initDb();
@@ -459,14 +465,10 @@ app.get('/api/settings', async (req, res) => {
 
 app.put('/api/settings', async (req, res) => {
   try {
-    console.log('--- Settings Update Start ---');
     await runUpload(logoUpload.single('logo'), req, res);
-    console.log('Upload handled. File:', req.file);
-    console.log('Body:', req.body);
 
     const { site_name, site_description, phone, email, address, facebook_url, twitter_url, linkedin_url, youtube_url } = req.body;
     const logoPath = req.file ? `/uploads/${req.file.filename}` : null;
-    console.log('Logo Path to save:', logoPath);
     
     let result;
     if (logoPath) {

@@ -41,8 +41,22 @@ $deployCmd = @"
   sudo apt-get install -y unzip
   mkdir -p $remoteAppDir
   cd /home/ubuntu
+
+  # Backup uploads before overwrite
+  if [ -d "$remoteAppDir/public/uploads" ]; then
+    cp -r "$remoteAppDir/public/uploads" /tmp/uploads_backup_${timestamp}
+  fi
+
   unzip -o deploy.zip -d $remoteAppDir
   rm deploy.zip
+
+  # Restore uploads if they were overwritten
+  mkdir -p "$remoteAppDir/public/uploads"
+  if [ -d "/tmp/uploads_backup_${timestamp}" ]; then
+    cp -rn /tmp/uploads_backup_${timestamp}/. "$remoteAppDir/public/uploads/"
+    rm -rf /tmp/uploads_backup_${timestamp}
+  fi
+
   cd $remoteAppDir
   npm install --production
   pm2 restart $pm2AppName || pm2 start server.js --name $pm2AppName
