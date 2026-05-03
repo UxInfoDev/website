@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { FaFacebook, FaTwitter, FaYoutube, FaLinkedin, FaMapMarkerAlt, FaPhone, FaEnvelope, FaArrowRight, FaChevronRight } from 'react-icons/fa'
+import { FaFacebook, FaTwitter, FaYoutube, FaLinkedin, FaMapMarkerAlt, FaPhone, FaEnvelope, FaArrowRight, FaChevronRight, FaWhatsapp } from 'react-icons/fa'
 import axios from 'axios'
-import QuoteForm from './QuoteForm'
+import QuoteForm from './QuoteForm'  
 
 const Footer = () => {
   const currentYear = new Date().getFullYear()
@@ -17,20 +17,26 @@ const Footer = () => {
     youtube_url: '#'
   })
   const [logoUrl, setLogoUrl] = useState(null)
+  const [isLoaded, setIsLoaded] = useState(false)
+  const fetchedRef = useRef(false)
   const [isInquiryOpen, setIsInquiryOpen] = useState(false)
   const navigate = useNavigate()
   const location = useLocation()
 
   useEffect(() => {
     const fetchSettings = async () => {
+      if (fetchedRef.current) return
+      fetchedRef.current = true
       try {
         const response = await axios.get(`/api/settings?_t=${new Date().getTime()}`)
         if (response.data) {
           setSettings(response.data)
           if (response.data.logo_url) setLogoUrl(response.data.logo_url)
+          setIsLoaded(true)
         }
       } catch (error) {
         console.error('Failed to load settings')
+        setIsLoaded(true)
       }
     }
     fetchSettings()
@@ -65,10 +71,10 @@ const Footer = () => {
   return (
     <footer>
       {/* ─── CTA Banner ─── */}
-      <div className="relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #0b3b60 0%, #093050 50%, #071e35 100%)' }}>
+      <div className="relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #0971C8 0%, #093050 50%, #071e35 100%)' }}>
         <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)', backgroundSize: '32px 32px' }} />
-        <div className="container relative py-14 md:py-16">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+        <div className="container relative">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-6 py-8 md:py-8">
             <div>
               <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">Ready to Start Your Next Project?</h3>
               <p className="text-blue-200/70 text-sm md:text-base">Let's build something remarkable together.</p>
@@ -87,15 +93,16 @@ const Footer = () => {
 
       {/* ─── Main Footer ─── */}
       <div style={{ background: 'linear-gradient(180deg, #061a2e 0%, #040f1a 100%)' }}>
-        <div className="container py-16">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
-
+          <div className="container">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 px-4 py-6">
             {/* Column 1: Brand */}
             <div className="lg:col-span-1">
-              <div className="mb-6">
-                {logoUrl ? (
-                  <img src={logoUrl} alt={settings.site_name} className="h-10 max-w-[160px] object-contain brightness-0 invert" />
+              <div className="mb-6 min-h-[40px] flex items-center">
+                {isLoaded ? (logoUrl ? (
+                  <img src={logoUrl} alt={settings.site_name} className="h-10 max-w-[160px] object-contain brightness-0 invert transition-opacity duration-300" />
                 ) : (
+                  <span className="text-2xl font-bold text-white tracking-tight">{settings.site_name}</span>
+                )) : (
                   <span className="text-2xl font-bold text-white tracking-tight">{settings.site_name}</span>
                 )}
               </div>
@@ -130,7 +137,7 @@ const Footer = () => {
                   { label: 'About Us', action: (e) => goToSection('about', e), href: '/#about' },
                   { label: 'Our Services', action: (e) => goToSection('services', e), href: '/#services' },
                   { label: 'Portfolio', action: (e) => goToSection('portfolio', e), href: '/#portfolio' },
-                  { label: 'Contact', action: (e) => goToSection('contact', e), href: '/#contact' },
+                  { label: 'Contact Us', action: (e) => goToSection('contact', e), href: '/#contact' },
                 ].map((link) => (
                   <li key={link.label}>
                     <a
@@ -157,17 +164,27 @@ const Footer = () => {
                   { label: 'Privacy Policy', href: '/#contact' },
                   { label: 'Terms of Service', href: '/#contact' },
                   { label: 'Legal', href: '/#contact' },
-                  { label: 'Sitemap', href: '/' },
+                
                 ].map((link) => (
                   <li key={link.label}>
-                    <a
-                      href={link.href}
-                      onClick={(e) => { e.preventDefault(); goToSection('contact', e) }}
-                      className="group flex items-center gap-2 text-gray-400 hover:text-white transition-colors duration-200 text-sm"
-                    >
-                      <FaChevronRight className="text-[8px] text-orange-500/60 group-hover:text-orange-400 transition-colors" />
-                      {link.label}
-                    </a>
+                    {link.external ? (
+                      <a
+                        href={link.href}
+                        className="group flex items-center gap-2 text-gray-400 hover:text-white transition-colors duration-200 text-sm"
+                      >
+                        <FaChevronRight className="text-[8px] text-orange-500/60 group-hover:text-orange-400 transition-colors" />
+                        {link.label}
+                      </a>
+                    ) : (
+                      <a
+                        href={link.href}
+                        onClick={(e) => { e.preventDefault(); goToSection('contact', e) }}
+                        className="group flex items-center gap-2 text-gray-400 hover:text-white transition-colors duration-200 text-sm"
+                      >
+                        <FaChevronRight className="text-[8px] text-orange-500/60 group-hover:text-orange-400 transition-colors" />
+                        {link.label}
+                      </a>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -190,11 +207,16 @@ const Footer = () => {
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-lg bg-white/[0.06] border border-white/[0.08] flex items-center justify-center flex-shrink-0">
-                    <FaPhone className="text-orange-400 text-xs" />
+                    <a href={`tel:${settings.phone}`}><FaPhone className="text-orange-400 text-xs" /></a> 
                   </div>
-                  <a href={`tel:${settings.phone}`} className="text-gray-400 hover:text-white transition-colors text-sm">
-                    {settings.phone}
-                  </a>
+                  <a
+            href={`https://wa.me/${settings.phone.replace(/\D/g, '')}?text=${encodeURIComponent('Hello I am interested in your services')}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1 text-gray-400 hover:text-white transition-colors text-sm"
+          ><FaWhatsapp className='text-green-500'  />
+            {settings.phone}
+          </a>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-lg bg-white/[0.06] border border-white/[0.08] flex items-center justify-center flex-shrink-0">
@@ -211,7 +233,7 @@ const Footer = () => {
 
         {/* ─── Bottom Bar ─── */}
         <div className="border-t border-white/[0.06]">
-          <div className="container py-6">
+          <div className="container p-2">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
               <p className="text-gray-400 text-xs tracking-wide">
                 &copy; {currentYear} {settings.site_name}. All rights reserved.

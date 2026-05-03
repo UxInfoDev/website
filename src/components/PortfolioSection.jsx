@@ -35,7 +35,7 @@ const PortfolioSection = () => {
       <div className="container">
         {/* Header */}
         <div className="text-center mb-12">
-          <h2 className="text-6xl font-extrabold text-[#0b3b60] tracking-tight mb-4">Our Portfolio</h2>
+          <h2 className="text-6xl font-extrabold text-[#0971C8]  tracking-tight mb-4">Our Portfolio</h2>
           <p className="text-gray-700 text-lg max-w-2xl mx-auto leading-relaxed">
             Explore some of our recent projects and see how we've helped businesses succeed
           </p>
@@ -47,10 +47,10 @@ const PortfolioSection = () => {
             <button
               key={filter.id}
               onClick={() => setActiveFilter(filter.id)}
-              className={`px-6 py-2.5 font-bold rounded-full transition-all duration-300 text-[11px] tracking-wider uppercase ${
+              className={`px-6 py-2.5 font-bold rounded-lg transition-all duration-300 text-[11px] tracking-wider uppercase ${
                 activeFilter === filter.id
-                  ? 'bg-[#0b3b60] text-white shadow-md'
-                  : 'bg-white text-gray-600 hover:text-[#0b3b60] border border-gray-200 shadow-sm hover:shadow-md'
+                  ? 'bg-[#0971C8]  text-white shadow-md'
+                  : 'bg-white text-gray-600 hover:text-[#0971C8]  border border-gray-200 shadow-sm hover:shadow-md'
               }`}
             >
               {filter.label}

@@ -56,7 +56,7 @@ const ProjectDetails = () => {
               </span>
             </div>
 
-            <h1 className="text-4xl md:text-6xl font-extrabold mb-8 text-[#0b3b60] tracking-tight leading-tight">{project.title}</h1>
+            <h1 className="text-4xl md:text-6xl font-extrabold mb-8 text-[#0971C8] tracking-tight leading-tight">{project.title}</h1>
             
             <div className="prose prose-lg prose-gray max-w-none text-gray-700 leading-relaxed">
               <p className="whitespace-pre-line">{project.description}</p>
@@ -68,7 +68,7 @@ const ProjectDetails = () => {
                   href={project.website_link} 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="inline-block px-10 py-4 bg-[#0b3b60] text-white font-bold rounded-xl hover:bg-orange-600 transition-all shadow-lg hover:-translate-y-1 uppercase tracking-widest text-xs"
+                  className="inline-block px-10 py-4 bg-[#0971C8] text-white font-bold rounded-xl hover:bg-orange-600 transition-all shadow-lg hover:-translate-y-1 uppercase tracking-widest text-xs"
                 >
                   Visit Live Project
                 </a>

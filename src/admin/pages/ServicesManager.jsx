@@ -121,7 +121,7 @@ const ServicesManager = () => {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
         <div>
-          <h2 className="text-3xl font-extrabold text-[#0b3b60]">Services Management</h2>
+          <h2 className="text-3xl font-extrabold text-[#0971C8] ">Services Management</h2>
           <p className="text-gray-500 mt-1">Manage and organize your service offerings.</p>
         </div>
         <div className="flex items-center gap-4 w-full sm:w-auto">
@@ -303,7 +303,7 @@ const ServicesManager = () => {
 
                 {/* Content */}
                 <div className="flex-1 text-center md:text-left">
-                  <h3 className="text-xl font-extrabold text-[#0b3b60] mb-1">{service.title}</h3>
+                  <h3 className="text-xl font-extrabold text-[#0971C8]  mb-1">{service.title}</h3>
                   <p className="text-gray-600 text-sm line-clamp-2">{service.short_description}</p>
                 </div>
 
@@ -351,7 +351,7 @@ const ServicesManager = () => {
 
               {/* Content Body */}
               <div className="p-6 flex-1 flex flex-col">
-                <h3 className="text-xl font-extrabold text-[#0b3b60] mb-2">{service.title}</h3>
+                <h3 className="text-xl font-extrabold text-[#0971C8]  mb-2">{service.title}</h3>
                 <p className="text-gray-600 text-sm mb-4 line-clamp-3 flex-1">{service.short_description}</p>
                 
                 {/* Actions Footer */}

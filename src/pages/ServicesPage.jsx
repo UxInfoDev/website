@@ -46,8 +46,8 @@ const ServicesPage = () => {
           style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2015&auto=format&fit=crop")' }}
         >
           {/* Overlays for premium contrast */}
-          <div className="absolute inset-0 bg-[#0b3b60]/80 mix-blend-multiply"></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0b3b60] to-transparent opacity-90"></div>
+          <div className="absolute inset-0 bg-[#0971C8]/80 mix-blend-multiply"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0971C8] to-transparent opacity-90"></div>
         </div>
 
         <div className="container mx-auto text-center relative z-10 animate-fade-in-up">
@@ -87,7 +87,7 @@ const ServicesPage = () => {
                     )}
                   </div>
                   <div className="p-8">
-                    <h3 className="text-2xl font-extrabold text-[#0b3b60] tracking-tight mb-3">{service.title}</h3>
+                    <h3 className="text-2xl font-extrabold text-[#0971C8] tracking-tight mb-3">{service.title}</h3>
                     <p className="text-gray-600 mb-6 leading-relaxed line-clamp-3">{getShortDescription(service)}</p>
                     <Link
                       to={`/service/${service.id}`}

@@ -564,7 +564,42 @@ app.get(/^\/admin(\/.*)?$/, (req, res) => {
   }
 });
 
-// 3. Serve Frontend Assets
+// 3. Dynamic Sitemap for SEO
+app.get('/sitemap.xml', async (req, res) => {
+  try {
+    const [services, projects] = await Promise.all([
+      pool.query('SELECT id, updated_at FROM services ORDER BY display_order ASC'),
+      pool.query('SELECT id, updated_at FROM projects ORDER BY created_at DESC')
+    ]);
+
+    const baseUrl = process.env.BASE_URL || 'https://uxinfotech.com';
+    const now = new Date().toISOString();
+
+    let xml = '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
+    xml += `<url><loc>${baseUrl}/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>`;
+    xml += `<url><loc>${baseUrl}/services</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>`;
+    xml += `<url><loc>${baseUrl}/search</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>`;
+
+    services.rows.forEach(s => {
+      const lastmod = s.updated_at ? new Date(s.updated_at).toISOString() : now;
+      xml += `<url><loc>${baseUrl}/service/${s.id}</loc><lastmod>${lastmod}</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>`;
+    });
+
+    projects.rows.forEach(p => {
+      const lastmod = p.updated_at ? new Date(p.updated_at).toISOString() : now;
+      xml += `<url><loc>${baseUrl}/project/${p.id}</loc><lastmod>${lastmod}</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>`;
+    });
+
+    xml += '</urlset>';
+    res.header('Content-Type', 'application/xml');
+    res.send(xml);
+  } catch (err) {
+    console.error('Sitemap generation error:', err);
+    res.status(500).send('Error generating sitemap');
+  }
+});
+
+// 4. Serve Frontend Assets
 app.use(express.static(frontendDist));
 
 // 4. Frontend Catch-all

@@ -156,7 +156,7 @@ const Header = () => {
               Home
             </button>
             <button onClick={() => scrollToSection('about')} className={desktopNavClass('about')}>
-              About
+              About Us
             </button>
             <div 
               className="relative group"
@@ -185,7 +185,7 @@ const Header = () => {
                           setActiveTab('services')
                           setIsServicesDropdownOpen(false)
                         }}
-                        className="block px-4 py-2 text-sm font-bold text-[#0b3b60] hover:bg-gray-50 border-b border-gray-50"
+                        className="block px-4 py-2 text-sm font-bold text-[#0971C8]  hover:bg-gray-50 border-b border-gray-50"
                       >
                         View All Services
                       </Link>
@@ -211,7 +211,7 @@ const Header = () => {
               Portfolio
             </button>
             <button onClick={() => scrollToSection('contact')} className={desktopNavClass('contact')}>
-              Contact
+              Contact Us
             </button>
           </nav>
 
@@ -233,16 +233,16 @@ const Header = () => {
           </div>
 
           {/* Search & Mobile Toggle */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
             <button 
               onClick={toggleSearch}
-              className="text-gray-700 hover:text-orange-600 text-xl"
+              className="text-gray-700 hover:text-orange-600 text-xl px-1"
             >
               <FaSearch />
             </button>
             <button 
               onClick={toggleMenu}
-              className="md:hidden text-gray-700 hover:text-orange-600 text-xl"
+              className="md:hidden text-gray-700 hover:text-orange-600 text-xl px-1"
             >
               {isMenuOpen ? <FaTimes /> : <FaBars />}
             </button>
@@ -251,7 +251,7 @@ const Header = () => {
 
         {/* Search Bar */}
         {isSearchOpen && (
-          <div className="pb-4 border-t">
+          <div className="py-2 border-t">
             <form onSubmit={handleSearchSubmit} className="flex gap-2">
               <input
                 type="search"
@@ -283,7 +283,7 @@ const Header = () => {
                 Home
               </button>
               <button onClick={() => scrollToSection('about')} className={mobileNavClass('about')}>
-                About
+                About Us
               </button>
               
               <div className="flex flex-col">
@@ -329,7 +329,7 @@ const Header = () => {
                 Portfolio
               </button>
               <button onClick={() => scrollToSection('contact')} className={mobileNavClass('contact')}>
-                Contact
+                Contact Us
               </button>
             </div>
           </nav>

@@ -27,7 +27,7 @@ const ServiceDetails = () => {
   if (!service) {
     return (
       <div className="py-32 flex flex-col items-center justify-center gap-4">
-        <div className="w-12 h-12 border-4 border-orange-200 border-t-orange-600 rounded-full animate-spin"></div>
+        <div className="w-12 h-12 border-4 border-orange-200 border-t-orange-600 rounded-lg animate-spin"></div>
         <p className="text-gray-500 font-medium animate-pulse">Loading service details...</p>
       </div>
     )
@@ -78,20 +78,20 @@ const ServiceDetails = () => {
 
             <div className="p-8 md:p-10 flex flex-col justify-center">
               <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-orange-600 mb-3">Service Details</p>
-              <h1 className="text-3xl md:text-5xl font-extrabold text-[#0b3b60] mb-4 leading-tight tracking-tight">{service.title}</h1>
+              <h1 className="text-3xl md:text-5xl font-extrabold text-[#0971C8] mb-4 leading-tight tracking-tight">{service.title}</h1>
               <p className="text-gray-700 text-lg md:text-xl leading-relaxed">
                 {service.short_description || 'We provide professional digital solutions to help your business reach its goals.'}
               </p>
 
               <div className="mt-6 flex flex-wrap gap-3">
-                <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold bg-green-50 text-green-700 border border-green-100">
+                <span className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold bg-green-50 text-green-700 border border-green-100">
                   <FaCheckCircle size={14} />
                   Strategy-focused
                 </span>
-                <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-100">
+                <span className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold bg-blue-50 text-blue-700 border border-blue-100">
                   Mobile-friendly
                 </span>
-                <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold bg-orange-50 text-orange-700 border border-orange-100">
+                <span className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold bg-orange-50 text-orange-700 border border-orange-100">
                   Fast delivery
                 </span>
               </div>
@@ -101,12 +101,12 @@ const ServiceDetails = () => {
           <div className="px-8 md:px-10 pb-10 pt-6">
             <hr className="border-gray-100 mb-10" />
             <div
-              className="prose prose-lg prose-gray max-w-none text-gray-700 leading-relaxed prose-headings:text-[#0b3b60] prose-headings:font-extrabold prose-headings:tracking-tight prose-headings:mb-4 prose-p:mb-6 prose-ul:mb-6 prose-li:my-2"
+              className="prose prose-lg prose-gray max-w-none text-gray-700 leading-relaxed prose-headings:text-[#0971C8] prose-headings:font-extrabold prose-headings:tracking-tight prose-headings:mb-4 prose-p:mb-6 prose-ul:mb-6 prose-li:my-2"
               dangerouslySetInnerHTML={{ __html: normalizedDescription.trim() ? normalizedDescription : sampleDescription }}
             />
 
-            <div className="mt-12 bg-[#0b3b60] rounded-3xl p-8 md:p-12 text-white relative overflow-hidden group">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-orange-600/10 rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-110 transition-transform duration-700"></div>
+            <div className="mt-12 bg-[#0971C8] rounded-3xl p-8 md:p-12 text-white relative overflow-hidden group">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-orange-600/10 rounded-lg -translate-y-1/2 translate-x-1/2 group-hover:scale-110 transition-transform duration-700"></div>
               
               <div className="relative z-10">
                 <h3 className="text-3xl font-extrabold mb-3 text-white tracking-tight">Ready to start?</h3>

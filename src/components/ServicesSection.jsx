@@ -40,7 +40,7 @@ const ServicesSection = () => {
       <div className="container">
         {/* Header */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-extrabold text-[#0b3b60] tracking-tight mb-4">Our Services</h2>
+          <h2 className="text-4xl font-extrabold text-[#0971C8] tracking-tight mb-4">Our Services</h2>
           <p className="text-gray-700 text-lg max-w-2xl mx-auto leading-relaxed">
             We provide simple, powerful digital services to help your business succeed. 
             From design to development, we handle everything for you.
@@ -71,7 +71,7 @@ const ServicesSection = () => {
                   )}
                 </div>
                 <div className="p-8">
-                  <h3 className="text-2xl font-extrabold text-[#0b3b60] tracking-tight mb-3">{service.title}</h3>
+                  <h3 className="text-2xl font-extrabold text-[#0971C8] tracking-tight mb-3">{service.title}</h3>
                   <p className="text-gray-700 mb-6 leading-relaxed">{getShortDescription(service)}</p>
                   <Link
                     to={`/service/${service.id}`}

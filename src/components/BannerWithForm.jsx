@@ -108,7 +108,7 @@ const BannerWithForm = () => {
                   {(slides[currentSlide]?.cta_alt || 'Contact Us') && (
                     <a
                       href={slides[currentSlide]?.cta_link || '#contact'}
-                      className="inline-flex items-center justify-center px-8 py-4 border-2 border-white text-white hover:bg-white hover:text-[#0b3b60] font-bold rounded-lg transition-all duration-300 text-[12px] tracking-widest uppercase shadow-sm hover:shadow-md hover:-translate-y-0.5"
+                      className="inline-flex items-center justify-center px-8 py-4 border-2 border-white text-white hover:bg-white hover:text-[#0971C8]  font-bold rounded-lg transition-all duration-300 text-[12px] tracking-widest uppercase shadow-sm hover:shadow-md hover:-translate-y-0.5"
                     >
                       {slides[currentSlide]?.cta_alt || 'Contact Us'}
                     </a>
