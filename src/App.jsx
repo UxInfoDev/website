@@ -33,7 +33,7 @@ function App() {
       <Helmet>
         <title>{settings?.site_name || 'UX Infotech'} | Professional Design Agency</title>
         {settings?.favicon_url && (
-          <link rel="icon" type="image/png" href={settings.favicon_url} />
+          <link rel="icon" type="image/png" href="/fevicon.png" />
         )}
         <meta
           name="description"

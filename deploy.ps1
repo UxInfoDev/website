@@ -42,19 +42,30 @@ $deployCmd = @"
   mkdir -p $remoteAppDir
   cd /home/ubuntu
 
-  # Backup uploads before overwrite
+  # Backup uploads and favicon before overwrite
   if [ -d "$remoteAppDir/public/uploads" ]; then
     cp -r "$remoteAppDir/public/uploads" /tmp/uploads_backup_${timestamp}
+  fi
+  if [ -f "$remoteAppDir/fevicon.png" ]; then
+    cp "$remoteAppDir/fevicon.png" /tmp/fevicon_backup_${timestamp}
+  elif [ -f "$remoteAppDir/dist/fevicon.png" ]; then
+    cp "$remoteAppDir/dist/fevicon.png" /tmp/fevicon_backup_${timestamp}
   fi
 
   unzip -o deploy.zip -d $remoteAppDir
   rm deploy.zip
 
-  # Restore uploads if they were overwritten
+  # Restore uploads and fevicon if they were overwritten
   mkdir -p "$remoteAppDir/public/uploads"
   if [ -d "/tmp/uploads_backup_${timestamp}" ]; then
     cp -rn /tmp/uploads_backup_${timestamp}/. "$remoteAppDir/public/uploads/"
     rm -rf /tmp/uploads_backup_${timestamp}
+  fi
+  if [ -f "/tmp/fevicon_backup_${timestamp}" ]; then
+    cp "/tmp/fevicon_backup_${timestamp}" "$remoteAppDir/fevicon.png"
+    cp "/tmp/fevicon_backup_${timestamp}" "$remoteAppDir/dist/fevicon.png"
+    cp "/tmp/fevicon_backup_${timestamp}" "$remoteAppDir/public/fevicon.png"
+    rm /tmp/fevicon_backup_${timestamp}
   fi
 
   cd $remoteAppDir

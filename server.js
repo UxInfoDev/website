@@ -524,20 +524,34 @@ app.put('/api/settings', async (req, res) => {
     // Special handling for Favicon: always save as favicon.png in root
     let faviconPath = null;
     if (req.files?.['favicon']) {
-      const file = req.files['favicon'][0];
-      const targetName = 'favicon.png';
-      
-      // Copy to public folder (for dev/consistency)
-      const publicPath = path.join(__dirname, 'public', targetName);
-      fs.copyFileSync(file.path, publicPath);
-      
-      // Copy to dist folder (for production serving)
-      const distPath = path.join(__dirname, 'dist', targetName);
-      if (fs.existsSync(path.join(__dirname, 'dist'))) {
-        fs.copyFileSync(file.path, distPath);
+      try {
+        const file = req.files['favicon'][0];
+        const targetName = 'fevicon.png';
+        
+        // Ensure public folder exists before copying
+        const publicDir = path.join(__dirname, 'public');
+        if (!fs.existsSync(publicDir)) {
+          fs.mkdirSync(publicDir, { recursive: true });
+        }
+        const publicPath = path.join(__dirname, 'public', targetName);
+        fs.copyFileSync(file.path, publicPath);
+        
+        // Copy to dist folder if it exists
+        const distDir = path.join(__dirname, 'dist');
+        if (fs.existsSync(distDir)) {
+          const distPath = path.join(distDir, targetName);
+          fs.copyFileSync(file.path, distPath);
+        }
+        
+        // Copy to root as well just in case
+        fs.copyFileSync(file.path, path.join(__dirname, targetName));
+        
+        faviconPath = `/${targetName}`;
+        console.log('Favicon updated successfully at root directories');
+      } catch (fErr) {
+        console.error('Favicon file operation error:', fErr);
+        // We continue anyway so other settings can save, but faviconPath remains null
       }
-      
-      faviconPath = `/${targetName}`;
     }
     
     // Ensure banner_rotation_speed is a valid integer or null
