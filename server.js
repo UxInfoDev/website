@@ -8,7 +8,6 @@ const { Pool } = require('pg');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const axios = require('axios');
 
 const app = express();
 
@@ -292,34 +291,7 @@ app.get('/api/inquiries', async (req, res) => {
 
 app.post('/api/inquiries', async (req, res) => {
   const { name, email, subject, message } = req.body;
-  const turnstileToken = req.body['cf-turnstile-response'];
-
   try {
-    // 1. Verify Turnstile token with Cloudflare
-    const secretKey = process.env.TURNSTILE_SECRET_KEY || '0x4AAAAAAAx7Y9M_m9u-Y-X5';
-    
-    try {
-      const verificationResponse = await axios.post(
-        'https://challenges.cloudflare.com/turnstile/v0/siteverify',
-        new URLSearchParams({
-          secret: secretKey,
-          response: turnstileToken,
-          remoteip: req.ip
-        })
-      );
-
-      if (!verificationResponse.data.success) {
-        console.error('Turnstile verification failed:', verificationResponse.data['error-codes']);
-        return res.status(400).json({ error: 'Security verification failed. Please try again.' });
-      }
-    } catch (err) {
-      console.error('Cloudflare API error:', err.message);
-      // In case of API failure, we might want to let it pass or fail. 
-      // Usually better to fail for security, but depends on criticality.
-      return res.status(500).json({ error: 'Security service unavailable.' });
-    }
-
-    // 2. Save inquiry to database
     const result = await pool.query(
       'INSERT INTO inquiries (name, email, subject, message) VALUES ($1, $2, $3, $4) RETURNING *',
       [name, email, subject, message]

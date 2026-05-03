@@ -219,15 +219,6 @@ const Header = () => {
           <div className="hidden lg:flex items-center gap-3">
             <button 
               onClick={() => {
-                if (location.pathname !== '/') navigate('/#contact')
-                else scrollToSection('contact')
-              }} 
-              className="px-6 py-2.5 border-2 border-[#0b3b60] text-[#0b3b60] hover:bg-[#0b3b60] hover:text-white font-bold rounded-lg transition-all duration-300 text-[11px] tracking-widest uppercase hover:shadow-md hover:-translate-y-0.5"
-            >
-              Book Consultation
-            </button>
-            <button 
-              onClick={() => {
                 if (location.pathname !== '/') {
                   navigate('/')
                   setTimeout(() => window.dispatchEvent(new Event('openQuoteModal')), 300)
