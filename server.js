@@ -184,7 +184,7 @@ app.delete('/api/projects/:id', async (req, res) => {
 // Services API -----------------------------------------
 app.get('/api/services', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM services ORDER BY created_at DESC');
+    const result = await pool.query('SELECT * FROM services ORDER BY display_order ASC, created_at DESC');
     res.json(result.rows);
   } catch (err) {
     console.error(err);
@@ -206,11 +206,11 @@ app.get('/api/services/:id', async (req, res) => {
 app.post('/api/services', async (req, res) => {
   try {
     await runUpload(upload.single('image'), req, res);
-    const { title, short_description, description, icon } = req.body;
+    const { title, short_description, description, icon, display_order } = req.body;
     const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
     const result = await pool.query(
-      'INSERT INTO services (title, short_description, description, icon, image) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-      [title, short_description, description, icon, imagePath]
+      'INSERT INTO services (title, short_description, description, icon, image, display_order) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+      [title, short_description, description, icon, imagePath, display_order || 0]
     );
     res.json(result.rows[0]);
   } catch (err) {
@@ -223,18 +223,18 @@ app.put('/api/services/:id', async (req, res) => {
   try {
     await runUpload(upload.single('image'), req, res);
     const { id } = req.params;
-    const { title, short_description, description, icon } = req.body;
+    const { title, short_description, description, icon, display_order } = req.body;
     const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
     if (imagePath) {
       const result = await pool.query(
-        'UPDATE services SET title = $1, short_description = $2, description = $3, icon = $4, image = $5 WHERE id = $6 RETURNING *',
-        [title, short_description, description, icon, imagePath, id]
+        'UPDATE services SET title = $1, short_description = $2, description = $3, icon = $4, image = $5, display_order = $6 WHERE id = $7 RETURNING *',
+        [title, short_description, description, icon, imagePath, display_order || 0, id]
       );
       res.json(result.rows[0]);
     } else {
       const result = await pool.query(
-        'UPDATE services SET title = $1, short_description = $2, description = $3, icon = $4 WHERE id = $5 RETURNING *',
-        [title, short_description, description, icon, id]
+        'UPDATE services SET title = $1, short_description = $2, description = $3, icon = $4, display_order = $5 WHERE id = $6 RETURNING *',
+        [title, short_description, description, icon, display_order || 0, id]
       );
       res.json(result.rows[0]);
     }
@@ -249,6 +249,29 @@ app.delete('/api/services/:id', async (req, res) => {
   try {
     await pool.query('DELETE FROM services WHERE id = $1', [id]);
     res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.post('/api/services/reorder', async (req, res) => {
+  const { items } = req.body; // Array of { id, display_order }
+  try {
+    const client = await pool.connect();
+    try {
+      await client.query('BEGIN');
+      for (const item of items) {
+        await client.query('UPDATE services SET display_order = $1 WHERE id = $2', [item.display_order, item.id]);
+      }
+      await client.query('COMMIT');
+      res.json({ success: true });
+    } catch (e) {
+      await client.query('ROLLBACK');
+      throw e;
+    } finally {
+      client.release();
+    }
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Internal server error' });
@@ -313,7 +336,7 @@ app.get('/api/banners', async (req, res) => {
     if (req.query.active === 'true') {
       query += ' WHERE is_active = true';
     }
-    query += ' ORDER BY created_at ASC';
+    query += ' ORDER BY display_order ASC, created_at ASC';
     const result = await pool.query(query);
     res.json(result.rows);
   } catch (err) {
@@ -325,11 +348,11 @@ app.get('/api/banners', async (req, res) => {
 app.post('/api/banners', async (req, res) => {
   try {
     await runUpload(upload.single('image'), req, res);
-    const { title, subtitle, description, cta_text, cta_link, cta_alt, is_active } = req.body;
+    const { title, subtitle, description, cta_text, cta_link, cta_alt, is_active, display_order } = req.body;
     const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
     const result = await pool.query(
-      'INSERT INTO carousels (title, subtitle, description, image, cta_text, cta_link, cta_alt, is_active) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
-      [title, subtitle || '', description, imagePath, cta_text, cta_link, cta_alt, is_active !== 'false']
+      'INSERT INTO carousels (title, subtitle, description, image, cta_text, cta_link, cta_alt, is_active, display_order) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *',
+      [title, subtitle || '', description, imagePath, cta_text, cta_link, cta_alt, is_active !== 'false', display_order || 0]
     );
     res.json(result.rows[0]);
   } catch (err) {
@@ -342,18 +365,18 @@ app.put('/api/banners/:id', async (req, res) => {
   try {
     await runUpload(upload.single('image'), req, res);
     const { id } = req.params;
-    const { title, subtitle, description, cta_text, cta_link, cta_alt, is_active } = req.body;
+    const { title, subtitle, description, cta_text, cta_link, cta_alt, is_active, display_order } = req.body;
     const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
     if (imagePath) {
       const result = await pool.query(
-        'UPDATE carousels SET title = $1, subtitle = $2, description = $3, image = $4, cta_text = $5, cta_link = $6, cta_alt = $7, is_active = $8 WHERE id = $9 RETURNING *',
-        [title, subtitle || '', description, imagePath, cta_text, cta_link, cta_alt, is_active !== 'false', id]
+        'UPDATE carousels SET title = $1, subtitle = $2, description = $3, image = $4, cta_text = $5, cta_link = $6, cta_alt = $7, is_active = $8, display_order = $9 WHERE id = $10 RETURNING *',
+        [title, subtitle || '', description, imagePath, cta_text, cta_link, cta_alt, is_active !== 'false', display_order || 0, id]
       );
       res.json(result.rows[0]);
     } else {
       const result = await pool.query(
-        'UPDATE carousels SET title = $1, subtitle = $2, description = $3, cta_text = $4, cta_link = $5, cta_alt = $6, is_active = $7 WHERE id = $8 RETURNING *',
-        [title, subtitle || '', description, cta_text, cta_link, cta_alt, is_active !== 'false', id]
+        'UPDATE carousels SET title = $1, subtitle = $2, description = $3, cta_text = $4, cta_link = $5, cta_alt = $6, is_active = $7, display_order = $8 WHERE id = $9 RETURNING *',
+        [title, subtitle || '', description, cta_text, cta_link, cta_alt, is_active !== 'false', display_order || 0, id]
       );
       res.json(result.rows[0]);
     }
@@ -383,6 +406,29 @@ app.delete('/api/banners/:id', async (req, res) => {
   try {
     await pool.query('DELETE FROM carousels WHERE id = $1', [id]);
     res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.post('/api/banners/reorder', async (req, res) => {
+  const { items } = req.body; // Array of { id, display_order }
+  try {
+    const client = await pool.connect();
+    try {
+      await client.query('BEGIN');
+      for (const item of items) {
+        await client.query('UPDATE carousels SET display_order = $1 WHERE id = $2', [item.display_order, item.id]);
+      }
+      await client.query('COMMIT');
+      res.json({ success: true });
+    } catch (e) {
+      await client.query('ROLLBACK');
+      throw e;
+    } finally {
+      client.release();
+    }
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Internal server error' });
@@ -467,31 +513,31 @@ app.put('/api/settings', async (req, res) => {
   try {
     await runUpload(logoUpload.single('logo'), req, res);
 
-    const { site_name, site_description, phone, email, address, facebook_url, twitter_url, linkedin_url, youtube_url } = req.body;
+    const { site_name, site_description, phone, email, address, facebook_url, twitter_url, linkedin_url, youtube_url, banner_rotation_speed } = req.body;
     const logoPath = req.file ? `/uploads/${req.file.filename}` : null;
     
     let result;
     if (logoPath) {
       result = await pool.query(
-        `INSERT INTO settings (id, site_name, site_description, phone, email, address, facebook_url, twitter_url, linkedin_url, youtube_url, logo_url, updated_at)
+        `INSERT INTO settings (id, site_name, site_description, phone, email, address, facebook_url, twitter_url, linkedin_url, youtube_url, logo_url, banner_rotation_speed, updated_at)
+         VALUES (1, $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, CURRENT_TIMESTAMP)
+         ON CONFLICT (id) DO UPDATE SET
+           site_name = $1, site_description = $2, phone = $3, email = $4, address = $5,
+           facebook_url = $6, twitter_url = $7, linkedin_url = $8, youtube_url = $9,
+           logo_url = $10, banner_rotation_speed = $11, updated_at = CURRENT_TIMESTAMP
+         RETURNING *`,
+        [site_name, site_description, phone, email, address, facebook_url, twitter_url, linkedin_url, youtube_url, logoPath, banner_rotation_speed]
+      );
+    } else {
+      result = await pool.query(
+        `INSERT INTO settings (id, site_name, site_description, phone, email, address, facebook_url, twitter_url, linkedin_url, youtube_url, banner_rotation_speed, updated_at)
          VALUES (1, $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, CURRENT_TIMESTAMP)
          ON CONFLICT (id) DO UPDATE SET
            site_name = $1, site_description = $2, phone = $3, email = $4, address = $5,
            facebook_url = $6, twitter_url = $7, linkedin_url = $8, youtube_url = $9,
-           logo_url = $10, updated_at = CURRENT_TIMESTAMP
+           banner_rotation_speed = $10, updated_at = CURRENT_TIMESTAMP
          RETURNING *`,
-        [site_name, site_description, phone, email, address, facebook_url, twitter_url, linkedin_url, youtube_url, logoPath]
-      );
-    } else {
-      result = await pool.query(
-        `INSERT INTO settings (id, site_name, site_description, phone, email, address, facebook_url, twitter_url, linkedin_url, youtube_url, updated_at)
-         VALUES (1, $1, $2, $3, $4, $5, $6, $7, $8, $9, CURRENT_TIMESTAMP)
-         ON CONFLICT (id) DO UPDATE SET
-           site_name = $1, site_description = $2, phone = $3, email = $4, address = $5,
-           facebook_url = $6, twitter_url = $7, linkedin_url = $8, youtube_url = $9,
-           updated_at = CURRENT_TIMESTAMP
-         RETURNING *`,
-        [site_name, site_description, phone, email, address, facebook_url, twitter_url, linkedin_url, youtube_url]
+        [site_name, site_description, phone, email, address, facebook_url, twitter_url, linkedin_url, youtube_url, banner_rotation_speed]
       );
     }
     res.json(result.rows[0]);

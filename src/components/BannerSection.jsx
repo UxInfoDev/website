@@ -6,6 +6,7 @@ import ContactInfoBar from './ContactInfoBar'
 const BannerSection = () => {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [slides, setSlides] = useState([])
+  const [rotationSpeed, setRotationSpeed] = useState(5000) // Default fallback
 
   useEffect(() => {
     const fetchBanners = async () => {
@@ -18,16 +19,27 @@ const BannerSection = () => {
         console.error('Failed to load banners')
       }
     }
+    const fetchSettings = async () => {
+      try {
+        const response = await axios.get(`/api/settings?_t=${new Date().getTime()}`)
+        if (response.data && response.data.banner_rotation_speed) {
+          setRotationSpeed(parseInt(response.data.banner_rotation_speed))
+        }
+      } catch (error) {
+        console.error('Failed to load settings')
+      }
+    }
     fetchBanners()
+    fetchSettings()
   }, [])
 
   useEffect(() => {
     if (slides.length === 0) return
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length)
-    }, 8000)
+    }, rotationSpeed)
     return () => clearInterval(timer)
-  }, [slides.length])
+  }, [slides.length, rotationSpeed])
 
   const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % slides.length)
   const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length)
@@ -63,23 +75,24 @@ const BannerSection = () => {
                     </div>
                   )}
                   
-                  <h1 className="text-4xl sm:text-5xl lg:text-5xl xl:text-6xl font-extrabold text-[#0b3b60] leading-[1.1] tracking-tight mb-6">
+                  <h1 className="text-3xl sm:text-5xl lg:text-5xl xl:text-6xl font-extrabold text-[#0b3b60] leading-tight tracking-tight mb-4 sm:mb-6 animate-fade-in-up" style={{ animationDelay: '100ms' }}>
                     {slide.title}
                   </h1>
                   
                   {slide.description && (
                     <div 
-                      className="text-base sm:text-lg text-gray-700 mb-10 max-w-xl leading-relaxed banner-rich-text"
+                      className="text-sm sm:text-lg text-gray-700 mb-6 sm:mb-10 max-w-xl leading-relaxed banner-rich-text animate-fade-in-up line-clamp-3 sm:line-clamp-none"
+                      style={{ animationDelay: '200ms' }}
                       dangerouslySetInnerHTML={{ __html: slide.description }}
                     />
                   )}
 
                   {(slide.cta_text || slide.cta_alt) && (
-                    <div className="flex flex-col sm:flex-row gap-4 mb-12 w-full sm:w-auto">
+                    <div className="flex flex-col sm:flex-row gap-4 mb-12 w-full sm:w-auto animate-fade-in-up" style={{ animationDelay: '300ms' }}>
                       {slide.cta_text && (
                         <button
                           onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event('openQuoteModal')); }}
-                          className="px-8 py-4 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-lg transition-all duration-300 text-[12px] tracking-widest uppercase shadow-md hover:shadow-lg hover:-translate-y-0.5 w-full sm:w-auto text-center"
+                          className="px-8 py-4 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-lg transition-all duration-300 text-[12px] tracking-widest uppercase shadow-md hover:shadow-xl hover:-translate-y-1 w-full sm:w-auto text-center"
                         >
                           {slide.cta_text}
                         </button>
@@ -87,7 +100,7 @@ const BannerSection = () => {
                       {slide.cta_alt && (
                         <a
                           href={slide.cta_link || '#contact'}
-                          className="px-8 py-4 border-2 border-[#0b3b60] text-[#0b3b60] hover:bg-[#0b3b60] hover:text-white font-bold rounded-lg transition-all duration-300 text-[12px] tracking-widest uppercase hover:shadow-md hover:-translate-y-0.5 w-full sm:w-auto text-center flex items-center justify-center"
+                          className="px-8 py-4 border-2 border-[#0b3b60] text-[#0b3b60] hover:bg-[#0b3b60] hover:text-white font-bold rounded-lg transition-all duration-300 text-[12px] tracking-widest uppercase shadow-sm hover:shadow-xl hover:-translate-y-1 w-full sm:w-auto text-center flex items-center justify-center bg-white"
                         >
                           {slide.cta_alt}
                         </a>
@@ -97,13 +110,18 @@ const BannerSection = () => {
                 </div>
 
                 {/* ── Image Content ── */}
-                <div className="w-full lg:w-1/2 relative mt-4 lg:mt-0 flex justify-center">
-                  <div className="w-full aspect-[4/3] sm:aspect-video lg:aspect-[4/3] xl:aspect-[1.4/1] relative">
-                    <img 
-                      src={slide.image} 
-                      alt={slide.title}
-                      className="w-full h-full object-cover rounded-[20px] shadow-lg relative z-10"
-                    />
+                <div className="w-full lg:w-1/2 relative mt-4 lg:mt-0 flex justify-center animate-fade-in-up" style={{ animationDelay: '400ms' }}>
+                  <div className="w-full aspect-[4/3] sm:aspect-video lg:aspect-[4/3] xl:aspect-[1.4/1] relative group rounded-2xl overflow-hidden shadow-2xl bg-gray-100 border border-gray-100">
+                    {slide.image ? (
+                      <img 
+                        src={slide.image} 
+                        alt={slide.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-gray-400">No Image Provided</div>
+                    )}
                   </div>
                 </div>
               </div>

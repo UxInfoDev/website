@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { FaEdit, FaTrash, FaPlus } from 'react-icons/fa'
+import { FaEdit, FaTrash, FaPlus, FaArrowUp, FaArrowDown } from 'react-icons/fa'
 import { toast } from 'react-toastify'
 import { useForm } from 'react-hook-form'
 import axios from 'axios'
@@ -42,6 +42,10 @@ const BannersManager = () => {
       formData.append('is_active', data.is_active === false ? 'false' : 'true')
       if (imageFile) {
         formData.append('image', imageFile)
+      }
+      if (editingId) {
+        const existing = banners.find(b => b.id === editingId)
+        if (existing) formData.append('display_order', existing.display_order)
       }
        
       const config = { headers: { 'Content-Type': 'multipart/form-data' } }
@@ -94,6 +98,27 @@ const BannersManager = () => {
       fetchBanners();
     } catch (error) {
       toast.error('Failed to update banner status');
+    }
+  }
+
+  const handleMove = async (index, direction) => {
+    if (direction === -1 && index === 0) return;
+    if (direction === 1 && index === banners.length - 1) return;
+
+    const newBanners = [...banners];
+    const temp = newBanners[index];
+    newBanners[index] = newBanners[index + direction];
+    newBanners[index + direction] = temp;
+
+    const itemsToUpdate = newBanners.map((item, i) => ({ id: item.id, display_order: i }));
+    setBanners(newBanners);
+
+    try {
+      await axios.post(`${API_BASE}/reorder`, { items: itemsToUpdate });
+      toast.success('Order updated');
+    } catch (error) {
+      toast.error('Failed to update order');
+      fetchBanners();
     }
   }
 
@@ -237,11 +262,12 @@ const BannersManager = () => {
               <th className="text-left py-3 px-4">Subtitle</th>
               <th className="text-left py-3 px-4">CTA Link</th>
               <th className="text-left py-3 px-4">Active</th>
+              <th className="text-left py-3 px-4">Order</th>
               <th className="text-left py-3 px-4">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {banners.map((banner) => (
+            {banners.map((banner, index) => (
               <tr key={banner.id} className="border-b hover:bg-gray-50">
                 <td className="py-3 px-4">{banner.title}</td>
                 <td className="py-3 px-4 text-sm text-gray-500">{banner.subtitle || '—'}</td>
@@ -265,6 +291,24 @@ const BannersManager = () => {
                     <span className={`text-sm font-bold ${banner.is_active ? 'text-green-700' : 'text-gray-500'}`}>
                       {banner.is_active ? 'Active' : 'Inactive'}
                     </span>
+                  </div>
+                </td>
+                <td className="py-3 px-4">
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => handleMove(index, -1)}
+                      disabled={index === 0}
+                      className={`p-1 rounded ${index === 0 ? 'text-gray-300' : 'text-gray-600 hover:bg-gray-200'}`}
+                    >
+                      <FaArrowUp />
+                    </button>
+                    <button
+                      onClick={() => handleMove(index, 1)}
+                      disabled={index === banners.length - 1}
+                      className={`p-1 rounded ${index === banners.length - 1 ? 'text-gray-300' : 'text-gray-600 hover:bg-gray-200'}`}
+                    >
+                      <FaArrowDown />
+                    </button>
                   </div>
                 </td>
                 <td className="py-3 px-4 flex gap-2">

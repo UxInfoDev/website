@@ -11,6 +11,7 @@ import NotFound from './pages/NotFound'
 import ServiceDetails from './pages/ServiceDetails'
 import ProjectDetails from './pages/ProjectDetails'
 import SearchResults from './pages/SearchResults'
+import ServicesPage from './pages/ServicesPage'
 import QuoteModal from './components/QuoteModal'
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/search" element={<SearchResults />} />
+            <Route path="/services" element={<ServicesPage />} />
             <Route path="/service/:id" element={<ServiceDetails />} />
             <Route path="/project/:id" element={<ProjectDetails />} />
             <Route path="*" element={<NotFound />} />

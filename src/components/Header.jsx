@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
-import { FaBars, FaTimes, FaSearch } from 'react-icons/fa'
+import { FaBars, FaTimes, FaSearch, FaChevronDown } from 'react-icons/fa'
 import axios from 'axios'
 
 const Header = () => {
@@ -9,15 +9,24 @@ const Header = () => {
   const [logoUrl, setLogoUrl] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [activeTab, setActiveTab] = useState('home')
+  const [services, setServices] = useState([])
+  const [isServicesDropdownOpen, setIsServicesDropdownOpen] = useState(false)
   const navigate = useNavigate()
   const location = useLocation()
 
   useEffect(() => {
-    axios.get(`/api/settings?_t=${Date.now()}`)
-      .then(res => {
-        if (res.data?.logo_url) setLogoUrl(res.data.logo_url + `?_t=${Date.now()}`)
-      })
-      .catch(() => {})
+    const fetchSettingsAndServices = async () => {
+      try {
+        const settingsRes = await axios.get(`/api/settings?_t=${Date.now()}`)
+        if (settingsRes.data?.logo_url) setLogoUrl(settingsRes.data.logo_url + `?_t=${Date.now()}`)
+      } catch (err) {}
+
+      try {
+        const servicesRes = await axios.get(`/api/services?_t=${Date.now()}`)
+        setServices(servicesRes.data)
+      } catch (err) {}
+    }
+    fetchSettingsAndServices()
   }, [])
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
@@ -149,9 +158,55 @@ const Header = () => {
             <button onClick={() => scrollToSection('about')} className={desktopNavClass('about')}>
               About
             </button>
-            <button onClick={() => scrollToSection('services')} className={desktopNavClass('services')}>
-              Services
-            </button>
+            <div 
+              className="relative group"
+              onMouseEnter={() => setIsServicesDropdownOpen(true)}
+              onMouseLeave={() => setIsServicesDropdownOpen(false)}
+            >
+              <button 
+                onClick={() => {
+                  navigate('/services')
+                  setActiveTab('services')
+                  setIsMenuOpen(false)
+                }} 
+                className={`${desktopNavClass('services')} flex items-center gap-1`}
+              >
+                Services <FaChevronDown className="text-[10px]" />
+              </button>
+              
+              {/* Dropdown Menu */}
+              {isServicesDropdownOpen && (
+                <div className="absolute top-full left-0 pt-2 w-64 z-50">
+                  <div className="bg-white rounded-lg shadow-xl border border-gray-100 overflow-hidden animate-fade-in-up">
+                    <div className="py-2">
+                      <Link 
+                        to="/services"
+                        onClick={() => {
+                          setActiveTab('services')
+                          setIsServicesDropdownOpen(false)
+                        }}
+                        className="block px-4 py-2 text-sm font-bold text-[#0b3b60] hover:bg-gray-50 border-b border-gray-50"
+                      >
+                        View All Services
+                      </Link>
+                    {services.map(service => (
+                      <Link
+                        key={service.id}
+                        to={`/service/${service.id}`}
+                        onClick={() => {
+                          setActiveTab('services')
+                          setIsServicesDropdownOpen(false)
+                        }}
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition-colors"
+                      >
+                        {service.title}
+                      </Link>
+                    ))}
+                  </div>
+                  </div>
+                </div>
+              )}
+            </div>
             <button onClick={() => scrollToSection('portfolio')} className={desktopNavClass('portfolio')}>
               Portfolio
             </button>
@@ -239,9 +294,46 @@ const Header = () => {
               <button onClick={() => scrollToSection('about')} className={mobileNavClass('about')}>
                 About
               </button>
-              <button onClick={() => scrollToSection('services')} className={mobileNavClass('services')}>
-                Services
-              </button>
+              
+              <div className="flex flex-col">
+                <div className="flex justify-between items-center w-full">
+                  <button 
+                    onClick={() => {
+                      navigate('/services')
+                      setActiveTab('services')
+                      setIsMenuOpen(false)
+                    }} 
+                    className={mobileNavClass('services')}
+                  >
+                    Services
+                  </button>
+                  <button 
+                    onClick={() => setIsServicesDropdownOpen(!isServicesDropdownOpen)}
+                    className="p-2 text-gray-500 hover:text-orange-600"
+                  >
+                    <FaChevronDown className={`transition-transform ${isServicesDropdownOpen ? 'rotate-180' : ''}`} />
+                  </button>
+                </div>
+                
+                {isServicesDropdownOpen && (
+                  <div className="pl-4 border-l-2 border-gray-100 mt-1 flex flex-col gap-2">
+                    {services.map(service => (
+                      <Link
+                        key={service.id}
+                        to={`/service/${service.id}`}
+                        onClick={() => {
+                          setActiveTab('services')
+                          setIsMenuOpen(false)
+                        }}
+                        className="text-sm py-1.5 text-gray-600 hover:text-orange-600"
+                      >
+                        {service.title}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+
               <button onClick={() => scrollToSection('portfolio')} className={mobileNavClass('portfolio')}>
                 Portfolio
               </button>

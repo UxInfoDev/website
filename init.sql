@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS services (
     description TEXT,
     icon VARCHAR(100),
     image VARCHAR(255),
+    display_order INTEGER DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -39,6 +40,7 @@ CREATE TABLE IF NOT EXISTS carousels (
     cta_link VARCHAR(255),
     cta_alt VARCHAR(100),
     is_active BOOLEAN DEFAULT TRUE,
+    display_order INTEGER DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -89,3 +91,7 @@ ALTER TABLE carousels ADD COLUMN IF NOT EXISTS is_active BOOLEAN DEFAULT TRUE;
 
 -- Add subtitle column to carousels for the tagline above banner title
 ALTER TABLE carousels ADD COLUMN IF NOT EXISTS subtitle VARCHAR(255);
+
+-- Add display_order columns for reordering functionality
+ALTER TABLE carousels ADD COLUMN IF NOT EXISTS display_order INTEGER DEFAULT 0;
+ALTER TABLE services ADD COLUMN IF NOT EXISTS display_order INTEGER DEFAULT 0;

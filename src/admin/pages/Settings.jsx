@@ -53,7 +53,7 @@ const SettingsPage = () => {
       // (exclude id, updated_at, logo_url which come from reset())
       const allowedFields = [
         'site_name', 'site_description', 'phone', 'email',
-        'address', 'facebook_url', 'twitter_url', 'linkedin_url', 'youtube_url'
+        'address', 'facebook_url', 'twitter_url', 'linkedin_url', 'youtube_url', 'banner_rotation_speed'
       ]
       const formData = new FormData()
       allowedFields.forEach((key) => {
@@ -210,14 +210,18 @@ const SettingsPage = () => {
                   />
                 </div>
 
-                {/* Site Description */}
+                {/* Banner Rotation Speed */}
                 <div>
-                  <label className="block font-bold mb-2">Site Description</label>
-                  <textarea
-                    {...register('site_description')}
-                    rows="3"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-400"
-                  />
+                  <label className="block font-bold mb-2">Banner Rotation Speed (ms)</label>
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="number"
+                      {...register('banner_rotation_speed')}
+                      placeholder="5000"
+                      className="w-full max-w-[200px] px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-400"
+                    />
+                    <span className="text-gray-500 text-sm">milliseconds (e.g., 5000 = 5 seconds)</span>
+                  </div>
                 </div>
               </div>
             </div>
