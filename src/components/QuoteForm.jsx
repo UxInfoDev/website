@@ -61,23 +61,66 @@ const QuoteForm = ({ compact = false, onAutoClose, onClose }) => {
     if (isDismissed && onAutoClose) onAutoClose()
   }, [isDismissed, onAutoClose])
 
+  const turnstileRef = useRef(null)
+  const [turnstileToken, setTurnstileToken] = useState('')
+
+  // Hidden for the rest of the session after dismissal
+  if (isDismissed) return null
+
   const onSubmit = async (data) => {
+    if (!turnstileToken) {
+      toast.error('Please verify that you are human.')
+      return
+    }
+
     setLoading(true)
     try {
-      await axios.post('/api/inquiries', { ...data, subject: 'Quote Request' })
+      await axios.post('/api/inquiries', { 
+        ...data, 
+        subject: 'Quote Request',
+        'cf-turnstile-response': turnstileToken 
+      })
       toast.success('Your quote request has been sent successfully!')
       reset()
       setSubmittedName(data.name || 'there')
       setIsSubmitted(true)
+      setTurnstileToken('') // Reset token after success
     } catch (error) {
-      toast.error('Failed to send request. Please try again.')
+      toast.error(error.response?.data?.error || 'Failed to send request. Please try again.')
     } finally {
       setLoading(false)
     }
   }
 
-  // Hidden for the rest of the session after dismissal
-  if (isDismissed) return null
+  // Effect to initialize Turnstile
+  useEffect(() => {
+    let interval;
+    const renderTurnstile = () => {
+      if (window.turnstile && turnstileRef.current) {
+        window.turnstile.render(turnstileRef.current, {
+          sitekey: import.meta.env.VITE_TURNSTILE_SITE_KEY || '0x4AAAAAAAx7Y9M_m9u-Y-X5',
+          callback: (token) => {
+            setTurnstileToken(token)
+          },
+        })
+        return true;
+      }
+      return false;
+    }
+
+    if (!isSubmitted) {
+      if (!renderTurnstile()) {
+        // Retry every 500ms if not ready
+        interval = setInterval(() => {
+          if (renderTurnstile()) clearInterval(interval);
+        }, 500);
+      }
+    }
+
+    return () => {
+      if (interval) clearInterval(interval);
+    }
+  }, [isSubmitted])
 
   return (
     <div className="w-full" style={{ perspective: 1200 }}>
@@ -191,10 +234,15 @@ const QuoteForm = ({ compact = false, onAutoClose, onClose }) => {
                 {errors.message && <span className="text-red-500 text-xs mt-1 block pl-2">{errors.message.message}</span>}
               </div>
 
+              {/* Cloudflare Turnstile */}
+              <div className="flex justify-center py-2">
+                <div ref={turnstileRef}></div>
+              </div>
+
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-4 mt-2 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-lg transition-all duration-300 text-[12px] tracking-widest uppercase shadow-md hover:shadow-lg hover:-translate-y-0.5 disabled:opacity-70 flex justify-center items-center gap-2"
+                className="w-full py-4 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-lg transition-all duration-300 text-[12px] tracking-widest uppercase shadow-md hover:shadow-lg hover:-translate-y-0.5 disabled:opacity-70 flex justify-center items-center gap-2"
               >
                 {loading ? 'Sending...' : <>👉 Get Free Quote</>}
               </button>
