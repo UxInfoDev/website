@@ -42,8 +42,8 @@ const ServicesSection = () => {
         <div className="text-center mb-16">
           <h2 className="text-4xl font-extrabold text-[#0b3b60] tracking-tight mb-4">Our Services</h2>
           <p className="text-gray-700 text-lg max-w-2xl mx-auto leading-relaxed">
-            We offer a comprehensive range of digital design and development services
-            tailored to meet your unique business needs
+            We provide simple, powerful digital services to help your business succeed. 
+            From design to development, we handle everything for you.
           </p>
         </div>
 

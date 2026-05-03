@@ -30,7 +30,7 @@ const ContactSection = () => {
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-extrabold mb-4 text-[#0b3b60] tracking-tight">Get In Touch</h2>
           <p className="text-gray-700 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
-            Have a project in mind? Let's talk about how we can help transform your digital presence.
+            Have a project in mind? Let's talk about how we can help your business grow.
           </p>
         </div>
 

@@ -100,7 +100,7 @@ const Footer = () => {
                 )}
               </div>
               <p className="text-gray-400 text-sm leading-relaxed mb-6">
-                Delivering exceptional digital experiences through innovative design and cutting-edge technology.
+                We build easy-to-use websites and digital designs that help your business succeed.
               </p>
               <div className="flex gap-3">
                 {socialLinks.map(({ url, icon: Icon, label }) => (

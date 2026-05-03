@@ -24,7 +24,14 @@ const ServiceDetails = () => {
     fetchService()
   }, [id])
 
-  if (!service) return <div className="py-32 text-center text-xl font-bold">Loading Service...</div>
+  if (!service) {
+    return (
+      <div className="py-32 flex flex-col items-center justify-center gap-4">
+        <div className="w-12 h-12 border-4 border-orange-200 border-t-orange-600 rounded-full animate-spin"></div>
+        <p className="text-gray-500 font-medium animate-pulse">Loading service details...</p>
+      </div>
+    )
+  }
 
   const IconComponent = Icons[service.icon] || Icons.FaCog
   const imageUrl = resolveServiceImageUrl(service)
@@ -36,73 +43,78 @@ const ServiceDetails = () => {
   const sampleDescription = `
     <h3>What You Get</h3>
     <ul>
-      <li>Modern interface design focused on clarity and trust</li>
-      <li>Mobile-first responsiveness across all major devices</li>
-      <li>Conversion-focused sections with clean call-to-action flow</li>
+      <li>Modern design that is easy for your customers to use and trust</li>
+      <li>Works perfectly on mobile phones, tablets, and computers</li>
+      <li>Clear buttons and links to help your customers take action</li>
     </ul>
-    <h3>Our Process</h3>
-    <p>We start with your business goals, map user journeys, and deliver a structured experience that is easy to use and easy to scale.</p>
-    <h3>Business Impact</h3>
-    <p>A well-designed digital experience helps reduce bounce rates, improve lead quality, and create a stronger brand impression.</p>
+    <h3>How We Work</h3>
+    <p>We start by understanding what your business needs. Then, we create a plan and build a digital experience that is easy to manage and grow.</p>
+    <h3>Why It Matters</h3>
+    <p>A great website or app helps you look professional, reach more people, and get better results for your business.</p>
   `
 
   return (
-    <section className="py-8 md:py-12 bg-slate-50">
+    <section className="py-8 md:py-12 bg-slate-50 min-h-screen fade-in">
       <div className="container mx-auto px-4 max-w-5xl">
-        <Link to="/" className="inline-flex items-center gap-2 text-orange-600 font-semibold mb-5 hover:text-orange-700 transition">
+        <Link to="/" className="inline-flex items-center gap-2 text-orange-600 font-bold mb-5 hover:text-orange-700 transition uppercase tracking-widest text-[11px]">
           <FaArrowLeft /> Back to Home
         </Link>
 
         <div className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
-          <div className="grid grid-cols-1 md:grid-cols-[260px_1fr]">
-            <div className="bg-gray-100 h-56 md:h-full">
+          <div className="grid grid-cols-1 md:grid-cols-[300px_1fr]">
+            <div className="bg-gray-100 h-64 md:h-full overflow-hidden">
               {imageUrl ? (
                 <img
                   src={imageUrl}
                   alt={service.title}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
                 />
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-orange-600 text-7xl">
+                <div className="w-full h-full flex items-center justify-center text-orange-600 text-8xl bg-orange-50">
                   <IconComponent />
                 </div>
               )}
             </div>
 
-            <div className="p-6 md:p-8">
-              <p className="text-xs uppercase tracking-widest font-semibold text-orange-600 mb-2">Service Overview</p>
-              <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-3 leading-tight">{service.title}</h1>
-              <p className="text-gray-600 text-base md:text-lg">
-                {service.short_description || 'Professional digital service tailored to your business goals.'}
+            <div className="p-8 md:p-10 flex flex-col justify-center">
+              <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-orange-600 mb-3">Service Details</p>
+              <h1 className="text-3xl md:text-5xl font-extrabold text-[#0b3b60] mb-4 leading-tight tracking-tight">{service.title}</h1>
+              <p className="text-gray-700 text-lg md:text-xl leading-relaxed">
+                {service.short_description || 'We provide professional digital solutions to help your business reach its goals.'}
               </p>
 
-              <div className="mt-5 flex flex-wrap gap-2">
-                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-green-50 text-green-700 border border-green-100">
-                  <FaCheckCircle size={12} />
-                  Strategy-led execution
+              <div className="mt-6 flex flex-wrap gap-3">
+                <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold bg-green-50 text-green-700 border border-green-100">
+                  <FaCheckCircle size={14} />
+                  Strategy-focused
                 </span>
-                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-100">
-                  Mobile-first output
+                <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-100">
+                  Mobile-friendly
                 </span>
-                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-orange-50 text-orange-700 border border-orange-100">
-                  Fast turnaround
+                <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold bg-orange-50 text-orange-700 border border-orange-100">
+                  Fast delivery
                 </span>
               </div>
             </div>
           </div>
 
-          <div className="px-6 md:px-8 pb-8">
+          <div className="px-8 md:px-10 pb-10 pt-6">
+            <hr className="border-gray-100 mb-10" />
             <div
-              className="prose prose-gray max-w-none text-gray-700 leading-relaxed prose-headings:text-gray-900 prose-headings:mb-3 prose-p:mb-4 prose-ul:mb-4 prose-li:my-1"
+              className="prose prose-lg prose-gray max-w-none text-gray-700 leading-relaxed prose-headings:text-[#0b3b60] prose-headings:font-extrabold prose-headings:tracking-tight prose-headings:mb-4 prose-p:mb-6 prose-ul:mb-6 prose-li:my-2"
               dangerouslySetInnerHTML={{ __html: normalizedDescription.trim() ? normalizedDescription : sampleDescription }}
             />
 
-            <div className="mt-8 bg-orange-600 rounded-2xl p-6 md:p-8 text-white">
-              <h3 className="text-2xl font-bold mb-2 text-white">Ready to get started with this service?</h3>
-              <p className="text-orange-100 mb-5">Share your requirements and we will send you a clear action plan.</p>
-              <Link to="/#contact" className="inline-block px-6 py-3 bg-white text-orange-600 font-bold rounded-lg hover:bg-gray-100 transition">
-                Contact Our Team
-              </Link>
+            <div className="mt-12 bg-[#0b3b60] rounded-3xl p-8 md:p-12 text-white relative overflow-hidden group">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-orange-600/10 rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-110 transition-transform duration-700"></div>
+              
+              <div className="relative z-10">
+                <h3 className="text-3xl font-extrabold mb-3 text-white tracking-tight">Ready to start?</h3>
+                <p className="text-blue-100 text-lg mb-8 max-w-2xl">Tell us what you need and we will create a simple, clear plan to help your business grow.</p>
+                <Link to="/#contact" className="inline-block px-10 py-4 bg-orange-600 text-white font-bold rounded-xl hover:bg-orange-700 transition-all shadow-lg hover:shadow-orange-900/20 hover:-translate-y-1 uppercase tracking-widest text-xs">
+                  Talk to Our Team
+                </Link>
+              </div>
             </div>
           </div>
         </div>

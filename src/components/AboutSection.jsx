@@ -6,26 +6,26 @@ const AboutSection = () => {
     {
       id: 1,
       icon: '🎨',
-      title: 'User-Centered Design',
-      description: 'We put users first in every design decision, backed by research and testing'
+      title: 'Design Made for People',
+      description: 'We build designs that are easy to use, so your customers have a great experience.'
     },
     {
       id: 2,
       icon: '💻',
-      title: 'Full-Stack Development',
-      description: 'From frontend to backend, we build scalable and robust web applications'
+      title: 'Web & App Building',
+      description: 'We create powerful websites and apps that help your business grow.'
     },
     {
       id: 3,
       icon: '📱',
-      title: 'Responsive Solutions',
-      description: 'Perfect experience across all devices and screen sizes'
+      title: 'Works on Any Screen',
+      description: 'Your site will look perfect and work smoothly on phones, tablets, and computers.'
     },
     {
       id: 4,
       icon: '🚀',
-      title: 'Performance Optimized',
-      description: 'Lightning-fast loading times and smooth user interactions'
+      title: 'Fast and Reliable',
+      description: 'We make sure your website loads instantly and never slows down.'
     }
   ]
 
@@ -46,12 +46,12 @@ const AboutSection = () => {
           <div>
             <h2 className="text-4xl font-extrabold text-[#0b3b60] tracking-tight mb-6">About UX Infotech</h2>
             <p className="text-gray-700 text-lg mb-4 leading-relaxed">
-              We are an award-winning UX design and web development agency dedicated to creating 
-              user-centered digital products and experiences that delight.
+              We are a professional design and development agency. Our goal is simple: to create 
+              easy-to-use digital products that help your business succeed and grow.
             </p>
             <p className="text-gray-700 text-lg mb-8 leading-relaxed">
-              With over a decade of experience, we've helped startups and enterprises transform 
-              their digital presence through innovative design and cutting-edge technology.
+              For over ten years, we have helped both new and established businesses 
+              improve their online presence using smart design and the latest tools.
             </p>
 
             {/* Features */}
