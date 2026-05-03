@@ -71,8 +71,10 @@ CREATE TABLE IF NOT EXISTS settings (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Add logo_url column if upgrading from older schema
+-- Add columns if upgrading from older schema
 ALTER TABLE settings ADD COLUMN IF NOT EXISTS logo_url VARCHAR(255);
+ALTER TABLE settings ADD COLUMN IF NOT EXISTS favicon_url VARCHAR(255);
+ALTER TABLE settings ADD COLUMN IF NOT EXISTS banner_rotation_speed INTEGER DEFAULT 10000;
 ALTER TABLE services ADD COLUMN IF NOT EXISTS short_description TEXT;
 
 -- Add short_description column to services if upgrading from older schema

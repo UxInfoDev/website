@@ -6,7 +6,7 @@ import ContactInfoBar from './ContactInfoBar'
 const BannerSection = () => {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [slides, setSlides] = useState([])
-  const [rotationSpeed, setRotationSpeed] = useState(5000)
+  const [rotationSpeed, setRotationSpeed] = useState(10000)
   const [isPlaying, setIsPlaying] = useState(true) // ✅ NEW
 
   useEffect(() => {

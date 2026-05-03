@@ -511,35 +511,56 @@ app.get('/api/settings', async (req, res) => {
 
 app.put('/api/settings', async (req, res) => {
   try {
-    await runUpload(logoUpload.single('logo'), req, res);
+    await runUpload(logoUpload.fields([
+      { name: 'logo', maxCount: 1 },
+      { name: 'favicon', maxCount: 1 }
+    ]), req, res);
 
     const { site_name, site_description, phone, email, address, facebook_url, twitter_url, linkedin_url, youtube_url, banner_rotation_speed } = req.body;
-    const logoPath = req.file ? `/uploads/${req.file.filename}` : null;
     
-    let result;
-    if (logoPath) {
-      result = await pool.query(
-        `INSERT INTO settings (id, site_name, site_description, phone, email, address, facebook_url, twitter_url, linkedin_url, youtube_url, logo_url, banner_rotation_speed, updated_at)
-         VALUES (1, $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, CURRENT_TIMESTAMP)
-         ON CONFLICT (id) DO UPDATE SET
-           site_name = $1, site_description = $2, phone = $3, email = $4, address = $5,
-           facebook_url = $6, twitter_url = $7, linkedin_url = $8, youtube_url = $9,
-           logo_url = $10, banner_rotation_speed = $11, updated_at = CURRENT_TIMESTAMP
-         RETURNING *`,
-        [site_name, site_description, phone, email, address, facebook_url, twitter_url, linkedin_url, youtube_url, logoPath, banner_rotation_speed]
-      );
-    } else {
-      result = await pool.query(
-        `INSERT INTO settings (id, site_name, site_description, phone, email, address, facebook_url, twitter_url, linkedin_url, youtube_url, banner_rotation_speed, updated_at)
-         VALUES (1, $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, CURRENT_TIMESTAMP)
-         ON CONFLICT (id) DO UPDATE SET
-           site_name = $1, site_description = $2, phone = $3, email = $4, address = $5,
-           facebook_url = $6, twitter_url = $7, linkedin_url = $8, youtube_url = $9,
-           banner_rotation_speed = $10, updated_at = CURRENT_TIMESTAMP
-         RETURNING *`,
-        [site_name, site_description, phone, email, address, facebook_url, twitter_url, linkedin_url, youtube_url, banner_rotation_speed]
-      );
+    // Extract file paths from req.files
+    const logoPath = req.files?.['logo'] ? `/uploads/${req.files['logo'][0].filename}` : null;
+    
+    // Special handling for Favicon: always save as favicon.png in root
+    let faviconPath = null;
+    if (req.files?.['favicon']) {
+      const file = req.files['favicon'][0];
+      const targetName = 'favicon.png';
+      
+      // Copy to public folder (for dev/consistency)
+      const publicPath = path.join(__dirname, 'public', targetName);
+      fs.copyFileSync(file.path, publicPath);
+      
+      // Copy to dist folder (for production serving)
+      const distPath = path.join(__dirname, 'dist', targetName);
+      if (fs.existsSync(path.join(__dirname, 'dist'))) {
+        fs.copyFileSync(file.path, distPath);
+      }
+      
+      faviconPath = `/${targetName}`;
     }
+    
+    // Ensure banner_rotation_speed is a valid integer or null
+    const rotationSpeed = banner_rotation_speed ? parseInt(banner_rotation_speed) : 10000;
+
+    // Build the query dynamically or handle cases
+    const currentSettingsRes = await pool.query('SELECT * FROM settings WHERE id = 1');
+    const current = currentSettingsRes.rows[0] || {};
+
+    const finalLogo = logoPath || current.logo_url;
+    const finalFavicon = faviconPath || current.favicon_url;
+
+    const result = await pool.query(
+      `INSERT INTO settings (id, site_name, site_description, phone, email, address, facebook_url, twitter_url, linkedin_url, youtube_url, logo_url, favicon_url, banner_rotation_speed, updated_at)
+       VALUES (1, $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, CURRENT_TIMESTAMP)
+       ON CONFLICT (id) DO UPDATE SET
+         site_name = $1, site_description = $2, phone = $3, email = $4, address = $5,
+         facebook_url = $6, twitter_url = $7, linkedin_url = $8, youtube_url = $9,
+         logo_url = $10, favicon_url = $11, banner_rotation_speed = $12, updated_at = CURRENT_TIMESTAMP
+       RETURNING *`,
+      [site_name, site_description, phone, email, address, facebook_url, twitter_url, linkedin_url, youtube_url, finalLogo, finalFavicon, rotationSpeed]
+    );
+
     res.json(result.rows[0]);
   } catch (err) {
     console.error('Settings PUT error:', err);
