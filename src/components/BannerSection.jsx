@@ -46,20 +46,26 @@ const BannerSection = () => {
     }
   }, [])
 
+  const overlayRef = useRef(null)
+
   // ── Pointer handlers for ring-particles overlay ──
   const handlePointerMove = useCallback((e) => {
     const rect = e.currentTarget.getBoundingClientRect()
     const x = ((e.clientX - rect.left) / rect.width) * 100
     const y = ((e.clientY - rect.top) / rect.height) * 100
-    e.currentTarget.style.setProperty('--ring-x', x)
-    e.currentTarget.style.setProperty('--ring-y', y)
-    e.currentTarget.style.setProperty('--ring-interactive', 1)
+    if (overlayRef.current) {
+      overlayRef.current.style.setProperty('--ring-x', x)
+      overlayRef.current.style.setProperty('--ring-y', y)
+      overlayRef.current.style.setProperty('--ring-interactive', 1)
+    }
   }, [])
 
   const handlePointerLeave = useCallback((e) => {
-    e.currentTarget.style.setProperty('--ring-x', 50)
-    e.currentTarget.style.setProperty('--ring-y', 50)
-    e.currentTarget.style.setProperty('--ring-interactive', 0)
+    if (overlayRef.current) {
+      overlayRef.current.style.setProperty('--ring-x', 50)
+      overlayRef.current.style.setProperty('--ring-y', 50)
+      overlayRef.current.style.setProperty('--ring-interactive', 0)
+    }
   }, [])
 
   // ✅ UPDATED: respects play/pause
@@ -92,11 +98,22 @@ const BannerSection = () => {
     <>
       <section 
         id="home" 
-        className="relative pt-2 pb-10 lg:pt-4 lg:pb-16 overflow-hidden transition-all duration-1000 ease-in-out"
+        className="relative pt-2 pb-10 lg:pt-4 lg:pb-12 overflow-hidden transition-all duration-1000 ease-in-out min-h-[50vh] lg:min-h-[60vh] flex flex-col justify-center"
         style={{ background: currentGradient }}
+        onPointerMove={handlePointerMove}
+        onPointerLeave={handlePointerLeave}
       >
+        {/* ── Ring-Particles cursor overlay (Houdini) for entire section ── */}
+        {(workletReady && slides.length > 0) && (
+          <div
+            ref={overlayRef}
+            className="banner-ring-overlay absolute inset-0 z-0 pointer-events-none"
+            aria-hidden="true"
+          />
+        )}
+        
         {/* CSS Grid Stacking forces the container height to match the tallest slide, enabling perfect crossfade */}
-        <div className="container mx-auto px-4 lg:px-8 relative grid grid-cols-1 grid-rows-1 items-center">
+        <div className="container mx-auto px-4 lg:px-8 relative grid grid-cols-1 grid-rows-1 items-center w-full">
           
           {slides.length > 0 && slides.map((slide, index) => {
             const isActive = index === currentSlide;
@@ -186,15 +203,6 @@ const BannerSection = () => {
                       <div className="w-full h-full flex items-center justify-center text-gray-400">No Image Provided</div>
                     )}
 
-                    {/* ── Ring-Particles cursor overlay (Houdini) ── */}
-                    {workletReady && (
-                      <div
-                        className="banner-ring-overlay absolute inset-0 z-10"
-                        onPointerMove={handlePointerMove}
-                        onPointerLeave={handlePointerLeave}
-                        aria-hidden="true"
-                      />
-                    )}
                   </div>
                 </div>
               </div>
