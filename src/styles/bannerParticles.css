@@ -41,9 +41,15 @@
   100% { --animation-tick: 1; }
 }
 
-@keyframes banner-ring-pulse {
-  0%   { --ring-radius: 70;  }
-  100% { --ring-radius: 160; }
+@keyframes banner-explode {
+  0%   { 
+    --ring-radius: 0; 
+    --ring-thickness: 50;
+  }
+  100% { 
+    --ring-radius: 140; 
+    --ring-thickness: 500;
+  }
 }
 
 /* ── Overlay element that sits on top of the banner image ──
@@ -54,22 +60,23 @@
 .banner-ring-overlay {
   /* Particle configuration */
   --ring-thickness: 500;
-  --particle-count: 70;
-  --particle-rows: 22;
-  --particle-size: 2.2;
-  --particle-color: dodgerblue;
-  --particle-min-alpha: 0.04;
-  --particle-max-alpha: 0.75;
+  --particle-count: 90;
+  --particle-rows: 25;
+  --particle-size: 2.5;
+  --particle-colors: #FF6B35, #004E89, #0971C8, #ffc107;
+  --particle-min-alpha: 0.1;
+  --particle-max-alpha: 0.8;
   --seed: 77;
+  --ring-radius: 140;
 
   /* Paint worklet as background — transparent everywhere except particles */
   background-image: paint(ring-particles);
 
   /* Smooth cursor tracking via @property-declared custom props */
-  transition: --ring-x 2.5s ease, --ring-y 2.5s ease;
+  transition: --ring-x 0.5s ease-out, --ring-y 0.5s ease-out;
 
   /* Continuous animations */
   animation:
-    banner-ripple       6s linear      infinite,
-    banner-ring-pulse   5s ease-in-out infinite alternate;
+    banner-ripple       8s linear      infinite,
+    banner-explode      1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
