@@ -74,7 +74,7 @@ const ServicesSection = () => {
                   <h3 className="text-2xl font-extrabold text-[#0971C8] tracking-tight mb-3">{service.title}</h3>
                   <p className="text-gray-700 mb-6 leading-relaxed">{getShortDescription(service)}</p>
                   <Link
-                    to={`/service/${service.id}`}
+                    to={`/service/${service.slug || service.id}`}
                     className="inline-flex items-center gap-2 text-orange-600 font-bold hover:text-orange-700 transition-all uppercase tracking-widest text-[11px] group"
                   >
                     Learn More

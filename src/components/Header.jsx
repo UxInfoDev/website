@@ -203,7 +203,7 @@ const Header = () => {
                     {services.map(service => (
                       <Link
                         key={service.id}
-                        to={`/service/${service.id}`}
+                        to={`/service/${service.slug || service.id}`}
                         onClick={() => {
                           setActiveTab('services')
                           setIsServicesDropdownOpen(false)
@@ -322,7 +322,7 @@ const Header = () => {
                     {services.map(service => (
                       <Link
                         key={service.id}
-                        to={`/service/${service.id}`}
+                        to={`/service/${service.slug || service.id}`}
                         onClick={() => {
                           setActiveTab('services')
                           setIsMenuOpen(false)

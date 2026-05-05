@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS projects (
     description TEXT,
     is_active BOOLEAN DEFAULT TRUE,
     website_link VARCHAR(255),
+    slug VARCHAR(255) UNIQUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -18,6 +19,7 @@ CREATE TABLE IF NOT EXISTS services (
     icon VARCHAR(100),
     image VARCHAR(255),
     display_order INTEGER DEFAULT 0,
+    slug VARCHAR(255) UNIQUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -97,3 +99,24 @@ ALTER TABLE carousels ADD COLUMN IF NOT EXISTS subtitle VARCHAR(255);
 -- Add display_order columns for reordering functionality
 ALTER TABLE carousels ADD COLUMN IF NOT EXISTS display_order INTEGER DEFAULT 0;
 ALTER TABLE services ADD COLUMN IF NOT EXISTS display_order INTEGER DEFAULT 0;
+
+-- Media Library: standalone image management
+CREATE TABLE IF NOT EXISTS media_library (
+    id SERIAL PRIMARY KEY,
+    filename VARCHAR(255) NOT NULL,
+    original_name VARCHAR(255) NOT NULL,
+    url VARCHAR(255) NOT NULL,
+    mime_type VARCHAR(100),
+    size_bytes INTEGER,
+    width INTEGER,
+    height INTEGER,
+    alt_text VARCHAR(500),
+    folder VARCHAR(255) DEFAULT 'Uncategorized',
+    tags TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Indexes for fast filtering
+CREATE INDEX IF NOT EXISTS idx_media_folder ON media_library(folder);
+CREATE INDEX IF NOT EXISTS idx_media_created ON media_library(created_at DESC);

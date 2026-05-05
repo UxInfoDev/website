@@ -58,9 +58,22 @@ const ProjectDetails = () => {
 
             <h1 className="text-4xl md:text-6xl font-extrabold mb-8 text-[#0971C8] tracking-tight leading-tight">{project.title}</h1>
             
-            <div className="prose prose-lg prose-gray max-w-none text-gray-700 leading-relaxed">
-              <p className="whitespace-pre-line">{project.description}</p>
-            </div>
+            {(() => {
+              const rawDescription = (project.description || '')
+                .replace(/:contentReference\[oaicite:\d+\]\{index=\d+\}/g, '');
+              
+              const hasHtml = /<[^>]+>/.test(rawDescription);
+              const normalizedDescription = hasHtml
+                ? rawDescription
+                : `<p>${rawDescription.trim().replace(/\n+/g, '</p><p>')}</p>`;
+              
+              return (
+                <div 
+                  className="prose prose-lg prose-gray max-w-none text-gray-700 leading-relaxed"
+                  dangerouslySetInnerHTML={{ __html: normalizedDescription }}
+                />
+              );
+            })()}
 
             {project.website_link && (
               <div className="mt-12 pt-10 border-t border-gray-100">

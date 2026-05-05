@@ -78,9 +78,11 @@ const PortfolioSection = () => {
                   <h3 className="text-2xl font-bold mb-2 text-white">
                     {project.title}
                   </h3>
-                  <p className="text-gray-200 text-sm mb-4 leading-relaxed line-clamp-3">{project.description}</p>
+                  <p className="text-gray-200 text-sm mb-4 leading-relaxed line-clamp-3">
+                    {project.description?.replace(/:contentReference\[oaicite:\d+\]\{index=\d+\}/g, '').replace(/<[^>]*>?/gm, '')}
+                  </p>
                   <div className="flex gap-4 items-center mt-2">
-                    <Link to={`/project/${project.id}`} className="text-orange-400 font-bold hover:text-orange-300 inline-block">
+                    <Link to={`/project/${project.slug || project.id}`} className="text-orange-400 font-bold hover:text-orange-300 inline-block">
                       View Project →
                     </Link>
                     {project.website_link && (

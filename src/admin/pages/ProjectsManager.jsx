@@ -3,6 +3,7 @@ import { FaEdit, FaTrash, FaPlus } from 'react-icons/fa'
 import { toast } from 'react-toastify'
 import { useForm } from 'react-hook-form'
 import axios from 'axios'
+import RichTextEditor from '../components/RichTextEditor'
 
 const API_BASE = '/api/projects'
 
@@ -10,7 +11,7 @@ const ProjectsManager = () => {
   const [projects, setProjects] = useState([])
   const [showForm, setShowForm] = useState(false)
   const [editingId, setEditingId] = useState(null)
-  const { register, handleSubmit, reset, formState: { errors } } = useForm()
+  const { register, handleSubmit, reset, setValue, watch, formState: { errors } } = useForm()
 
   useEffect(() => {
     fetchProjects()
@@ -146,12 +147,13 @@ const ProjectsManager = () => {
                 {errors.status && <span className="text-red-600 text-sm">{errors.status.message}</span>}
               </div>
 
-              <div>
-                <label className="block font-bold mb-2">Description</label>
-                <input
-                  type="text"
-                  {...register('description')}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+              <div className="col-span-2">
+                <input type="hidden" {...register('description')} />
+                <RichTextEditor
+                  label="Description"
+                  value={watch('description') || ''}
+                  onChange={(val) => setValue('description', val, { shouldValidate: true })}
+                  error={errors.description?.message}
                 />
               </div>
 
@@ -207,6 +209,7 @@ const ProjectsManager = () => {
           <thead className="bg-gray-100 border-b">
             <tr>
               <th className="text-left py-3 px-4">Title</th>
+              <th className="text-left py-3 px-4">Slug</th>
               <th className="text-left py-3 px-4">Category</th>
               <th className="text-left py-3 px-4">Status</th>
               <th className="text-left py-3 px-4">Active</th>
@@ -217,6 +220,7 @@ const ProjectsManager = () => {
             {projects.map((project) => (
               <tr key={project.id} className="border-b hover:bg-gray-50">
                 <td className="py-3 px-4">{project.title}</td>
+                <td className="py-3 px-4 font-mono text-xs">{project.slug}</td>
                 <td className="py-3 px-4">{project.category}</td>
                 <td className="py-3 px-4">
                   <span className={`px-3 py-1 rounded-full text-sm font-bold ${

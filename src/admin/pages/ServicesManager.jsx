@@ -303,7 +303,10 @@ const ServicesManager = () => {
 
                 {/* Content */}
                 <div className="flex-1 text-center md:text-left">
-                  <h3 className="text-xl font-extrabold text-[#0971C8]  mb-1">{service.title}</h3>
+                  <div className="flex items-center gap-3 mb-1">
+                    <h3 className="text-xl font-extrabold text-[#0971C8]">{service.title}</h3>
+                    <span className="bg-gray-100 text-gray-500 px-2 py-0.5 rounded text-[10px] font-mono">{service.slug}</span>
+                  </div>
                   <p className="text-gray-600 text-sm line-clamp-2">{service.short_description}</p>
                 </div>
 

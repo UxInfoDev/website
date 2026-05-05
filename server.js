@@ -8,6 +8,15 @@ const { Pool } = require('pg');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const slugify = (text) => {
+  return text
+    .toString()
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, '-')     // Replace spaces with -
+    .replace(/[^\w-]+/g, '')   // Remove all non-word chars
+    .replace(/--+/g, '-');    // Replace multiple - with single -
+};
 
 const app = express();
 
@@ -101,9 +110,12 @@ app.get('/api/projects', async (req, res) => {
   }
 });
 
-app.get('/api/projects/:id', async (req, res) => {
+app.get('/api/projects/:idOrSlug', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM projects WHERE id = $1', [req.params.id]);
+    const { idOrSlug } = req.params;
+    const isId = /^\d+$/.test(idOrSlug);
+    const query = isId ? 'SELECT * FROM projects WHERE id = $1' : 'SELECT * FROM projects WHERE slug = $1';
+    const result = await pool.query(query, [isId ? parseInt(idOrSlug) : idOrSlug]);
     if (result.rows.length === 0) return res.status(404).json({ error: 'Not found' });
     res.json(result.rows[0]);
   } catch (err) {
@@ -118,9 +130,10 @@ app.post('/api/projects', async (req, res) => {
     const { title, category, status, description, is_active, website_link } = req.body;
     const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
     const isActive = is_active === 'false' ? false : true;
+    const slug = slugify(title);
     const result = await pool.query(
-      'INSERT INTO projects (title, category, image, status, description, is_active, website_link) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
-      [title, category, imagePath, status, description, isActive, website_link]
+      'INSERT INTO projects (title, category, image, status, description, is_active, website_link, slug) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
+      [title, category, imagePath, status, description, isActive, website_link, slug]
     );
     res.json(result.rows[0]);
   } catch (err) {
@@ -136,16 +149,17 @@ app.put('/api/projects/:id', async (req, res) => {
     const { title, category, status, description, is_active, website_link } = req.body;
     const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
     const isActive = is_active === 'false' ? false : true;
+    const slug = slugify(title);
     if (imagePath) {
       const result = await pool.query(
-        'UPDATE projects SET title = $1, category = $2, image = $3, status = $4, description = $5, is_active = $6, website_link = $7 WHERE id = $8 RETURNING *',
-        [title, category, imagePath, status, description, isActive, website_link, id]
+        'UPDATE projects SET title = $1, category = $2, image = $3, status = $4, description = $5, is_active = $6, website_link = $7, slug = $8 WHERE id = $9 RETURNING *',
+        [title, category, imagePath, status, description, isActive, website_link, slug, id]
       );
       res.json(result.rows[0]);
     } else {
       const result = await pool.query(
-        'UPDATE projects SET title = $1, category = $2, status = $3, description = $4, is_active = $5, website_link = $6 WHERE id = $7 RETURNING *',
-        [title, category, status, description, isActive, website_link, id]
+        'UPDATE projects SET title = $1, category = $2, status = $3, description = $4, is_active = $5, website_link = $6, slug = $7 WHERE id = $8 RETURNING *',
+        [title, category, status, description, isActive, website_link, slug, id]
       );
       res.json(result.rows[0]);
     }
@@ -192,9 +206,12 @@ app.get('/api/services', async (req, res) => {
   }
 });
 
-app.get('/api/services/:id', async (req, res) => {
+app.get('/api/services/:idOrSlug', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM services WHERE id = $1', [req.params.id]);
+    const { idOrSlug } = req.params;
+    const isId = /^\d+$/.test(idOrSlug);
+    const query = isId ? 'SELECT * FROM services WHERE id = $1' : 'SELECT * FROM services WHERE slug = $1';
+    const result = await pool.query(query, [isId ? parseInt(idOrSlug) : idOrSlug]);
     if (result.rows.length === 0) return res.status(404).json({ error: 'Not found' });
     res.json(result.rows[0]);
   } catch (err) {
@@ -208,9 +225,10 @@ app.post('/api/services', async (req, res) => {
     await runUpload(upload.single('image'), req, res);
     const { title, short_description, description, icon, display_order } = req.body;
     const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
+    const slug = slugify(title);
     const result = await pool.query(
-      'INSERT INTO services (title, short_description, description, icon, image, display_order) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-      [title, short_description, description, icon, imagePath, display_order || 0]
+      'INSERT INTO services (title, short_description, description, icon, image, display_order, slug) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+      [title, short_description, description, icon, imagePath, display_order || 0, slug]
     );
     res.json(result.rows[0]);
   } catch (err) {
@@ -225,16 +243,17 @@ app.put('/api/services/:id', async (req, res) => {
     const { id } = req.params;
     const { title, short_description, description, icon, display_order } = req.body;
     const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
+    const slug = slugify(title);
     if (imagePath) {
       const result = await pool.query(
-        'UPDATE services SET title = $1, short_description = $2, description = $3, icon = $4, image = $5, display_order = $6 WHERE id = $7 RETURNING *',
-        [title, short_description, description, icon, imagePath, display_order || 0, id]
+        'UPDATE services SET title = $1, short_description = $2, description = $3, icon = $4, image = $5, display_order = $6, slug = $7 WHERE id = $8 RETURNING *',
+        [title, short_description, description, icon, imagePath, display_order || 0, slug, id]
       );
       res.json(result.rows[0]);
     } else {
       const result = await pool.query(
-        'UPDATE services SET title = $1, short_description = $2, description = $3, icon = $4, display_order = $5 WHERE id = $6 RETURNING *',
-        [title, short_description, description, icon, display_order || 0, id]
+        'UPDATE services SET title = $1, short_description = $2, description = $3, icon = $4, display_order = $5, slug = $6 WHERE id = $7 RETURNING *',
+        [title, short_description, description, icon, display_order || 0, slug, id]
       );
       res.json(result.rows[0]);
     }
@@ -518,51 +537,45 @@ app.put('/api/settings', async (req, res) => {
 
     const { site_name, site_description, phone, email, address, facebook_url, twitter_url, linkedin_url, youtube_url, banner_rotation_speed } = req.body;
     
-    // Extract file paths from req.files
-    const logoPath = req.files?.['logo'] ? `/uploads/${req.files['logo'][0].filename}` : null;
+    // Helper to convert file to Base64
+    const fileToBase64 = (file) => {
+      if (!file) return null;
+      const data = fs.readFileSync(file.path);
+      return `data:${file.mimetype};base64,${data.toString('base64')}`;
+    };
+
+    let logoData = null;
+    if (req.files?.['logo']) {
+      logoData = fileToBase64(req.files['logo'][0]);
+    }
     
-    // Special handling for Favicon: always save as favicon.png in root
-    let faviconPath = null;
+    let faviconData = null;
     if (req.files?.['favicon']) {
+      faviconData = fileToBase64(req.files['favicon'][0]);
+      
+      // Also keep legacy file sync for root fevicon.png fallback
       try {
         const file = req.files['favicon'][0];
         const targetName = 'fevicon.png';
-        
-        // Ensure public folder exists before copying
         const publicDir = path.join(__dirname, 'public');
-        if (!fs.existsSync(publicDir)) {
-          fs.mkdirSync(publicDir, { recursive: true });
-        }
-        const publicPath = path.join(__dirname, 'public', targetName);
-        fs.copyFileSync(file.path, publicPath);
+        if (!fs.existsSync(publicDir)) fs.mkdirSync(publicDir, { recursive: true });
         
-        // Copy to dist folder if it exists
+        fs.copyFileSync(file.path, path.join(publicDir, targetName));
         const distDir = path.join(__dirname, 'dist');
-        if (fs.existsSync(distDir)) {
-          const distPath = path.join(distDir, targetName);
-          fs.copyFileSync(file.path, distPath);
-        }
-        
-        // Copy to root as well just in case
+        if (fs.existsSync(distDir)) fs.copyFileSync(file.path, path.join(distDir, targetName));
         fs.copyFileSync(file.path, path.join(__dirname, targetName));
-        
-        faviconPath = `/${targetName}`;
-        console.log('Favicon updated successfully at root directories');
       } catch (fErr) {
-        console.error('Favicon file operation error:', fErr);
-        // We continue anyway so other settings can save, but faviconPath remains null
+        console.error('Favicon legacy sync error:', fErr);
       }
     }
     
-    // Ensure banner_rotation_speed is a valid integer or null
     const rotationSpeed = banner_rotation_speed ? parseInt(banner_rotation_speed) : 10000;
 
-    // Build the query dynamically or handle cases
     const currentSettingsRes = await pool.query('SELECT * FROM settings WHERE id = 1');
     const current = currentSettingsRes.rows[0] || {};
 
-    const finalLogo = logoPath || current.logo_url;
-    const finalFavicon = faviconPath || current.favicon_url;
+    const finalLogo = logoData || current.logo_url;
+    const finalFavicon = faviconData || current.favicon_url;
 
     const result = await pool.query(
       `INSERT INTO settings (id, site_name, site_description, phone, email, address, facebook_url, twitter_url, linkedin_url, youtube_url, logo_url, favicon_url, banner_rotation_speed, updated_at)
@@ -581,6 +594,188 @@ app.put('/api/settings', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
+// ── Media Library API ─────────────────────────────────────────────────────────
+
+// Multer instance specifically for media uploads (accept images only)
+const mediaStorage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, uploadDir),
+  filename: (req, file, cb) => {
+    const unique = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+    cb(null, unique + path.extname(file.originalname).toLowerCase());
+  }
+});
+const mediaUpload = multer({
+  storage: mediaStorage,
+  limits: { fileSize: 20 * 1024 * 1024 }, // 20 MB per file
+  fileFilter: (req, file, cb) => {
+    if (/^image\//i.test(file.mimetype)) cb(null, true);
+    else cb(new Error('Only image files are allowed'));
+  }
+});
+
+// GET /api/media – list images (with optional folder, search, pagination)
+app.get('/api/media', async (req, res) => {
+  try {
+    const { folder, search, page = 1, limit = 50 } = req.query;
+    const offset = (parseInt(page) - 1) * parseInt(limit);
+    const conditions = [];
+    const values = [];
+
+    if (folder && folder !== 'all') {
+      conditions.push(`folder = $${values.length + 1}`);
+      values.push(folder);
+    }
+    if (search) {
+      conditions.push(`(original_name ILIKE $${values.length + 1} OR alt_text ILIKE $${values.length + 1} OR tags ILIKE $${values.length + 1})`);
+      values.push(`%${search}%`);
+    }
+
+    const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
+    const countResult = await pool.query(`SELECT COUNT(*) FROM media_library ${where}`, values);
+    const total = parseInt(countResult.rows[0].count);
+
+    values.push(parseInt(limit), offset);
+    const result = await pool.query(
+      `SELECT * FROM media_library ${where} ORDER BY created_at DESC LIMIT $${values.length - 1} OFFSET $${values.length}`,
+      values
+    );
+
+    // Also return distinct folders
+    const foldersResult = await pool.query(
+      `SELECT DISTINCT folder FROM media_library ORDER BY folder ASC`
+    );
+
+    res.json({
+      items: result.rows,
+      total,
+      page: parseInt(page),
+      totalPages: Math.ceil(total / parseInt(limit)),
+      folders: foldersResult.rows.map(r => r.folder)
+    });
+  } catch (err) {
+    console.error('Media GET error:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// POST /api/media/upload – upload one or more images
+app.post('/api/media/upload', (req, res) => {
+  mediaUpload.array('images', 20)(req, res, async (err) => {
+    if (err) {
+      return res.status(400).json({ error: err.message });
+    }
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ error: 'No files uploaded' });
+    }
+
+    try {
+      const folder = req.body.folder || 'Uncategorized';
+      const inserted = [];
+
+      for (const file of req.files) {
+        const url = `/uploads/${file.filename}`;
+        const result = await pool.query(
+          `INSERT INTO media_library (filename, original_name, url, mime_type, size_bytes, folder)
+           VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
+          [file.filename, file.originalname, url, file.mimetype, file.size, folder]
+        );
+        inserted.push(result.rows[0]);
+      }
+
+      res.json({ uploaded: inserted.length, items: inserted });
+    } catch (err) {
+      console.error('Media upload DB error:', err);
+      res.status(500).json({ error: 'Failed to save media metadata' });
+    }
+  });
+});
+
+// PATCH /api/media/:id – update alt_text, tags, or move to folder
+app.patch('/api/media/:id', async (req, res) => {
+  const { id } = req.params;
+  const { alt_text, tags, folder } = req.body;
+  try {
+    const result = await pool.query(
+      `UPDATE media_library
+       SET alt_text = COALESCE($1, alt_text),
+           tags     = COALESCE($2, tags),
+           folder   = COALESCE($3, folder),
+           updated_at = CURRENT_TIMESTAMP
+       WHERE id = $4 RETURNING *`,
+      [alt_text ?? null, tags ?? null, folder ?? null, id]
+    );
+    if (result.rows.length === 0) return res.status(404).json({ error: 'Not found' });
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error('Media PATCH error:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// DELETE /api/media/:id – delete record and physical file
+app.delete('/api/media/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await pool.query('DELETE FROM media_library WHERE id = $1 RETURNING *', [id]);
+    if (result.rows.length === 0) return res.status(404).json({ error: 'Not found' });
+
+    const filePath = path.join(uploadDir, result.rows[0].filename);
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Media DELETE error:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// DELETE /api/media (bulk) – delete multiple items
+app.delete('/api/media', async (req, res) => {
+  const { ids } = req.body;
+  if (!Array.isArray(ids) || ids.length === 0) {
+    return res.status(400).json({ error: 'ids array required' });
+  }
+  try {
+    const placeholders = ids.map((_, i) => `$${i + 1}`).join(',');
+    const result = await pool.query(
+      `DELETE FROM media_library WHERE id IN (${placeholders}) RETURNING *`,
+      ids
+    );
+    for (const row of result.rows) {
+      const filePath = path.join(uploadDir, row.filename);
+      if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+    }
+    res.json({ deleted: result.rows.length });
+  } catch (err) {
+    console.error('Media bulk DELETE error:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// PATCH /api/media/bulk/move – bulk move to folder
+app.patch('/api/media/bulk/move', async (req, res) => {
+  const { ids, folder } = req.body;
+  if (!Array.isArray(ids) || !folder) {
+    return res.status(400).json({ error: 'ids and folder required' });
+  }
+  try {
+    const placeholders = ids.map((_, i) => `$${i + 2}`).join(',');
+    await pool.query(
+      `UPDATE media_library SET folder = $1, updated_at = CURRENT_TIMESTAMP WHERE id IN (${placeholders})`,
+      [folder, ...ids]
+    );
+    res.json({ moved: ids.length });
+  } catch (err) {
+    console.error('Media bulk MOVE error:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// ── End Media Library API ─────────────────────────────────────────────────────
+
 
 // Serve Production React SPA Bundles
 const frontendDist = path.join(__dirname, 'dist');
