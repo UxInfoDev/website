@@ -6,7 +6,8 @@ import axios from 'axios'
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
-  const [logoUrl, setLogoUrl] = useState(null)
+  // Pre-load from sessionStorage to avoid flash-of-fallback on every mount
+  const [logoUrl, setLogoUrl] = useState(() => sessionStorage.getItem('site_logo_url') || null)
   const [searchQuery, setSearchQuery] = useState('')
   const [activeTab, setActiveTab] = useState('home')
   const [services, setServices] = useState([])
@@ -17,12 +18,22 @@ const Header = () => {
   useEffect(() => {
     const fetchSettingsAndServices = async () => {
       try {
-        const settingsRes = await axios.get(`/api/settings?_t=${Date.now()}`)
-        if (settingsRes.data?.logo_url) setLogoUrl(settingsRes.data.logo_url + `?_t=${Date.now()}`)
+        const settingsRes = await axios.get('/api/settings')
+        const newLogoUrl = settingsRes.data?.logo_url || null
+        if (newLogoUrl) {
+          // Only update state/cache when the URL actually changes
+          if (newLogoUrl !== sessionStorage.getItem('site_logo_url')) {
+            sessionStorage.setItem('site_logo_url', newLogoUrl)
+            setLogoUrl(newLogoUrl)
+          }
+        } else {
+          sessionStorage.removeItem('site_logo_url')
+          setLogoUrl(null)
+        }
       } catch (err) {}
 
       try {
-        const servicesRes = await axios.get(`/api/services?_t=${Date.now()}`)
+        const servicesRes = await axios.get('/api/services')
         setServices(servicesRes.data)
       } catch (err) {}
     }

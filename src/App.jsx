@@ -16,13 +16,27 @@ import ServicesPage from './pages/ServicesPage'
 import QuoteModal from './components/QuoteModal'
 
 function App() {
-  const [settings, setSettings] = useState(null)
+  // Pre-load from sessionStorage to avoid favicon/title flash on every mount
+  const [settings, setSettings] = useState(() => {
+    const cachedFavicon = sessionStorage.getItem('site_favicon_url')
+    const cachedName = sessionStorage.getItem('site_name')
+    if (cachedFavicon || cachedName) {
+      return { favicon_url: cachedFavicon, site_name: cachedName }
+    }
+    return null
+  })
 
   useEffect(() => {
     const fetchSettings = async () => {
       try {
-        const res = await axios.get(`/api/settings?_t=${Date.now()}`)
-        setSettings(res.data)
+        const res = await axios.get('/api/settings')
+        const data = res.data
+        setSettings(data)
+        // Cache key values so they are available instantly on next mount
+        if (data?.favicon_url) sessionStorage.setItem('site_favicon_url', data.favicon_url)
+        else sessionStorage.removeItem('site_favicon_url')
+        if (data?.site_name) sessionStorage.setItem('site_name', data.site_name)
+        else sessionStorage.removeItem('site_name')
       } catch (err) {}
     }
     fetchSettings()
@@ -33,7 +47,7 @@ function App() {
       <Helmet>
         <title>{settings?.site_name || 'UX Infotech'} | Professional Design Agency</title>
         {settings?.favicon_url && (
-          <link rel="icon" type="image/png" href="/fevicon.png" />
+          <link rel="icon" type="image/png" href={settings.favicon_url} />
         )}
         <meta
           name="description"

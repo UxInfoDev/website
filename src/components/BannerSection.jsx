@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { FaChevronLeft, FaChevronRight, FaPlay, FaPause } from 'react-icons/fa'
 import axios from 'axios'
 import ContactInfoBar from './ContactInfoBar'
+import '../styles/bannerParticles.css'
 
 const BannerSection = () => {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [slides, setSlides] = useState([])
   const [rotationSpeed, setRotationSpeed] = useState(10000)
   const [isPlaying, setIsPlaying] = useState(true) // ✅ NEW
+  const [workletReady, setWorkletReady] = useState(false)
+  const workletRegistered = useRef(false)
 
   useEffect(() => {
     const fetchBanners = async () => {
@@ -32,6 +35,31 @@ const BannerSection = () => {
     }
     fetchBanners()
     fetchSettings()
+
+    // ── Register CSS Houdini ring-particles paint worklet (once) ──
+    if (!workletRegistered.current && 'paintWorklet' in CSS) {
+      workletRegistered.current = true
+      CSS.paintWorklet
+        .addModule('https://unpkg.com/css-houdini-ringparticles/dist/ringparticles.js')
+        .then(() => setWorkletReady(true))
+        .catch(() => { /* Houdini not available — overlay simply stays hidden */ })
+    }
+  }, [])
+
+  // ── Pointer handlers for ring-particles overlay ──
+  const handlePointerMove = useCallback((e) => {
+    const rect = e.currentTarget.getBoundingClientRect()
+    const x = ((e.clientX - rect.left) / rect.width) * 100
+    const y = ((e.clientY - rect.top) / rect.height) * 100
+    e.currentTarget.style.setProperty('--ring-x', x)
+    e.currentTarget.style.setProperty('--ring-y', y)
+    e.currentTarget.style.setProperty('--ring-interactive', 1)
+  }, [])
+
+  const handlePointerLeave = useCallback((e) => {
+    e.currentTarget.style.setProperty('--ring-x', 50)
+    e.currentTarget.style.setProperty('--ring-y', 50)
+    e.currentTarget.style.setProperty('--ring-interactive', 0)
   }, [])
 
   // ✅ UPDATED: respects play/pause
@@ -156,6 +184,16 @@ const BannerSection = () => {
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-gray-400">No Image Provided</div>
+                    )}
+
+                    {/* ── Ring-Particles cursor overlay (Houdini) ── */}
+                    {workletReady && (
+                      <div
+                        className="banner-ring-overlay absolute inset-0 z-10"
+                        onPointerMove={handlePointerMove}
+                        onPointerLeave={handlePointerLeave}
+                        aria-hidden="true"
+                      />
                     )}
                   </div>
                 </div>
