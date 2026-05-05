@@ -14,7 +14,7 @@ $pm2AppName = "uxinfotech-backend"    # Actual PM2 process name on the server
 
 # 2. Setup Variables
 $timestamp = Get-Date -Format "yyyyMMdd_HHmm"
-$zipFile = "C:\Temp\deploy.zip"
+$zipFile = "C:\Temp\deploy_${timestamp}.zip"
 $backupDir = "${remoteAppDir}_backup_${timestamp}"
 
 Write-Host "==================" -ForegroundColor Cyan

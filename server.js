@@ -798,26 +798,33 @@ app.get(/^\/admin(\/.*)?$/, (req, res) => {
 app.get('/sitemap.xml', async (req, res) => {
   try {
     const [services, projects] = await Promise.all([
-      pool.query('SELECT id, updated_at FROM services ORDER BY display_order ASC'),
-      pool.query('SELECT id, updated_at FROM projects ORDER BY created_at DESC')
+      pool.query('SELECT id, slug, created_at FROM services ORDER BY display_order ASC'),
+      pool.query('SELECT id, slug, created_at FROM projects ORDER BY created_at DESC')
     ]);
 
     const baseUrl = process.env.BASE_URL || 'https://uxinfotech.com';
     const now = new Date().toISOString();
 
-    let xml = '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
-    xml += `<url><loc>${baseUrl}/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>`;
-    xml += `<url><loc>${baseUrl}/services</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>`;
-    xml += `<url><loc>${baseUrl}/search</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>`;
+    let xml = '<?xml version="1.0" encoding="UTF-8"?>';
+    xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">';
+    
+    // Core Static Pages
+    xml += `<url><loc>${baseUrl}/</loc><lastmod>${now}</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>`;
+    xml += `<url><loc>${baseUrl}/services</loc><lastmod>${now}</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>`;
+    xml += `<url><loc>${baseUrl}/search</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>`;
 
+    // Dynamic Service Pages
     services.rows.forEach(s => {
-      const lastmod = s.updated_at ? new Date(s.updated_at).toISOString() : now;
-      xml += `<url><loc>${baseUrl}/service/${s.id}</loc><lastmod>${lastmod}</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>`;
+      const lastmod = s.created_at ? new Date(s.created_at).toISOString() : now;
+      const slug = s.slug || s.id;
+      xml += `<url><loc>${baseUrl}/service/${slug}</loc><lastmod>${lastmod}</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>`;
     });
 
+    // Dynamic Project Pages
     projects.rows.forEach(p => {
-      const lastmod = p.updated_at ? new Date(p.updated_at).toISOString() : now;
-      xml += `<url><loc>${baseUrl}/project/${p.id}</loc><lastmod>${lastmod}</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>`;
+      const lastmod = p.created_at ? new Date(p.created_at).toISOString() : now;
+      const slug = p.slug || p.id;
+      xml += `<url><loc>${baseUrl}/project/${slug}</loc><lastmod>${lastmod}</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>`;
     });
 
     xml += '</urlset>';
