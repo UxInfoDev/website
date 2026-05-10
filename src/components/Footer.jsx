@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { FaFacebook, FaTwitter, FaYoutube, FaLinkedin, FaMapMarkerAlt, FaPhone, FaEnvelope, FaArrowRight, FaChevronRight, FaWhatsapp } from 'react-icons/fa'
+import { FaFacebook, FaTwitter, FaYoutube, FaLinkedin, FaVoicemail, FaMapMarkerAlt, FaPhone, FaEnvelope, FaArrowRight, FaChevronRight, FaWhatsapp } from 'react-icons/fa'
 import axios from 'axios'
 import QuoteForm from './QuoteForm'  
 
@@ -8,8 +8,8 @@ const Footer = () => {
   const currentYear = new Date().getFullYear()
   const [settings, setSettings] = useState({
     site_name: 'UX Infotech',
-    address: 'Ahmedabad, Gujarat\nIndia',
-    phone: '+91 98765 43210',
+    address: 'Bengaluru, India, Toronto, Canada',
+    phone: '+91 821724 1551',
     email: 'hello@uxinfotech.com',
     facebook_url: '#',
     twitter_url: '#',
@@ -226,6 +226,7 @@ const Footer = () => {
                     {settings.email}
                   </a>
                 </div>
+             
               </div>
             </div>
           </div>
