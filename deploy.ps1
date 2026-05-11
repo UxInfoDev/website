@@ -9,13 +9,13 @@ $remoteUser = "ubuntu"
 $remoteHost = "129.153.51.230"
 
 # Change these two variables if your project is hosted in a different folder or has a different PM2 name
-$remoteAppDir = "/home/ubuntu"       # Files live directly here (no subfolder)
+$remoteAppDir = "/home/ubuntu/uxinfotech"       # Fixed: Point to the actual app subfolder
 $pm2AppName = "uxinfotech-backend"    # Actual PM2 process name on the server
 
 # 2. Setup Variables
 $timestamp = Get-Date -Format "yyyyMMdd_HHmm"
 $zipFile = "C:\Temp\deploy_${timestamp}.zip"
-$backupDir = "${remoteAppDir}_backup_${timestamp}"
+$backupDir = "/tmp/uxinfotech_backup_${timestamp}" # Fixed: Use /tmp to avoid permission errors
 
 Write-Host "==================" -ForegroundColor Cyan
 Write-Host "Starting Deployment" -ForegroundColor Cyan
@@ -38,40 +38,43 @@ scp -o StrictHostKeyChecking=no -i $sshKey $zipFile ${remoteUser}@${remoteHost}:
 # 6. Extract, Install Dependencies, and Restart PM2 Server
 Write-Host "4. Extracting files and restarting Node server..." -ForegroundColor Yellow
 $deployCmd = @"
-  sudo apt-get install -y unzip
+  sudo apt-get update && sudo apt-get install -y unzip
   mkdir -p $remoteAppDir
-  cd /home/ubuntu
+  cd $remoteAppDir
 
   # Backup uploads and favicon before overwrite
-  if [ -d "$remoteAppDir/public/uploads" ]; then
-    cp -r "$remoteAppDir/public/uploads" /tmp/uploads_backup_${timestamp}
+  if [ -d "public/uploads" ]; then
+    cp -r "public/uploads" /tmp/uploads_backup_${timestamp}
   fi
-  if [ -f "$remoteAppDir/fevicon.png" ]; then
-    cp "$remoteAppDir/fevicon.png" /tmp/fevicon_backup_${timestamp}
-  elif [ -f "$remoteAppDir/dist/fevicon.png" ]; then
-    cp "$remoteAppDir/dist/fevicon.png" /tmp/fevicon_backup_${timestamp}
+  if [ -f "fevicon.png" ]; then
+    cp "fevicon.png" /tmp/fevicon_backup_${timestamp}
+  elif [ -f "dist/fevicon.png" ]; then
+    cp "dist/fevicon.png" /tmp/fevicon_backup_${timestamp}
   fi
 
-  unzip -o deploy.zip -d $remoteAppDir
-  rm deploy.zip
+  unzip -o /home/ubuntu/deploy.zip -d .
+  rm /home/ubuntu/deploy.zip
 
   # Restore uploads and fevicon if they were overwritten
-  mkdir -p "$remoteAppDir/public/uploads"
+  mkdir -p "public/uploads"
   if [ -d "/tmp/uploads_backup_${timestamp}" ]; then
-    cp -rn /tmp/uploads_backup_${timestamp}/. "$remoteAppDir/public/uploads/"
+    cp -rn /tmp/uploads_backup_${timestamp}/. "public/uploads/"
     rm -rf /tmp/uploads_backup_${timestamp}
   fi
   if [ -f "/tmp/fevicon_backup_${timestamp}" ]; then
-    cp "/tmp/fevicon_backup_${timestamp}" "$remoteAppDir/fevicon.png"
-    cp "/tmp/fevicon_backup_${timestamp}" "$remoteAppDir/dist/fevicon.png"
-    cp "/tmp/fevicon_backup_${timestamp}" "$remoteAppDir/public/fevicon.png"
+    cp "/tmp/fevicon_backup_${timestamp}" "fevicon.png"
+    cp "/tmp/fevicon_backup_${timestamp}" "dist/fevicon.png"
+    cp "/tmp/fevicon_backup_${timestamp}" "public/fevicon.png"
     rm /tmp/fevicon_backup_${timestamp}
   fi
 
-  cd $remoteAppDir
   npm install --production
   pm2 restart $pm2AppName || pm2 start server.js --name $pm2AppName
 "@
+
+# Fix Windows line endings for the remote shell
+$deployCmd = $deployCmd -replace "`r", ""
+
 ssh -i $sshKey ${remoteUser}@${remoteHost} $deployCmd
 
 # 7. Clean up local zip file
