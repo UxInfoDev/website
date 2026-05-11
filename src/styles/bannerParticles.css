@@ -35,10 +35,38 @@
   initial-value: 0;
 }
 
-/* Keyframes that animate the custom properties */
-@keyframes banner-ripple {
-  0%   { --animation-tick: 0; }
-  100% { --animation-tick: 1; }
+/* Customizable variables for the banner particle animation */
+:root {
+  /* Gradient colors for rotating background – softer pastel palette for better text contrast */
+  --banner-bg-colors: #ffb3b3, #b3e0ff, #ffd9b3, #d9b3ff;
+  --banner-bg-duration: 12s;
+
+  /* Particle system configuration */
+  --particle-count: 150;
+  --particle-rows: 25;
+  --particle-size: 2.5;
+  --particle-colors: #ff0055, #00ffaa, #0055ff, #ffff00;
+  --particle-min-alpha: 0.1;
+  --particle-max-alpha: 0.8;
+  /* Slower rotation for the gradient overlay – 8 seconds full rotation */
+  --particle-speed: 8s; /* rotation speed for gradient overlay */
+}
+@keyframes banner-bg-gradient {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes banner-explode {
+  0%   { 
+    --ring-radius: 0; 
+    --ring-thickness: 50;
+  }
+}
+@keyframes banner-bg-gradient {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 @keyframes banner-explode {
@@ -58,25 +86,55 @@
    Houdini worklet is registered — so the condition is always false.
    Unsupported browsers simply ignore the paint() call gracefully. */
 .banner-ring-overlay {
-  /* Particle configuration */
+  /* Particle configuration – values pulled from :root */
   --ring-thickness: 500;
-  --particle-count: 90;
-  --particle-rows: 25;
-  --particle-size: 2.5;
-  --particle-colors: #FF6B35, #004E89, #0971C8, #ffc107;
-  --particle-min-alpha: 0.1;
-  --particle-max-alpha: 0.8;
+  --particle-count: var(--particle-count);
+  --particle-rows: var(--particle-rows);
+  --particle-size: var(--particle-size);
+  --particle-colors: var(--particle-colors);
+  --particle-min-alpha: var(--particle-min-alpha);
+  --particle-max-alpha: var(--particle-max-alpha);
   --seed: 77;
   --ring-radius: 140;
 
-  /* Paint worklet as background — transparent everywhere except particles */
+  /* Houdini worklet background – renders particles */
   background-image: paint(ring-particles);
 
-  /* Smooth cursor tracking via @property-declared custom props */
+  /* Smooth cursor tracking */
   transition: --ring-x 0.5s ease-out, --ring-y 0.5s ease-out;
 
-  /* Continuous animations */
+  /* Composite animations: ring ripple, explode, and rotating gradient */
   animation:
-    banner-ripple       8s linear      infinite,
-    banner-explode      1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    banner-ripple       8s linear infinite,
+    banner-explode      1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards,
+    banner-bg-gradient  var(--banner-bg-duration) linear infinite;
+
+  position: relative; /* needed for pseudo-element */
+  overflow: hidden;
+}
+
+/* Gradient overlay – creates a subtle multi‑color sweep */
+.banner-ring-overlay::before {
+  content: "";
+  position: absolute;
+  inset: -50%;
+  background: conic-gradient(var(--banner-bg-colors));
+  animation: rotate var(--particle-speed) linear infinite;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* Rotate animation for the gradient overlay */
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .banner-ring-overlay,
+  .banner-ring-overlay::before {
+    animation: none;
+  }
 }
