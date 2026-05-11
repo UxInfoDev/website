@@ -40,6 +40,7 @@ const BannersManager = () => {
       formData.append('cta_link', data.cta_link || '')
       formData.append('cta_alt', data.cta_alt || '')
       formData.append('is_active', data.is_active === false ? 'false' : 'true')
+      formData.append('background_pattern', data.background_pattern || '')
       if (imageFile) {
         formData.append('image', imageFile)
       }
@@ -201,6 +202,16 @@ const BannersManager = () => {
                   {...register('cta_alt')}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg"
                 />
+              </div>
+
+              <div className="col-span-2">
+                <label className="block font-bold mb-2">Background Pattern (CSS Gradient or URL)</label>
+                <textarea
+                  {...register('background_pattern')}
+                  placeholder="e.g. linear-gradient(145deg, #fffae6 0%, #ffffff 100%)"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg h-20"
+                />
+                <p className="text-xs text-gray-500 mt-1">Leave empty to use default rotating gradients.</p>
               </div>
 
               <div>

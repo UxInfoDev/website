@@ -379,11 +379,11 @@ app.get('/api/banners', async (req, res) => {
 app.post('/api/banners', async (req, res) => {
   try {
     await runUpload(upload.single('image'), req, res);
-    const { title, subtitle, description, cta_text, cta_link, cta_alt, is_active, display_order } = req.body;
+    const { title, subtitle, description, cta_text, cta_link, cta_alt, is_active, display_order, background_pattern } = req.body;
     const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
     const result = await pool.query(
-      'INSERT INTO carousels (title, subtitle, description, image, cta_text, cta_link, cta_alt, is_active, display_order) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *',
-      [title, subtitle || '', description, imagePath, cta_text, cta_link, cta_alt, is_active !== 'false', display_order || 0]
+      'INSERT INTO carousels (title, subtitle, description, image, cta_text, cta_link, cta_alt, is_active, display_order, background_pattern) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *',
+      [title, subtitle || '', description, imagePath, cta_text, cta_link, cta_alt, is_active !== 'false', display_order || 0, background_pattern || null]
     );
     res.json(result.rows[0]);
   } catch (err) {
@@ -396,18 +396,18 @@ app.put('/api/banners/:id', async (req, res) => {
   try {
     await runUpload(upload.single('image'), req, res);
     const { id } = req.params;
-    const { title, subtitle, description, cta_text, cta_link, cta_alt, is_active, display_order } = req.body;
+    const { title, subtitle, description, cta_text, cta_link, cta_alt, is_active, display_order, background_pattern } = req.body;
     const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
     if (imagePath) {
       const result = await pool.query(
-        'UPDATE carousels SET title = $1, subtitle = $2, description = $3, image = $4, cta_text = $5, cta_link = $6, cta_alt = $7, is_active = $8, display_order = $9 WHERE id = $10 RETURNING *',
-        [title, subtitle || '', description, imagePath, cta_text, cta_link, cta_alt, is_active !== 'false', display_order || 0, id]
+        'UPDATE carousels SET title = $1, subtitle = $2, description = $3, image = $4, cta_text = $5, cta_link = $6, cta_alt = $7, is_active = $8, display_order = $9, background_pattern = $10 WHERE id = $11 RETURNING *',
+        [title, subtitle || '', description, imagePath, cta_text, cta_link, cta_alt, is_active !== 'false', display_order || 0, background_pattern || null, id]
       );
       res.json(result.rows[0]);
     } else {
       const result = await pool.query(
-        'UPDATE carousels SET title = $1, subtitle = $2, description = $3, cta_text = $4, cta_link = $5, cta_alt = $6, is_active = $7, display_order = $8 WHERE id = $9 RETURNING *',
-        [title, subtitle || '', description, cta_text, cta_link, cta_alt, is_active !== 'false', display_order || 0, id]
+        'UPDATE carousels SET title = $1, subtitle = $2, description = $3, cta_text = $4, cta_link = $5, cta_alt = $6, is_active = $7, display_order = $8, background_pattern = $9 WHERE id = $10 RETURNING *',
+        [title, subtitle || '', description, cta_text, cta_link, cta_alt, is_active !== 'false', display_order || 0, background_pattern || null, id]
       );
       res.json(result.rows[0]);
     }

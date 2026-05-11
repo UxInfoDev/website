@@ -97,7 +97,8 @@ ALTER TABLE carousels ADD COLUMN IF NOT EXISTS is_active BOOLEAN DEFAULT TRUE;
 ALTER TABLE carousels ADD COLUMN IF NOT EXISTS subtitle VARCHAR(255);
 
 -- Add display_order columns for reordering functionality
-ALTER TABLE carousels ADD COLUMN IF NOT EXISTS display_order INTEGER DEFAULT 0;
+    ALTER TABLE carousels ADD COLUMN IF NOT EXISTS display_order INTEGER DEFAULT 0;
+    ALTER TABLE carousels ADD COLUMN IF NOT EXISTS background_pattern TEXT;
 ALTER TABLE services ADD COLUMN IF NOT EXISTS display_order INTEGER DEFAULT 0;
 
 -- Media Library: standalone image management

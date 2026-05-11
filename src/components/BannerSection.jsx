@@ -99,7 +99,7 @@ const BannerSection = () => {
       <section 
         id="home" 
         className="relative pt-2 pb-10 lg:pt-4 lg:pb-12 overflow-hidden transition-all duration-1000 ease-in-out min-h-[50vh] lg:min-h-[60vh] flex flex-col justify-center"
-        style={{ background: currentGradient }}
+        style={{ background: slides[currentSlide]?.background_pattern || currentGradient }}
         onPointerMove={handlePointerMove}
         onPointerLeave={handlePointerLeave}
       >
