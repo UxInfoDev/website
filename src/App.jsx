@@ -14,7 +14,6 @@ import ProjectDetails from './pages/ProjectDetails'
 import SearchResults from './pages/SearchResults'
 import ServicesPage from './pages/ServicesPage'
 import QuoteModal from './components/QuoteModal'
-import VoiceAssistant from './components/VoiceAssistant'
 
 function App() {
   // Pre-load from sessionStorage to avoid favicon/title flash on every mount
@@ -73,7 +72,6 @@ function App() {
 
         <Footer />
         <QuoteModal />
-        <VoiceAssistant />
 
         <ToastContainer
           position="bottom-right"
