@@ -112,7 +112,23 @@ const initDb = async () => {
 };
 initDb();
 
+// Auth API -----------------------------------------
+// Credentials come from environment variables — never hardcoded in frontend
+app.post('/api/auth/login', (req, res) => {
+  const { email, password } = req.body;
+  const adminEmail    = process.env.ADMIN_EMAIL    || 'admin@uxinfotech.com';
+  const adminPassword = process.env.ADMIN_PASSWORD || 'SatSuresh123$$';
+
+  if (email === adminEmail && password === adminPassword) {
+    // Simple token — in production replace with a proper JWT library
+    const token = 'admin-session-' + Date.now();
+    return res.json({ token, email: adminEmail });
+  }
+  return res.status(401).json({ error: 'Invalid email or password' });
+});
+
 // Projects API -----------------------------------------
+
 app.get('/api/projects', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM projects ORDER BY created_at DESC');
