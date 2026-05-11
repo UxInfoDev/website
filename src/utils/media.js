@@ -25,10 +25,11 @@ export const resolveImageUrl = (rawValue) => {
     return normalized.slice(uploadsSegmentIndex)
   }
 
+  // If it's already an absolute path from the root, trust it
   if (normalized.startsWith('/')) return normalized
-  if (normalized.includes('/')) return `/${normalized}`
 
-  return `/uploads/${normalized}`
+  // Otherwise, it's a relative path from the uploads directory
+  return `/uploads/${normalized.startsWith('./') ? normalized.slice(2) : normalized}`
 }
 
 export const resolveServiceImageUrl = (service = {}) =>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
+import { resolveImageUrl } from '../utils/media'
 
 const PortfolioSection = () => {
   const [activeFilter, setActiveFilter] = useState('all')
@@ -67,7 +68,7 @@ const PortfolioSection = () => {
             >
               {/* Image */}
               <img
-                src={project.image?.startsWith('/uploads') ? `${project.image}` : project.image}
+                src={resolveImageUrl(project.image)}
                 alt={project.title}
                 className="w-full h-64 object-cover group-hover:scale-110 transition duration-300"
               />

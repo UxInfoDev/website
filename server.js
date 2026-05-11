@@ -22,8 +22,9 @@ const app = express();
 
 // Security and Optimization Middleware
 app.use(helmet({
-  contentSecurityPolicy: false, // Disabled for local development / dynamic scripts
-  crossOriginEmbedderPolicy: false
+  contentSecurityPolicy: false,
+  crossOriginEmbedderPolicy: false,
+  crossOriginResourcePolicy: { policy: "cross-origin" }
 }));
 app.use(compression());
 app.use(morgan('combined'));

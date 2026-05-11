@@ -2,38 +2,45 @@ import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'
 import axios from 'axios'
 import ContactInfoBar from './ContactInfoBar'
+import ConfettiOverlay from './ConfettiOverlay'
+import { resolveImageUrl } from '../utils/media'
 import '../styles/bannerParticles.css'
-
-// ── Google-inspired multicolor particle palette ──
-const PARTICLE_COLORS = [
-  '#4285F4', // Google Blue
-  '#EA4335', // Google Red
-  '#FBBC04', // Google Yellow
-  '#34A853', // Google Green
-  '#AA47BC', // Material Purple
-  '#00ACC1', // Material Teal
-  '#FF7043', // Deep Orange
-  '#43A047', // Material Green variant
-]
 
 const BannerSection = () => {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [slides, setSlides]             = useState([])
+  const [loading, setLoading]           = useState(true)
+  const [error, setError]               = useState(false)
   const [rotationSpeed, setRotationSpeed] = useState(10000)
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
 
-  // ── Canvas cursor-effect refs ──
-  const sectionRef   = useRef(null)
-  const canvasRef    = useRef(null)
-  const particlesRef = useRef([])
-  const animFrameRef = useRef(null)
+  // ── Accessibility: Check for reduced motion preference ──
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+    setPrefersReducedMotion(mediaQuery.matches)
+    const handler = (e) => setPrefersReducedMotion(e.matches)
+    mediaQuery.addEventListener('change', handler)
+    return () => mediaQuery.removeEventListener('change', handler)
+  }, [])
 
   // ── Data fetching ──
   useEffect(() => {
     const fetchBanners = async () => {
+      setLoading(true)
       try {
         const response = await axios.get(`/api/banners?active=true&_t=${new Date().getTime()}`)
-        if (response.data && response.data.length > 0) setSlides(response.data)
-      } catch { console.error('Failed to load banners') }
+        if (response.data && response.data.length > 0) {
+          setSlides(response.data)
+          setError(false)
+        } else {
+          setError(true)
+        }
+      } catch (err) {
+        console.error('Failed to load banners')
+        setError(true)
+      } finally {
+        setLoading(false)
+      }
     }
     const fetchSettings = async () => {
       try {
@@ -46,147 +53,26 @@ const BannerSection = () => {
     fetchSettings()
   }, [])
 
+  // ── Default fallback slide if API fails or returns empty ──
+  const finalSlides = slides.length > 0 ? slides : (error || !loading ? [{
+    title: "Welcome to UX Infotech",
+    subtitle: "Innovation Meets Excellence",
+    description: "We provide cutting-edge IT solutions, custom software development, and professional consulting to help your business thrive in the digital age.",
+    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1200", // High quality IT/Business fallback
+    cta_text: "Get a Quote",
+    cta_alt: "Our Services",
+    cta_link: "#services"
+  }] : [])
+
   // ── Slide auto-rotation ──
   useEffect(() => {
-    if (slides.length === 0) return
-    const timer = setInterval(() => setCurrentSlide(p => (p + 1) % slides.length), rotationSpeed)
+    if (finalSlides.length === 0) return
+    const timer = setInterval(() => setCurrentSlide(p => (p + 1) % finalSlides.length), rotationSpeed)
     return () => clearInterval(timer)
-  }, [slides.length, rotationSpeed])
+  }, [finalSlides.length, rotationSpeed])
 
-  const nextSlide = () => setCurrentSlide(p => (p + 1) % slides.length)
-  const prevSlide = () => setCurrentSlide(p => (p - 1 + slides.length) % slides.length)
-
-  // ── Canvas: resize + animation loop ──
-  useEffect(() => {
-    const canvas  = canvasRef.current
-    const section = sectionRef.current
-    if (!canvas || !section) return
-
-    const resize = () => {
-      const r = section.getBoundingClientRect()
-      canvas.width  = r.width
-      canvas.height = r.height
-    }
-    resize()
-    const ro = new ResizeObserver(resize)
-    ro.observe(section)
-
-    const animate = () => {
-      const ctx = canvas.getContext('2d')
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
-
-      // Update + draw particles
-      particlesRef.current = particlesRef.current.filter(p => p.life > 0)
-
-      for (const p of particlesRef.current) {
-        ctx.save()
-        ctx.globalAlpha = Math.max(0, p.life)
-        ctx.fillStyle   = p.color
-        ctx.translate(p.x, p.y)
-        ctx.rotate(p.rotation)
-
-        if (p.shape === 'circle') {
-          ctx.beginPath()
-          ctx.arc(0, 0, p.size * 0.5, 0, Math.PI * 2)
-          ctx.fill()
-        } else if (p.shape === 'rect') {
-          ctx.fillRect(-p.size * 0.5, -p.size * 0.3, p.size, p.size * 0.55)
-        } else {
-          // diamond
-          ctx.beginPath()
-          ctx.moveTo(0, -p.size * 0.6)
-          ctx.lineTo(p.size * 0.4, 0)
-          ctx.lineTo(0,  p.size * 0.6)
-          ctx.lineTo(-p.size * 0.4, 0)
-          ctx.closePath()
-          ctx.fill()
-        }
-        ctx.restore()
-
-        // Physics
-        p.x        += p.vx
-        p.y        += p.vy
-        p.vy       += 0.06   // gravity
-        p.vx       *= 0.99   // air drag
-        p.rotation += p.rotSpeed
-        p.life     -= p.decay
-        p.size     *= 0.997
-      }
-
-      animFrameRef.current = requestAnimationFrame(animate)
-    }
-
-    animFrameRef.current = requestAnimationFrame(animate)
-
-    // ── Ambient idle emitter: spawns particles on load without mouse ──
-    // Fires every 120ms, placing 2-3 particles at random banner positions
-    const idleEmitter = setInterval(() => {
-      const w = canvas.width
-      const h = canvas.height
-      if (w === 0 || h === 0) return
-      const count = 2 + Math.floor(Math.random() * 2)
-      for (let i = 0; i < count; i++) {
-        const x     = Math.random() * w
-        const y     = Math.random() * h * 0.8           // spawn in top 80%
-        const angle = -Math.PI / 2 + (Math.random() - 0.5) * Math.PI // upward spread
-        const speed = 1.2 + Math.random() * 2.8
-        const shapeRng = Math.random()
-        particlesRef.current.push({
-          x, y,
-          vx:       Math.cos(angle) * speed,
-          vy:       Math.sin(angle) * speed,
-          color:    PARTICLE_COLORS[Math.floor(Math.random() * PARTICLE_COLORS.length)],
-          size:     3 + Math.random() * 6,
-          life:     0.7 + Math.random() * 0.3,
-          decay:    0.012 + Math.random() * 0.018,
-          shape:    shapeRng < 0.4 ? 'circle' : shapeRng < 0.72 ? 'rect' : 'diamond',
-          rotation: Math.random() * Math.PI * 2,
-          rotSpeed: (Math.random() - 0.5) * 0.18,
-        })
-      }
-      if (particlesRef.current.length > 500)
-        particlesRef.current = particlesRef.current.slice(-500)
-    }, 120)
-
-    return () => {
-      ro.disconnect()
-      cancelAnimationFrame(animFrameRef.current)
-      clearInterval(idleEmitter)
-    }
-  }, [])
-
-  // ── Spawn particles at cursor position ──
-  const spawnParticles = useCallback((x, y) => {
-    const count = 5 + Math.floor(Math.random() * 4)   // 5–8 per move
-    for (let i = 0; i < count; i++) {
-      const angle    = Math.random() * Math.PI * 2
-      const speed    = 1.8 + Math.random() * 3.8
-      const shapeRng = Math.random()
-      particlesRef.current.push({
-        x, y,
-        vx:       Math.cos(angle) * speed,
-        vy:       Math.sin(angle) * speed - 2.2,       // upward bias
-        color:    PARTICLE_COLORS[Math.floor(Math.random() * PARTICLE_COLORS.length)],
-        size:     4 + Math.random() * 7,
-        life:     0.85 + Math.random() * 0.15,
-        decay:    0.016 + Math.random() * 0.024,
-        shape:    shapeRng < 0.45 ? 'circle' : shapeRng < 0.75 ? 'rect' : 'diamond',
-        rotation: Math.random() * Math.PI * 2,
-        rotSpeed: (Math.random() - 0.5) * 0.22,
-      })
-    }
-    // Cap particle pool to keep it performant
-    if (particlesRef.current.length > 400)
-      particlesRef.current = particlesRef.current.slice(-400)
-  }, [])
-
-  // ── Pointer move: feed canvas (section-relative coords) ──
-  const handlePointerMove = useCallback((e) => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-    const rect = canvas.getBoundingClientRect()
-    spawnParticles(e.clientX - rect.left, e.clientY - rect.top)
-  }, [spawnParticles])
+  const nextSlide = () => setCurrentSlide(p => (p + 1) % finalSlides.length)
+  const prevSlide = () => setCurrentSlide(p => (p - 1 + finalSlides.length) % finalSlides.length)
 
   // ── Original per-slide light pastel gradients ──
   const BANNER_GRADIENTS = [
@@ -197,32 +83,37 @@ const BannerSection = () => {
     'linear-gradient(145deg, #f1f5f9 0%, #ffffff 100%)', // Slate
   ]
 
-  const activeBg = slides[currentSlide]?.background_pattern
+  const activeBg = finalSlides[currentSlide]?.background_pattern
     || BANNER_GRADIENTS[currentSlide % BANNER_GRADIENTS.length]
+
+  if (loading && slides.length === 0) {
+    return (
+      <div className="min-h-[40vh] lg:min-h-[50vh] flex items-center justify-center bg-gray-50">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0971C8]"></div>
+      </div>
+    )
+  }
 
   return (
     <>
       <section
-        ref={sectionRef}
         id="home"
         className="relative pt-1 pb-6 lg:pt-2 lg:pb-8 overflow-hidden transition-all duration-1000 ease-in-out min-h-[40vh] lg:min-h-[50vh] flex flex-col justify-center"
         style={{ background: activeBg }}
-        onPointerMove={handlePointerMove}
       >
         {/* ── Background Overlay for contrast ── */}
         <div className="absolute inset-0 bg-white/10 pointer-events-none z-0" />
 
-        {/* ── Multicolor canvas cursor-effect overlay ── */}
-        <canvas
-          ref={canvasRef}
-          className="absolute inset-0 z-[1] pointer-events-none"
-          aria-hidden="true"
-        />
+        {/* ── Scrim Overlay for legibility ── */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none z-[1]" />
+
+        {/* ── Multicolor confetti cursor-effect overlay ── */}
+        <ConfettiOverlay prefersReducedMotion={prefersReducedMotion} />
 
         {/* CSS Grid Stacking forces the container height to match the tallest slide */}
-        <div className="container mx-auto px-4 lg:px-8 relative grid grid-cols-1 grid-rows-1 items-center w-full">
+        <div className="container mx-auto px-4 lg:px-8 relative grid grid-cols-1 grid-rows-1 items-center w-full z-10">
 
-          {slides.length > 0 && slides.map((slide, index) => {
+          {finalSlides.length > 0 && finalSlides.map((slide, index) => {
             const isActive   = index === currentSlide
             const isReversed = index % 2 !== 0
 
@@ -303,7 +194,7 @@ const BannerSection = () => {
                   <div className="w-full aspect-[4/3] sm:aspect-video lg:aspect-[4/3] xl:aspect-[1.5/1] max-h-[300px] lg:max-h-[400px] relative group rounded-2xl overflow-hidden shadow-2xl bg-gray-100 border border-gray-100">
                     {slide.image ? (
                       <img
-                        src={slide.image}
+                        src={resolveImageUrl(slide.image)}
                         alt={slide.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                         loading="lazy"
@@ -319,11 +210,12 @@ const BannerSection = () => {
         </div>
 
         {/* ── Slide Navigation Arrows (Desktop) ── */}
-        {slides.length > 1 && (
+        {finalSlides.length > 1 && (
           <>
             <div
               role="button"
               onClick={prevSlide}
+              aria-label="Previous slide"
               className="absolute left-4 lg:left-8 top-1/2 -translate-y-1/2 z-30 w-12 h-12 bg-white/90 backdrop-blur text-[#0971C8] rounded-full hidden lg:flex items-center justify-center hover:bg-gray-50 shadow-xl transition-transform hover:scale-110 cursor-pointer border border-gray-100"
             >
               <FaChevronLeft size={18} />
@@ -331,6 +223,7 @@ const BannerSection = () => {
             <div
               role="button"
               onClick={nextSlide}
+              aria-label="Next slide"
               className="absolute right-4 lg:right-8 top-1/2 -translate-y-1/2 z-30 w-12 h-12 bg-white/90 backdrop-blur text-[#0971C8] rounded-full hidden lg:flex items-center justify-center hover:bg-gray-50 shadow-xl transition-transform hover:scale-110 cursor-pointer border border-gray-100"
             >
               <FaChevronRight size={18} />
@@ -339,19 +232,19 @@ const BannerSection = () => {
         )}
 
         {/* ── Slide Indicators ── */}
-        {slides.length > 1 && (
+        {finalSlides.length > 1 && (
           <div className="absolute md:bottom-4 bottom-6 left-1/2 -translate-x-1/2 z-30 flex items-center gap-3">
-            {slides.map((_, index) => (
+            {finalSlides.map((_, index) => (
               <div
                 role="button"
                 key={index}
                 onClick={() => setCurrentSlide(index)}
+                aria-label={`Go to slide ${index + 1}`}
                 className={`rounded-full cursor-pointer transition-all duration-300 shadow-sm ${
                   index === currentSlide
                     ? 'bg-[#0971C8] w-3 h-3 scale-125'
                     : 'bg-gray-300 hover:bg-gray-400 w-3 h-3'
                 }`}
-                aria-label={`Go to slide ${index + 1}`}
               />
             ))}
           </div>
