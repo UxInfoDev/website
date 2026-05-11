@@ -32,10 +32,22 @@ app.use(cors());
 app.use(express.json());
 
 // Serve static files from public/uploads
-const uploadDir = path.join(__dirname, 'public/uploads');
+const uploadDir = path.resolve(__dirname, 'public/uploads');
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
+
+// Debug middleware for uploads - LOCAL ONLY
+app.use('/uploads', (req, res, next) => {
+  const filePath = path.join(uploadDir, req.url);
+  if (fs.existsSync(filePath)) {
+    // console.log(`[DEBUG] Serving image: ${filePath}`);
+  } else {
+    console.warn(`[DEBUG] Image NOT FOUND: ${filePath}`);
+  }
+  next();
+});
+
 app.use('/uploads', express.static(uploadDir));
 
 // Setup multer for physical path storage
@@ -839,8 +851,11 @@ app.get('/sitemap.xml', async (req, res) => {
 // 4. Serve Frontend Assets
 app.use(express.static(frontendDist));
 
-// 4. Frontend Catch-all
-app.get('/{*path}', (req, res) => {
+// 4. Frontend Catch-all - Use middleware to avoid Express 5 regex issues
+app.use((req, res, next) => {
+  // Only handle GET requests that didn't match previous routes
+  if (req.method !== 'GET') return next();
+  
   const indexHtml = path.join(frontendDist, 'index.html');
   if (fs.existsSync(indexHtml)) {
     res.sendFile(indexHtml);
