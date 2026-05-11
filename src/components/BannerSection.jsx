@@ -98,16 +98,22 @@ const BannerSection = () => {
     <>
       <section 
         id="home" 
-        className="relative pt-2 pb-10 lg:pt-4 lg:pb-12 overflow-hidden transition-all duration-1000 ease-in-out min-h-[50vh] lg:min-h-[60vh] flex flex-col justify-center"
-        style={{ background: slides[currentSlide]?.background_pattern || currentGradient }}
+        className="relative pt-1 pb-6 lg:pt-2 lg:pb-8 overflow-hidden transition-all duration-1000 ease-in-out min-h-[40vh] lg:min-h-[50vh] flex flex-col justify-center"
+        style={{ 
+          background: slides[currentSlide]?.background_pattern || currentGradient,
+          position: 'relative'
+        }}
         onPointerMove={handlePointerMove}
         onPointerLeave={handlePointerLeave}
       >
+        {/* ── Background Overlay for contrast ── */}
+        <div className="absolute inset-0 bg-white/10 pointer-events-none z-0" />
+        
         {/* ── Ring-Particles cursor overlay (Houdini) for entire section ── */}
         {(workletReady && slides.length > 0) && (
           <div
             ref={overlayRef}
-            className="banner-ring-overlay absolute inset-0 z-0 pointer-events-none"
+            className="banner-ring-overlay absolute inset-0 z-[1] pointer-events-none"
             aria-hidden="true"
           />
         )}
@@ -132,7 +138,7 @@ const BannerSection = () => {
               <div 
                 key={slide.id || index} 
                 style={{ gridArea: '1 / 1 / 2 / 2' }}
-                className={`w-full flex flex-col lg:flex-row items-center gap-10 lg:gap-16 transition-all duration-1000 ease-[cubic-bezier(0.4,0.0,0.2,1)] py-2 ${
+                className={`w-full flex flex-col lg:flex-row items-center gap-6 lg:gap-12 transition-all duration-1000 ease-[cubic-bezier(0.4,0.0,0.2,1)] py-1 ${
                   isReversed ? 'lg:flex-row-reverse' : ''
                 } ${
                   isActive 
@@ -147,28 +153,37 @@ const BannerSection = () => {
                 <div className={`absolute ${bgStyles.circle2} w-40 h-40 rounded-full border-[4px] border-[#0971C8]/5 pointer-events-none transition-all duration-1000`} />
 
                 {/* ── Text Content ── */}
-                <div className="w-full lg:w-1/2 flex flex-col items-start text-left font-sans z-10">
+                <div className="w-full lg:w-1/2 flex flex-col items-start text-left font-sans z-10 bg-white/80 backdrop-blur-xl p-5 sm:p-8 rounded-[2rem] border border-white/60 shadow-[0_20px_50px_rgba(0,0,0,0.1)]">
                   {slide.subtitle && (
-                    <div className="flex items-center gap-3 text-[#00a0dc] font-bold tracking-widest text-[10px] sm:text-[11px] mb-4 uppercase">
-                      <span className="w-6 h-0.5 bg-[#00a0dc] inline-block"></span>
+                    <div className="flex items-center gap-3 text-[#00a0dc] font-black tracking-[0.3em] text-[10px] sm:text-[12px] mb-3 uppercase drop-shadow-sm">
+                      <span className="w-8 h-0.5 bg-[#00a0dc] inline-block rounded-full"></span>
                       {slide.subtitle}
                     </div>
                   )}
                   
-                  <h1 className="text-3xl sm:text-5xl lg:text-5xl xl:text-6xl font-extrabold text-[#0971C8] leading-tight tracking-tight mb-3 sm:mb-4 animate-fade-in-up" style={{ animationDelay: '100ms' }}>
+                  <h1 
+                    className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black text-[#0971C8] leading-[1.1] tracking-tight mb-3 sm:mb-4 animate-fade-in-up" 
+                    style={{ 
+                      animationDelay: '100ms',
+                      textShadow: '0 2px 15px rgba(0,0,0,0.08)'
+                    }}
+                  >
                     {slide.title}
                   </h1>
                   
                   {slide.description && (
                     <div 
-                      className="text-sm sm:text-lg text-gray-700 mb-4 sm:mb-6 max-w-xl leading-relaxed banner-rich-text animate-fade-in-up line-clamp-3 sm:line-clamp-none"
-                      style={{ animationDelay: '200ms' }}
+                      className="text-sm sm:text-lg text-slate-900 font-medium mb-4 sm:mb-6 max-w-xl leading-relaxed banner-rich-text animate-fade-in-up line-clamp-3 sm:line-clamp-none"
+                      style={{ 
+                        animationDelay: '200ms',
+                        textShadow: '0 1px 1px rgba(255,255,255,1)'
+                      }}
                       dangerouslySetInnerHTML={{ __html: slide.description }}
                     />
                   )}
 
                   {(slide.cta_text || slide.cta_alt) && (
-                    <div className="flex flex-col sm:flex-row gap-4 mb-8 w-full sm:w-auto animate-fade-in-up" style={{ animationDelay: '300ms' }}>
+                    <div className="flex flex-col sm:flex-row gap-3 mb-4 w-full sm:w-auto animate-fade-in-up" style={{ animationDelay: '300ms' }}>
                       {slide.cta_text && (
                         <button
                           onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event('openQuoteModal')); }}
@@ -191,7 +206,7 @@ const BannerSection = () => {
 
                 {/* ── Image Content ── */}
                 <div className="w-full lg:w-1/2 relative mt-2 lg:mt-0 flex justify-center animate-fade-in-up" style={{ animationDelay: '400ms' }}>
-                  <div className="w-full aspect-[4/3] sm:aspect-video lg:aspect-[4/3] xl:aspect-[1.4/1] relative group rounded-2xl overflow-hidden shadow-2xl bg-gray-100 border border-gray-100">
+                  <div className="w-full aspect-[4/3] sm:aspect-video lg:aspect-[4/3] xl:aspect-[1.5/1] max-h-[300px] lg:max-h-[400px] relative group rounded-2xl overflow-hidden shadow-2xl bg-gray-100 border border-gray-100">
                     {slide.image ? (
                       <img 
                         src={slide.image} 
