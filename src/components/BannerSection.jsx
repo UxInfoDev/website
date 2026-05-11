@@ -74,13 +74,13 @@ const BannerSection = () => {
   const nextSlide = () => setCurrentSlide(p => (p + 1) % finalSlides.length)
   const prevSlide = () => setCurrentSlide(p => (p - 1 + finalSlides.length) % finalSlides.length)
 
-  // ── Original per-slide light pastel gradients ──
+  // ── Vibrant & Shiny Branding Gradients (Intensified) ──
   const BANNER_GRADIENTS = [
-    'linear-gradient(145deg, #e0f2fe 0%, #ffffff 100%)', // Sky Blue
-    'linear-gradient(145deg, #ede9fe 0%, #ffffff 100%)', // Violet
-    'linear-gradient(145deg, #dcfce7 0%, #ffffff 100%)', // Emerald
-    'linear-gradient(145deg, #ffedd5 0%, #ffffff 100%)', // Orange (Branding)
-    'linear-gradient(145deg, #f1f5f9 0%, #ffffff 100%)', // Slate
+    'radial-gradient(circle at 20% 30%, rgba(9, 113, 200, 0.22) 0%, transparent 70%), linear-gradient(145deg, #e0f2fe 0%, #ffffff 100%)', // Intense Blue
+    'radial-gradient(circle at 80% 20%, rgba(234, 88, 12, 0.18) 0%, transparent 60%), linear-gradient(145deg, #fff2e6 0%, #ffffff 100%)', // Intense Orange
+    'radial-gradient(circle at 50% 50%, rgba(0, 160, 220, 0.15) 0%, transparent 80%), linear-gradient(145deg, #f1f5f9 0%, #ffffff 100%)', // Vibrant Tech
+    'linear-gradient(145deg, #ffffff 0%, #f1f5f9 40%, rgba(9, 113, 200, 0.12) 100%)', // Deep Slate
+    'linear-gradient(135deg, #ffffff 0%, #f0fdf4 50%, rgba(34, 197, 94, 0.1) 100%)',  // Fresh Success
   ]
 
   const activeBg = finalSlides[currentSlide]?.background_pattern
@@ -98,7 +98,7 @@ const BannerSection = () => {
     <>
       <section
         id="home"
-        className="relative pt-1 pb-6 lg:pt-2 lg:pb-8 overflow-hidden transition-all duration-1000 ease-in-out min-h-[40vh] lg:min-h-[50vh] flex flex-col justify-center"
+        className="relative pt-1 pb-4 lg:pt-1 lg:pb-6 overflow-hidden transition-all duration-1000 ease-in-out min-h-[30vh] lg:min-h-[35vh] flex flex-col justify-center"
         style={{ background: activeBg }}
       >
         {/* ── Background Overlay for contrast ── */}
@@ -138,13 +138,18 @@ const BannerSection = () => {
                 }`}
               >
                 {/* ── Slide-specific Decorative Elements ── */}
-                <div className={`absolute ${bgStyles.glow1} w-[35%] h-[45%] rounded-full bg-orange-400/10 blur-[100px] pointer-events-none animate-pulse transition-all duration-1000`} />
-                <div className={`absolute ${bgStyles.glow2} w-[45%] h-[55%] rounded-full bg-blue-600/10  blur-[100px] pointer-events-none transition-all duration-1000`} />
-                <div className={`absolute ${bgStyles.circle1} w-32 h-32 rounded-full border-[3px] border-[#0971C8]/10 pointer-events-none transition-all duration-1000`} />
-                <div className={`absolute ${bgStyles.circle2} w-40 h-40 rounded-full border-[4px] border-[#0971C8]/5  pointer-events-none transition-all duration-1000`} />
+                <div className={`absolute ${bgStyles.glow1} w-[40%] h-[50%] rounded-full bg-orange-500/15 blur-[120px] pointer-events-none animate-pulse transition-all duration-1000`} />
+                <div className={`absolute ${bgStyles.glow2} w-[50%] h-[60%] rounded-full bg-blue-500/15  blur-[120px] pointer-events-none transition-all duration-1000`} />
+                <div className={`absolute ${bgStyles.circle1} w-32 h-32 rounded-full border-[3px] border-[#0971C8]/20 pointer-events-none transition-all duration-1000 animate-[spin_20s_linear_infinite]`} />
+                <div className={`absolute ${bgStyles.circle2} w-40 h-40 rounded-full border-[4px] border-[#0971C8]/10 pointer-events-none transition-all duration-1000 animate-[spin_30s_linear_infinite_reverse]`} />
+                
+                {/* ── Moving Shine Overlay ── */}
+                <div className="absolute inset-0 pointer-events-none overflow-hidden z-[2]">
+                  <div className="absolute top-0 -left-[100%] w-[50%] h-full bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-[-25deg] animate-[shine_8s_ease-in-out_infinite]" />
+                </div>
 
                 {/* ── Text Content ── */}
-                <div className="w-full lg:w-1/2 flex flex-col items-start text-left font-sans z-10 p-5 sm:p-8">
+                <div className="w-full lg:w-1/2 flex flex-col items-start text-left font-sans z-10 p-4 sm:p-6">
                   {slide.subtitle && (
                     <div className="flex items-center gap-3 text-[#00a0dc] font-black tracking-[0.3em] text-[10px] sm:text-[12px] mb-3 uppercase drop-shadow-sm">
                       <span className="w-8 h-0.5 bg-[#00a0dc] inline-block rounded-full"></span>
@@ -153,7 +158,7 @@ const BannerSection = () => {
                   )}
 
                   <h1
-                    className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black text-[#0971C8] leading-[1.1] tracking-tight mb-3 sm:mb-4 animate-fade-in-up"
+                    className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black text-[#0971C8] leading-[1.1] tracking-tight mb-2 animate-fade-in-up"
                     style={{ animationDelay: '100ms', textShadow: '0 2px 15px rgba(0,0,0,0.08)' }}
                   >
                     {slide.title}

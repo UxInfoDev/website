@@ -9,3 +9,20 @@
 .banner-rich-text li     { margin-bottom: 0.25rem; }
 .banner-rich-text strong { color: #0f172a; font-weight: 700; }
 .banner-rich-text a      { color: #0971C8; text-decoration: underline; }
+
+@keyframes shine {
+  0% { left: -100%; opacity: 0; }
+  10% { opacity: 0.5; }
+  40% { left: 100%; opacity: 0; }
+  100% { left: 100%; opacity: 0; }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Base styles for the shine effect if Tailwind isn't enough */
+.animate-shine {
+  animation: shine 8s ease-in-out infinite;
+}
