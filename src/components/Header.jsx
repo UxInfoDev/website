@@ -120,7 +120,7 @@ const Header = () => {
   }, [location.pathname])
 
   const desktopNavClass = (tab) =>
-    `font-medium border-b-2 pb-1 transition ${activeTab === tab ? 'text-orange-600 border-orange-600' : 'border-transparent hover:text-orange-600'}`
+    `font-medium border-b-2 py-1 transition ${activeTab === tab ? 'text-orange-600 border-orange-600' : 'border-transparent hover:text-orange-600'}`
 
   const mobileNavClass = (tab) =>
     `text-left py-2 transition ${activeTab === tab ? 'text-orange-600 font-semibold' : 'hover:text-orange-600'}`
@@ -131,7 +131,7 @@ const Header = () => {
         <div className="flex justify-between items-center py-4">
           {/* Logo */}
           <div className="flex items-center">
-            <Link to="/" className="flex flex-col items-start leading-none group pb-1">
+            <Link to="/" className="flex flex-col items-start leading-none group">
               {logoUrl ? (
                 <img
                   src={logoUrl}
@@ -140,7 +140,7 @@ const Header = () => {
                 />
               ) : (
                 <>
-                <img src="/logo.png" alt="UX Infotech" className="h-12 max-w-[180px] object-contain" />
+                <img src="/logo.svg" alt="UX Infotech" className="h-12 max-w-[180px] object-contain" />
                   {/* <div className="flex items-baseline mb-1">
                     <span className="text-[#3282C4] text-[42px] font-black tracking-tighter leading-none">U</span>
                     <span className="text-[#F18835] text-[42px] font-black tracking-tighter leading-none ml-[-2px]">X</span>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import { FaMapMarkerAlt, FaPhoneAlt, FaEnvelope } from 'react-icons/fa'
+import { FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaMicrophone } from 'react-icons/fa'
 
 const ContactSection = () => {
   const [settings, setSettings] = useState({
@@ -35,9 +35,9 @@ const ContactSection = () => {
         </div>
 
         {/* Contact Info Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
           {/* Address */}
-          <div className="bg-white rounded-3xl p-10 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+          <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
             <div className="w-16 h-16 bg-orange-50 text-orange-600 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl">
               <FaMapMarkerAlt />
             </div>
@@ -48,7 +48,7 @@ const ContactSection = () => {
           </div>
 
           {/* Phone */}
-          <div className="bg-white rounded-3xl p-10 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+          <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
             <div className="w-16 h-16 bg-orange-50 text-orange-600 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl">
               <FaPhoneAlt />
             </div>
@@ -59,7 +59,7 @@ const ContactSection = () => {
           </div>
 
           {/* Email */}
-          <div className="bg-white rounded-3xl p-10 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+          <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
             <div className="w-16 h-16 bg-orange-50 text-orange-600 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl">
               <FaEnvelope />
             </div>
@@ -67,6 +67,20 @@ const ContactSection = () => {
             <a href={`mailto:${settings.email}`} className="text-orange-600 font-bold text-lg hover:text-orange-700 block transition-colors mt-2">
               {settings.email}
             </a>
+          </div>
+
+          {/* Voice Assistant */}
+          <div
+            onClick={() => window.dispatchEvent(new Event('openVoiceAssistant'))}
+            className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 hover:shadow-md transition-shadow cursor-pointer"
+          >
+            <div className="w-16 h-16 bg-orange-50 text-orange-600 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl">
+              <FaMicrophone />
+            </div>
+            <h3 className="text-2xl font-extrabold mb-4 text-[#0971C8] tracking-tight">Voice Assistant</h3>
+            <p className="text-gray-700 leading-relaxed">
+              Interact with our site using voice commands. Navigate, search, and more.
+            </p>
           </div>
         </div>
       </div>
