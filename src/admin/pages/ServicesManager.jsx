@@ -6,6 +6,8 @@ import axios from 'axios'
 import * as Icons from 'react-icons/fa'
 import RichTextEditor from '../components/RichTextEditor'
 import { resolveServiceImageUrl } from '../../utils/media'
+import ConfirmModal from '../components/ConfirmModal'
+import ReorderControls from '../components/ReorderControls'
 
 const API_BASE = '/api/services'
 
@@ -23,6 +25,11 @@ const ServicesManager = () => {
   }, [viewMode])
 
   const [imagePreview, setImagePreview] = useState('')
+  
+  // Custom confirm delete states
+  const [deleteId, setDeleteId] = useState(null)
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false)
+
   const { register, handleSubmit, reset, setValue, watch, formState: { errors } } = useForm()
   const imageRegister = register('image')
 
@@ -73,15 +80,18 @@ const ServicesManager = () => {
     }
   }
 
-  const handleDelete = async (id) => {
-    if (window.confirm('Are you sure?')) {
-      try {
-        await axios.delete(`${API_BASE}/${id}`)
-        toast.success('Service deleted!')
-        fetchServices()
-      } catch (error) {
-        toast.error('Failed to delete service')
-      }
+  const handleDeleteClick = (id) => {
+    setDeleteId(id)
+    setIsConfirmOpen(true)
+  }
+
+  const executeDelete = async () => {
+    try {
+      await axios.delete(`${API_BASE}/${deleteId}`)
+      toast.success('Service deleted!')
+      fetchServices()
+    } catch (error) {
+      toast.error('Failed to delete service')
     }
   }
 
@@ -282,10 +292,7 @@ const ServicesManager = () => {
               <div key={service.id} className="bg-t-bg-card rounded-2xl shadow-sm border border-t-border p-5 hover:shadow-md hover:-translate-y-0.5 transition-all flex flex-col md:flex-row items-center gap-6 group">
                 
                 {/* Reorder Controls */}
-                <div className="flex md:flex-col gap-1 items-center bg-slate-50 p-2 rounded-xl shrink-0 border border-t-border">
-                  <button onClick={() => handleMove(index, -1)} disabled={index === 0} className={`p-2 rounded-lg transition-colors ${index === 0 ? 'text-slate-300' : 'text-t-text hover:text-t-primary hover:bg-blue-50'}`} title="Move Up"><FaArrowUp /></button>
-                  <button onClick={() => handleMove(index, 1)} disabled={index === services.length - 1} className={`p-2 rounded-lg transition-colors ${index === services.length - 1 ? 'text-slate-300' : 'text-t-text hover:text-t-primary hover:bg-blue-50'}`} title="Move Down"><FaArrowDown /></button>
-                </div>
+                <ReorderControls index={index} total={services.length} onMove={handleMove} />
 
                 {/* Image/Icon */}
                 <div className="relative w-28 h-28 shrink-0 rounded-xl overflow-hidden bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center border border-slate-200/50 shadow-inner">
@@ -311,11 +318,11 @@ const ServicesManager = () => {
                 </div>
 
                 {/* Actions */}
-                <div className="flex items-center gap-3 w-full md:w-auto shrink-0 mt-4 md:mt-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="flex items-center gap-3 w-full md:w-auto shrink-0 mt-4 md:mt-0">
                   <button onClick={() => handleEdit(service)} className="flex-1 md:flex-none p-3 bg-blue-50 text-t-primary hover:bg-t-primary hover:text-white rounded-xl transition-colors flex items-center justify-center font-semibold">
                     <FaEdit />
                   </button>
-                  <button onClick={() => handleDelete(service.id)} className="flex-1 md:flex-none p-3 bg-red-50 text-red-600 hover:bg-red-600 hover:text-white rounded-xl transition-colors flex items-center justify-center font-semibold">
+                  <button onClick={() => handleDeleteClick(service.id)} className="flex-1 md:flex-none p-3 bg-red-50 text-red-600 hover:bg-red-600 hover:text-white rounded-xl transition-colors flex items-center justify-center font-semibold">
                     <FaTrash />
                   </button>
                 </div>
@@ -345,11 +352,13 @@ const ServicesManager = () => {
                 </div>
 
                 {/* Reorder Controls */}
-                <div className="absolute top-4 right-4 flex bg-t-bg-card/90 backdrop-blur-md rounded-xl shadow-sm overflow-hidden z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <button onClick={() => handleMove(index, -1)} disabled={index === 0} className={`p-2 transition-colors ${index === 0 ? 'text-slate-300 bg-slate-50' : 'text-t-text hover:text-t-primary hover:bg-blue-50'}`} title="Move Left"><FaArrowLeft size={12} /></button>
-                  <div className="w-px bg-slate-200"></div>
-                  <button onClick={() => handleMove(index, 1)} disabled={index === services.length - 1} className={`p-2 transition-colors ${index === services.length - 1 ? 'text-slate-300 bg-slate-50' : 'text-t-text hover:text-t-primary hover:bg-blue-50'}`} title="Move Right"><FaArrowRight size={12} /></button>
-                </div>
+                <ReorderControls 
+                  index={index} 
+                  total={services.length} 
+                  onMove={handleMove} 
+                  layout="horizontal" 
+                  className="absolute top-4 right-4 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                />
               </div>
 
               {/* Content Body */}
@@ -365,7 +374,7 @@ const ServicesManager = () => {
                   <button onClick={() => handleEdit(service)} className="flex-[3] py-2.5 bg-blue-50 text-t-primary hover:bg-t-primary hover:text-white rounded-xl transition-all duration-200 flex items-center justify-center gap-2 font-semibold text-[13px] shadow-sm hover:shadow">
                     <FaEdit /> Edit Service
                   </button>
-                  <button onClick={() => handleDelete(service.id)} className="flex-1 py-2.5 bg-red-50 text-red-600 hover:bg-red-600 hover:text-white rounded-xl transition-all duration-200 flex items-center justify-center gap-2 font-semibold text-[13px] shadow-sm hover:shadow">
+                  <button onClick={() => handleDeleteClick(service.id)} className="flex-1 py-2.5 bg-red-50 text-red-600 hover:bg-red-600 hover:text-white rounded-xl transition-all duration-200 flex items-center justify-center gap-2 font-semibold text-[13px] shadow-sm hover:shadow">
                     <FaTrash />
                   </button>
                 </div>
@@ -374,6 +383,15 @@ const ServicesManager = () => {
           )
         })}
       </div>
+      
+      {/* Confirm Deletion Popup */}
+      <ConfirmModal
+        isOpen={isConfirmOpen}
+        onClose={() => setIsConfirmOpen(false)}
+        onConfirm={executeDelete}
+        title="Delete Service?"
+        message="Are you sure you want to delete this service? This action is permanent and cannot be undone."
+      />
     </div>
   )
 }

@@ -100,6 +100,8 @@ ALTER TABLE carousels ADD COLUMN IF NOT EXISTS subtitle VARCHAR(255);
     ALTER TABLE carousels ADD COLUMN IF NOT EXISTS display_order INTEGER DEFAULT 0;
     ALTER TABLE carousels ADD COLUMN IF NOT EXISTS background_pattern TEXT;
 ALTER TABLE services ADD COLUMN IF NOT EXISTS display_order INTEGER DEFAULT 0;
+ALTER TABLE projects ADD COLUMN IF NOT EXISTS display_order INTEGER DEFAULT 0;
+ALTER TABLE team ADD COLUMN IF NOT EXISTS display_order INTEGER DEFAULT 0;
 
 -- Media Library: standalone image management
 CREATE TABLE IF NOT EXISTS media_library (

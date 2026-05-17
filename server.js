@@ -131,7 +131,7 @@ app.post('/api/auth/login', (req, res) => {
 
 app.get('/api/projects', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM projects ORDER BY created_at DESC');
+    const result = await pool.query('SELECT * FROM projects ORDER BY display_order ASC, created_at DESC');
     res.json(result.rows);
   } catch (err) {
     console.error(err);
@@ -218,6 +218,29 @@ app.delete('/api/projects/:id', async (req, res) => {
   try {
     await pool.query('DELETE FROM projects WHERE id = $1', [id]);
     res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.post('/api/projects/reorder', async (req, res) => {
+  const { items } = req.body;
+  try {
+    const client = await pool.connect();
+    try {
+      await client.query('BEGIN');
+      for (const item of items) {
+        await client.query('UPDATE projects SET display_order = $1 WHERE id = $2', [item.display_order, item.id]);
+      }
+      await client.query('COMMIT');
+      res.json({ success: true });
+    } catch (e) {
+      await client.query('ROLLBACK');
+      throw e;
+    } finally {
+      client.release();
+    }
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Internal server error' });
@@ -486,7 +509,7 @@ app.post('/api/banners/reorder', async (req, res) => {
 // Team API -----------------------------------------
 app.get('/api/team', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM team ORDER BY created_at ASC');
+    const result = await pool.query('SELECT * FROM team ORDER BY display_order ASC, created_at ASC');
     res.json(result.rows);
   } catch (err) {
     console.error(err);
@@ -540,6 +563,29 @@ app.delete('/api/team/:id', async (req, res) => {
   try {
     await pool.query('DELETE FROM team WHERE id = $1', [id]);
     res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.post('/api/team/reorder', async (req, res) => {
+  const { items } = req.body;
+  try {
+    const client = await pool.connect();
+    try {
+      await client.query('BEGIN');
+      for (const item of items) {
+        await client.query('UPDATE team SET display_order = $1 WHERE id = $2', [item.display_order, item.id]);
+      }
+      await client.query('COMMIT');
+      res.json({ success: true });
+    } catch (e) {
+      await client.query('ROLLBACK');
+      throw e;
+    } finally {
+      client.release();
+    }
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Internal server error' });

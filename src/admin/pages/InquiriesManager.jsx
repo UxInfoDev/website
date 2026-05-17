@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { FaEnvelope, FaCheck, FaTimes, FaChevronLeft, FaChevronRight, FaUser, FaCalendarAlt, FaTag, FaSort, FaSortUp, FaSortDown } from 'react-icons/fa'
 import { toast } from 'react-toastify'
 import axios from 'axios'
+import ConfirmModal from '../components/ConfirmModal'
 
 const API_BASE = '/api/inquiries'
 const PAGE_SIZE = 10
@@ -28,6 +29,10 @@ const InquiriesManager = () => {
   const [page, setPage]                       = useState(1)
   const [sortKey, setSortKey]                 = useState('created_at')
   const [sortDir, setSortDir]                 = useState('desc')
+  
+  // Custom confirm delete states
+  const [deleteId, setDeleteId] = useState(null)
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false)
 
   useEffect(() => { fetchInquiries() }, [])
 
@@ -106,13 +111,17 @@ const InquiriesManager = () => {
     setReply('')
   }
 
-  const handleDelete = async (id) => {
-    if (!window.confirm('Delete this inquiry?')) return
+  const handleDeleteClick = (id) => {
+    setDeleteId(id)
+    setIsConfirmOpen(true)
+  }
+
+  const executeDelete = async () => {
     try {
-      await axios.delete(`${API_BASE}/${id}`)
+      await axios.delete(`${API_BASE}/${deleteId}`)
       toast.success('Inquiry deleted!')
-      setInquiries(prev => prev.filter(i => i.id !== id))
-      if (selectedInquiry?.id === id) setSelectedInquiry(null)
+      setInquiries(prev => prev.filter(i => i.id !== deleteId))
+      if (selectedInquiry?.id === deleteId) setSelectedInquiry(null)
     } catch {
       toast.error('Failed to delete inquiry')
     }
@@ -389,7 +398,7 @@ const InquiriesManager = () => {
                     <FaCheck size={10} /> Send Reply
                   </button>
                   <button
-                    onClick={() => handleDelete(selectedInquiry.id)}
+                    onClick={() => handleDeleteClick(selectedInquiry.id)}
                     className="flex-1 flex items-center justify-center gap-1.5 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg text-xs font-semibold transition"
                   >
                     <FaTimes size={10} /> Delete
@@ -409,6 +418,14 @@ const InquiriesManager = () => {
         )}
 
       </div>
+      {/* Confirm Deletion Popup */}
+      <ConfirmModal
+        isOpen={isConfirmOpen}
+        onClose={() => setIsConfirmOpen(false)}
+        onConfirm={executeDelete}
+        title="Delete Inquiry?"
+        message="Are you sure you want to delete this inquiry? This action is permanent and cannot be undone."
+      />
     </div>
   )
 }

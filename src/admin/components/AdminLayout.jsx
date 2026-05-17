@@ -25,6 +25,7 @@ const AdminLayout = ({ children, onLogout }) => {
     () => !(typeof window !== 'undefined' && window.innerWidth < 1024)
   )
   const [logoUrl, setLogoUrl] = useState(null)
+  const [isProfileOpen, setIsProfileOpen] = useState(false)
   const location = useLocation()
 
   // Derive current page title from route
@@ -187,21 +188,50 @@ const AdminLayout = ({ children, onLogout }) => {
               </div>
             </div>
 
-            {/* Right — user info */}
-            <div className="flex items-center gap-4 bg-white/50 px-3 py-1.5 rounded-full border border-slate-100 shadow-sm">
-              <div className="hidden sm:flex flex-col items-end pr-2">
-                <span className="text-sm font-bold text-slate-800 leading-tight">Administrator</span>
-                <span className="text-[11px] font-medium text-[#0971C8] leading-tight">Active Session</span>
-              </div>
-              <div className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-base shadow-inner ring-2 ring-white bg-gradient-admin">
-                A
-              </div>
-            </div>
+             {/* Right — user info with Dropdown */}
+             <div className="relative">
+               <button
+                 onClick={() => setIsProfileOpen(!isProfileOpen)}
+                 className="flex items-center gap-4 bg-white/50 hover:bg-white/80 active:scale-95 px-3 py-1.5 rounded-full border border-slate-100 shadow-sm transition-all duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#0971C8]/20"
+                 aria-expanded={isProfileOpen}
+                 aria-haspopup="true"
+               >
+                 <div className="hidden sm:flex flex-col items-end pr-2 text-right justify-center h-10">
+                   <span className="text-sm font-bold text-slate-800 leading-tight">Administrator</span>
+                 </div>
+                 <div className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-base shadow-inner ring-2 ring-white bg-gradient-admin">
+                   A
+                 </div>
+               </button>
+
+               {isProfileOpen && (
+                 <>
+                   {/* Click outside overlay */}
+                   <div 
+                     className="fixed inset-0 z-30 cursor-default" 
+                     onClick={() => setIsProfileOpen(false)} 
+                   />
+                   {/* Dropdown Menu */}
+                   <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl border border-slate-200 shadow-xl p-1.5 z-40 animate-fade-in-up origin-top-right">
+                     <button
+                       onClick={() => {
+                         setIsProfileOpen(false)
+                         onLogout()
+                       }}
+                       className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors font-bold text-[13px] text-left cursor-pointer focus:outline-none"
+                     >
+                       <FaSignOutAlt className="text-base" />
+                       <span>Secure Logout</span>
+                     </button>
+                   </div>
+                 </>
+               )}
+             </div>
           </div>
         </div>
 
         {/* Content Area */}
-        <div className="p-6 sm:p-8 flex-1 max-w-[1600px] w-full mx-auto">
+        <div className="p-5 sm:p-6 flex-1 max-w-[1600px] w-full mx-auto">
           {children}
         </div>
       </div>

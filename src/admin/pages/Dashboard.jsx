@@ -8,6 +8,7 @@ import {
 } from 'react-icons/fa'
 import axios from 'axios'
 import { toast } from 'react-toastify'
+import ConfirmModal from '../components/ConfirmModal'
 
 const API_INQUIRIES = '/api/inquiries'
 
@@ -32,6 +33,10 @@ const AdminDashboard = () => {
   const [selectedInquiry, setSelectedInquiry] = useState(null)
   const [reply, setReply]                     = useState('')
   const [loading, setLoading]                 = useState(true)
+  
+  // Custom confirm delete states
+  const [deleteId, setDeleteId] = useState(null)
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false)
 
   const fmt = (d) => d ? new Date(d).toLocaleString('en-IN', {
     day: '2-digit', month: 'short', year: 'numeric',
@@ -96,12 +101,16 @@ const AdminDashboard = () => {
     setReply('')
   }
 
-  const handleDelete = async (id) => {
-    if (!window.confirm('Delete this inquiry?')) return
+  const handleDeleteClick = (id) => {
+    setDeleteId(id)
+    setIsConfirmOpen(true)
+  }
+
+  const executeDelete = async () => {
     try {
-      await axios.delete(`${API_INQUIRIES}/${id}`)
+      await axios.delete(`${API_INQUIRIES}/${deleteId}`)
       toast.success('Inquiry deleted!')
-      if (selectedInquiry?.id === id) { setSelectedInquiry(null); setReply('') }
+      if (selectedInquiry?.id === deleteId) { setSelectedInquiry(null); setReply('') }
       fetchData()
     } catch {
       toast.error('Failed to delete inquiry')
@@ -124,45 +133,25 @@ const AdminDashboard = () => {
   ]
 
   return (
-    <div className="space-y-8 animate-fade-in-up">
-
-      {/* ── Greeting ── */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-t-bg-card p-6 rounded-2xl shadow-sm border border-t-border relative overflow-hidden">
-        {/* Decorative background element */}
-        <div className="absolute right-0 top-0 w-64 h-full bg-gradient-to-l from-blue-50 to-transparent pointer-events-none" />
-
-        <div className="relative z-10">
-          <h3 className="text-3xl font-black text-t-heading tracking-tight">
-            {getGreeting()}, <span className="text-t-primary">Admin</span> 👋
-          </h3>
-          <p className="text-sm font-medium text-t-text mt-1">Here's what's happening on your site today.</p>
-        </div>
-        <button
-          onClick={fetchData}
-          title="Refresh data"
-          className="relative z-10 flex items-center justify-center p-3 rounded-xl border border-t-border bg-t-bg-card text-t-text hover:text-t-primary hover:border-t-primary/30 hover:bg-slate-50 hover:shadow-sm transition-all duration-200 group"
-        >
-          <FaSync className={`text-lg transition-transform duration-500 group-hover:rotate-180 ${loading ? 'animate-spin text-t-primary' : ''}`} />
-        </button>
-      </div>
+    <div className="space-y-5 animate-fade-in-up">
 
       {/* ── Live Stats Cards ── */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
         {stats.map((stat) => (
-          <Link to={stat.to} key={stat.id} className="bg-t-bg-card rounded-2xl p-5 border border-t-border shadow-sm hover:shadow-md transition-all duration-300 group hover:-translate-y-1 relative overflow-hidden block">
+          <Link to={stat.to} key={stat.id} className="bg-t-bg-card rounded-2xl p-4 border border-t-border shadow-sm hover:shadow-md transition-all duration-300 group hover:-translate-y-1 relative overflow-hidden block">
             {/* Subtle highlight effect on hover */}
             <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300 ${stat.bg}`} />
 
-            <div className="relative z-10 flex items-center gap-5">
-              <div className={`${stat.bg} ${stat.text} border ${stat.border} w-14 h-14 rounded-2xl flex-shrink-0 flex items-center justify-center shadow-sm ${stat.shadow} transition-transform duration-300 group-hover:scale-110`}>
+            <div className="relative z-10 flex items-center gap-4">
+              <div className={`${stat.bg} ${stat.text} border ${stat.border} w-12 h-12 rounded-2xl flex-shrink-0 flex items-center justify-center shadow-sm ${stat.shadow} transition-transform duration-300 group-hover:scale-110`}>
                 {stat.icon}
               </div>
               <div className="min-w-0">
-                <p className="text-t-text text-[13px] font-semibold uppercase tracking-wider leading-tight truncate mb-1">{stat.label}</p>
+                <p className="text-t-text text-[11px] font-bold uppercase tracking-wider leading-tight truncate mb-0.5">{stat.label}</p>
                 {loading ? (
-                  <div className="h-8 w-12 bg-slate-100 animate-pulse rounded mt-1" />
+                  <div className="h-6 w-12 bg-slate-100 animate-pulse rounded mt-1" />
                 ) : (
-                  <p className="text-3xl font-black text-t-heading leading-none tracking-tight">{stat.value}</p>
+                  <p className="text-2xl font-black text-t-heading leading-none tracking-tight">{stat.value}</p>
                 )}
               </div>
             </div>
@@ -171,39 +160,48 @@ const AdminDashboard = () => {
       </div>
 
       {/* ── Main Content Grid ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
 
         {/* Recent Inquiries */}
         <div className="lg:col-span-2 bg-t-bg-card rounded-2xl shadow-sm border border-t-border overflow-hidden flex flex-col">
-          <div className="px-6 py-5 border-b border-t-border flex items-center justify-between bg-slate-50/50">
-            <h3 className="text-lg font-black text-t-heading tracking-tight">Recent Inquiries</h3>
-            <Link to="/inquiries" className="text-sm font-bold text-t-primary hover:text-t-primary-hover transition flex items-center gap-1 group">
+          <div className="px-6 py-4 border-b border-t-border flex items-center justify-between bg-slate-50/50">
+            <div className="flex items-center gap-3">
+              <h3 className="text-base font-black text-t-heading tracking-tight">Recent Inquiries</h3>
+              <button
+                onClick={fetchData}
+                title="Refresh data"
+                className="p-1.5 rounded-lg border border-t-border bg-t-bg-card text-t-text hover:text-t-primary hover:border-t-primary/30 hover:bg-slate-50 hover:shadow-inner transition-all duration-200 group focus:outline-none"
+              >
+                <FaSync className={`text-[10px] transition-transform duration-500 group-hover:rotate-180 ${loading ? 'animate-spin text-t-primary' : ''}`} />
+              </button>
+            </div>
+            <Link to="/inquiries" className="text-xs font-bold text-t-primary hover:text-t-primary-hover transition flex items-center gap-1 group">
               View all <span className="group-hover:translate-x-1 transition-transform">→</span>
             </Link>
           </div>
 
           {recentInquiries.length === 0 && !loading ? (
-            <div className="flex-1 flex flex-col items-center justify-center py-16 text-t-muted">
-              <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-4 border border-t-border">
-                <FaEnvelope className="text-2xl opacity-40 text-t-muted" />
+            <div className="flex-1 flex flex-col items-center justify-center py-12 text-t-muted">
+              <div className="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center mb-3 border border-t-border">
+                <FaEnvelope className="text-lg opacity-40 text-t-muted" />
               </div>
-              <p className="text-[15px] font-medium text-t-text">No new inquiries yet</p>
+              <p className="text-[13px] font-medium text-t-text">No new inquiries yet</p>
             </div>
           ) : (
             <div className="divide-y divide-t-border flex-1 overflow-y-auto">
               {recentInquiries.map((inquiry) => (
                 <div
                   key={inquiry.id}
-                  className="flex items-center justify-between px-6 py-4 hover:bg-slate-50 transition cursor-pointer group"
+                  className="flex items-center justify-between px-6 py-2.5 hover:bg-slate-50 transition cursor-pointer group"
                   onClick={() => { setSelectedInquiry(inquiry); setReply('') }}
                 >
                   <div className="min-w-0 flex-1">
-                    <p className="text-[15px] font-bold text-t-heading truncate mb-0.5 group-hover:text-t-primary transition-colors">{inquiry.name}</p>
-                    <p className="text-[13px] font-medium text-t-text truncate">{inquiry.email}</p>
+                    <p className="text-[14px] font-bold text-t-heading truncate mb-0.5 group-hover:text-t-primary transition-colors">{inquiry.name}</p>
+                    <p className="text-[12px] font-medium text-t-text truncate">{inquiry.email}</p>
                   </div>
                   <div className="flex items-center gap-4 flex-shrink-0 ml-4">
                     <StatusBadge status={inquiry.status} />
-                    <button className="text-xs text-t-primary bg-slate-50 px-3 py-1.5 rounded-lg font-bold opacity-0 group-hover:opacity-100 transition-all hover:bg-slate-100">
+                    <button className="text-xs text-t-primary bg-slate-50 px-2.5 py-1 rounded-lg font-bold opacity-0 group-hover:opacity-100 transition-all hover:bg-slate-100">
                       Review
                     </button>
                   </div>
@@ -319,7 +317,7 @@ const AdminDashboard = () => {
                   <FaCheck size={11} /> Send Reply
                 </button>
                 <button
-                  onClick={() => handleDelete(selectedInquiry.id)}
+                  onClick={() => handleDeleteClick(selectedInquiry.id)}
                   className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-red-500 hover:bg-red-600 text-white rounded-xl text-sm font-semibold transition"
                 >
                   <FaTimes size={11} /> Delete
@@ -329,6 +327,15 @@ const AdminDashboard = () => {
           </div>
         </div>
       )}
+      
+      {/* Confirm Deletion Popup */}
+      <ConfirmModal
+        isOpen={isConfirmOpen}
+        onClose={() => setIsConfirmOpen(false)}
+        onConfirm={executeDelete}
+        title="Delete Inquiry?"
+        message="Are you sure you want to delete this inquiry? This action is permanent and cannot be undone."
+      />
     </div>
   )
 }
