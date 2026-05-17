@@ -1,0 +1,10 @@
+# Enterprise Application Guidelines
+Always strictly follow the standards defined in the ENTERPRISE_STANDARDS.md file located in the root of this workspace.
+
+Key focus areas for all AI interactions:
+1. Always maintain strict separation of concerns between frontend and backend.
+2. Prioritize secure, performant, and scalable code.
+3. Validate and sanitize all inputs before processing.
+4. Follow the Tailwind CSS utility-first approach and the established Theme System CSS variables for styling.
+5. Prevent SQL injections by using parameterized queries exclusively.
+6. Ensure responsive, mobile-first design for all UI components.

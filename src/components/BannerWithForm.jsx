@@ -44,23 +44,13 @@ const BannerWithForm = () => {
       {slides.map((slide, index) => (
         <div
           key={slide.id}
-          className="absolute inset-0 transition-opacity duration-1000"
-          style={{
-            backgroundImage: `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('${slide.image}')`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            opacity: index === currentSlide ? 1 : 0,
-            zIndex: 0
-          }}
+          className={`absolute inset-0 transition-opacity duration-1000 bg-image-dynamic bg-cover bg-center z-0 ${index === currentSlide ? 'opacity-100' : 'opacity-0'}`}
+          style={{ '--bg-image-dynamic': `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('${slide.image}')` }}
         />
       ))}
       {slides.length === 0 && (
         <div
-          className="absolute inset-0"
-          style={{
-            background: 'linear-gradient(135deg, rgba(15,23,42,0.97), rgba(30,41,59,0.97))',
-            zIndex: 0
-          }}
+          className="absolute inset-0 bg-gradient-dark-fallback z-0"
         />
       )}
 
@@ -84,21 +74,13 @@ const BannerWithForm = () => {
               {/* Animated slide content */}
               <div key={currentSlide} className="slide-animation w-full flex flex-col items-center">
                 <h1
-                  className="text-4xl md:text-6xl lg:text-7xl font-extrabold mb-6 leading-tight tracking-tight"
-                  style={{
-                    textShadow: '2px 3px 12px rgba(0,0,0,0.8)',
-                    background: 'linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    backgroundClip: 'text',
-                  }}
+                  className="text-4xl md:text-6xl lg:text-7xl font-extrabold mb-6 leading-tight tracking-tight text-gradient-hero"
                 >
                   {slides[currentSlide]?.title || 'Transforming Digital Experiences'}
                 </h1>
 
                 <p
-                  className="text-lg md:text-2xl mb-10 text-white max-w-2xl leading-relaxed"
-                  style={{ textShadow: '1px 2px 8px rgba(0,0,0,0.8)' }}
+                  className="text-lg md:text-2xl mb-10 text-white max-w-2xl leading-relaxed shadow-text-dark"
                 >
                   {slides[currentSlide]?.description || 'We craft exceptional digital products that drive results.'}
                 </p>

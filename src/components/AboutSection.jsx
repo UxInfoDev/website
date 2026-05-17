@@ -30,7 +30,7 @@ const AboutSection = () => {
   ]
 
   return (
-    <section id="about" className="py-16" style={{ backgroundColor: 'var(--t-bg-alt)' }}>
+    <section id="about" className="py-16 bg-t-bg-alt">
       <div className="container">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           {/* Image */}
@@ -38,19 +38,18 @@ const AboutSection = () => {
             <img 
               src="/images/slider-02.jpg" 
               alt="About UX Infotech"
-              className="shadow-lg w-full h-96 object-cover"
-              style={{ borderRadius: 'var(--t-radius-lg)' }}
+              className="shadow-lg w-full h-96 object-cover rounded-t-lg"
             />
           </div>
 
           {/* Content */}
           <div>
-            <h2 className="text-4xl font-extrabold tracking-tight mb-6" style={{ color: 'var(--t-heading)' }}>About UX Infotech</h2>
-            <p className="text-lg mb-4 leading-relaxed" style={{ color: 'var(--t-text)' }}>
+            <h2 className="text-4xl font-extrabold tracking-tight mb-6 text-t-heading">About UX Infotech</h2>
+            <p className="text-lg mb-4 leading-relaxed text-t-text">
               We are a professional design and development agency. Our goal is simple: to create 
               easy-to-use digital products that help your business succeed and grow.
             </p>
-            <p className="text-lg mb-8 leading-relaxed" style={{ color: 'var(--t-text)' }}>
+            <p className="text-lg mb-8 leading-relaxed text-t-text">
               For over ten years, we have helped both new and established businesses 
               improve their online presence using smart design and the latest tools.
             </p>
@@ -61,10 +60,10 @@ const AboutSection = () => {
                 const Icon = feature.icon
                 return (
                   <div key={feature.id} className="flex gap-4 items-start">
-                    <Icon className="text-2xl mt-1" style={{ color: 'var(--t-accent)' }} />
+                    <Icon className="text-2xl mt-1 text-t-accent" />
                     <div>
-                      <h4 className="font-extrabold text-lg mb-1" style={{ color: 'var(--t-heading)' }}>{feature.title}</h4>
-                      <p className="leading-relaxed" style={{ color: 'var(--t-text)' }}>{feature.description}</p>
+                      <h4 className="font-extrabold text-lg mb-1 text-t-heading">{feature.title}</h4>
+                      <p className="leading-relaxed text-t-text">{feature.description}</p>
                     </div>
                   </div>
                 )
@@ -72,10 +71,7 @@ const AboutSection = () => {
             </div>
 
             <button 
-              className="px-8 py-4 text-white font-bold transition-all duration-300 text-[12px] tracking-widest uppercase shadow-md hover:shadow-lg hover:-translate-y-0.5 mt-8"
-              style={{ backgroundColor: 'var(--t-accent)', borderRadius: 'var(--t-radius)' }}
-              onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--t-accent-hover)'}
-              onMouseLeave={e => e.currentTarget.style.backgroundColor = 'var(--t-accent)'}
+              className="px-8 py-4 text-white font-bold transition-all duration-300 text-[12px] tracking-widest uppercase shadow-md hover:shadow-lg hover:-translate-y-0.5 mt-8 bg-t-accent rounded-t hover:bg-t-accent-hover"
             >
               Learn More About Us
             </button>

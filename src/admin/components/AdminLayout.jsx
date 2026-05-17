@@ -81,15 +81,12 @@ const AdminLayout = ({ children, onLogout }) => {
       )}
 
       {/* ── Sidebar ── */}
-      <aside className={`fixed lg:relative inset-y-0 left-0 z-40 flex flex-col bg-slate-900 text-slate-300 transition-all duration-400 ease-out border-r border-white/5 ${
+      <aside className={`fixed lg:relative inset-y-0 left-0 z-40 flex flex-col text-slate-300 transition-all duration-400 ease-out border-r border-white/5 bg-gradient-to-b from-slate-900 to-slate-800 ${
         isMobile
-          ? `${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} w-72`
+          ? `${isSidebarOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'} w-72`
           : `${isSidebarOpen ? 'w-64' : 'w-20'} translate-x-0`
       }`}
-      style={{
-        background: 'linear-gradient(180deg, #0F172A 0%, #1E293B 100%)',
-        boxShadow: isMobile && isSidebarOpen ? '4px 0 24px rgba(0,0,0,0.2)' : 'none'
-      }}>
+      >
 
         {/* Sidebar Header */}
         <div className="p-5 flex items-center justify-between border-b border-white/10 relative overflow-hidden">
@@ -196,8 +193,7 @@ const AdminLayout = ({ children, onLogout }) => {
                 <span className="text-sm font-bold text-slate-800 leading-tight">Administrator</span>
                 <span className="text-[11px] font-medium text-[#0971C8] leading-tight">Active Session</span>
               </div>
-              <div className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-base shadow-inner ring-2 ring-white"
-                   style={{ background: 'linear-gradient(135deg, #0971C8 0%, #3282C4 100%)' }}>
+              <div className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-base shadow-inner ring-2 ring-white bg-gradient-admin">
                 A
               </div>
             </div>

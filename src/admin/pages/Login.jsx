@@ -58,9 +58,7 @@ const LoginPage = ({ onLogin }) => {
     <div className="min-h-screen flex bg-slate-50 font-sans">
 
       {/* ── Left Brand Panel (desktop only) ── */}
-      <div className="hidden lg:flex lg:w-1/2 relative flex-col items-center justify-center overflow-hidden"
-        style={{ background: 'linear-gradient(135deg, #0F172A 0%, #1E293B 100%)' }}
-      >
+      <div className="hidden lg:flex lg:w-1/2 relative flex-col items-center justify-center overflow-hidden bg-gradient-login">
         {/* Dynamic decorative elements */}
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
           <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-blue-500/10 blur-[100px]" />
@@ -69,8 +67,8 @@ const LoginPage = ({ onLogin }) => {
         </div>
 
         {/* Floating geometric shapes */}
-        <div className="absolute top-1/4 left-16 w-24 h-24 rounded-2xl border border-white/5 rotate-12 bg-white/5 backdrop-blur-sm pointer-events-none animate-pulse" style={{ animationDuration: '4s' }} />
-        <div className="absolute bottom-1/4 right-16 w-32 h-32 rounded-full border border-white/5 bg-white/5 backdrop-blur-sm pointer-events-none animate-pulse" style={{ animationDuration: '5s' }} />
+        <div className="absolute top-1/4 left-16 w-24 h-24 rounded-2xl border border-white/5 rotate-12 bg-white/5 backdrop-blur-sm pointer-events-none animate-pulse anim-duration-dynamic" style={{ '--anim-duration-dynamic': '4s' }} />
+        <div className="absolute bottom-1/4 right-16 w-32 h-32 rounded-full border border-white/5 bg-white/5 backdrop-blur-sm pointer-events-none animate-pulse anim-duration-dynamic" style={{ '--anim-duration-dynamic': '5s' }} />
 
         <div className="relative z-10 flex flex-col items-center text-center px-16 max-w-2xl">
           {/* Logo on brand panel */}

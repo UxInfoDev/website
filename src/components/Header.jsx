@@ -130,20 +130,16 @@ const Header = () => {
   const mobileNavClass = (tab) =>
     `text-left py-2 transition ${activeTab === tab ? 'font-semibold' : ''}`
 
-  // Header container styles based on variant
-  const headerStyles = {
-    standard:    { backgroundColor: 'var(--t-header-bg)', borderBottom: '1px solid var(--t-border)', boxShadow: '0 1px 3px rgba(0,0,0,0.08)' },
-    transparent: { backgroundColor: 'var(--t-header-bg)', backdropFilter: 'blur(12px)', borderBottom: '1px solid rgba(255,255,255,0.1)' },
-    minimal:     { backgroundColor: 'var(--t-header-bg)', borderBottom: '1px solid var(--t-border)' },
-    colored:     { backgroundColor: 'var(--t-header-bg)', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' },
-    'two-row':   { backgroundColor: 'var(--t-header-bg)', borderBottom: '1px solid var(--t-border)' },
+  const headerClasses = {
+    standard:    'bg-t-header-bg border-b border-t-border shadow-[0_1px_3px_rgba(0,0,0,0.08)]',
+    transparent: 'bg-t-header-bg backdrop-blur-md border-b border-white/10',
+    minimal:     'bg-t-header-bg border-b border-t-border',
+    colored:     'bg-t-header-bg shadow-[0_2px_8px_rgba(0,0,0,0.15)]',
+    'two-row':   'bg-t-header-bg border-b border-t-border',
   }
 
-  const navTextColor = 'var(--t-header-text)'
-  const activeNavColor = 'var(--t-accent)'
-
   return (
-    <header className="sticky top-0 z-50" style={{ ...headerStyles[headerVariant] || headerStyles.standard, color: navTextColor }}>
+    <header className={`sticky top-0 z-50 text-t-header-text ${headerClasses[headerVariant] || headerClasses.standard}`}>
       <div className="container">
         <div className="flex justify-between items-center py-4">
           {/* Logo */}
@@ -213,8 +209,7 @@ const Header = () => {
                           setActiveTab('services')
                           setIsServicesDropdownOpen(false)
                         }}
-                        className="block px-4 py-2 text-sm font-bold hover:bg-gray-50 border-b border-gray-50"
-                        style={{ color: 'var(--t-heading)' }}
+                        className="block px-4 py-2 text-sm font-bold hover:bg-gray-50 border-b border-gray-50 text-t-heading"
                       >
                         View All Services
                       </Link>
@@ -255,8 +250,7 @@ const Header = () => {
                   window.dispatchEvent(new Event('openQuoteModal'))
                 }
               }} 
-              className="px-6 py-2.5 text-white font-bold rounded-lg transition-all duration-300 text-[11px] tracking-widest uppercase shadow hover:shadow-md hover:-translate-y-0.5"
-              style={{ backgroundColor: 'var(--t-accent)' }}
+              className="px-6 py-2.5 text-white font-bold rounded-lg transition-all duration-300 text-[11px] tracking-widest uppercase shadow hover:shadow-md hover:-translate-y-0.5 bg-t-accent hover:bg-t-accent-hover"
             >
               Get a Quote
             </button>
@@ -290,7 +284,7 @@ const Header = () => {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:border-orange-600"
               />
-              <button type="submit" className="px-4 py-2 text-white rounded-lg" style={{ backgroundColor: 'var(--t-accent)' }}>
+              <button type="submit" className="px-4 py-2 text-white rounded-lg bg-t-accent hover:bg-t-accent-hover">
                 <FaSearch />
               </button>
             </form>

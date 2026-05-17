@@ -37,17 +37,17 @@ const ServicesPage = () => {
   }, [])
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: 'var(--t-bg-alt)' }}>
+    <div className="min-h-screen bg-t-bg-alt">
       {/* Page Header Banner */}
       <div className="relative text-white py-32 px-4 mt-[76px] lg:mt-[84px] overflow-hidden">
         {/* Background Image */}
         <div 
-          className="absolute inset-0 z-0 bg-cover bg-center"
-          style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2015&auto=format&fit=crop")' }}
+          className="absolute inset-0 z-0 bg-cover bg-center bg-image-dynamic"
+          style={{ '--bg-image-dynamic': 'url("https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2015&auto=format&fit=crop")' }}
         >
           {/* Overlays for premium contrast */}
-          <div className="absolute inset-0 mix-blend-multiply" style={{ backgroundColor: 'var(--t-primary)', opacity: 0.8 }}></div>
-          <div className="absolute inset-0 bg-gradient-to-t to-transparent opacity-90" style={{ background: `linear-gradient(to top, var(--t-primary), transparent)` }}></div>
+          <div className="absolute inset-0 mix-blend-multiply mix-blend-primary"></div>
+          <div className="absolute inset-0 bg-gradient-to-t to-transparent opacity-90 gradient-to-t-primary"></div>
         </div>
 
         <div className="container mx-auto text-center relative z-10 animate-fade-in-up">
@@ -69,8 +69,7 @@ const ServicesPage = () => {
               return (
                 <div
                   key={service.id}
-                  className="border border-gray-200 rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 bg-white animate-fade-in-up"
-                  style={{ animationDelay: `${idx * 100}ms` }}
+                  className={`border border-gray-200 rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 bg-white animate-fade-in-up delay-index-${(idx % 12) * 100}`}
                 >
                   <div className="h-60 bg-gray-100 relative group overflow-hidden">
                     {imageUrl ? (
@@ -87,12 +86,11 @@ const ServicesPage = () => {
                     )}
                   </div>
                   <div className="p-8">
-                    <h3 className="text-2xl font-extrabold tracking-tight mb-3" style={{ color: 'var(--t-heading)' }}>{service.title}</h3>
+                    <h3 className="text-2xl font-extrabold tracking-tight mb-3 text-t-heading">{service.title}</h3>
                     <p className="text-gray-600 mb-6 leading-relaxed line-clamp-3">{getShortDescription(service)}</p>
                     <Link
                       to={`/service/${service.slug || service.id}`}
-                      className="inline-flex items-center gap-2 font-bold transition-all uppercase tracking-widest text-[11px] group"
-                    style={{ color: 'var(--t-accent)' }}
+                      className="inline-flex items-center gap-2 font-bold transition-all uppercase tracking-widest text-[11px] group text-t-accent hover:text-t-accent-hover"
                     >
                       Learn More
                       <span className="w-7 h-7 rounded-full border-2 border-orange-200 flex items-center justify-center group-hover:bg-orange-600 group-hover:border-orange-600 group-hover:text-white transition-all shadow-sm group-hover:shadow-md">

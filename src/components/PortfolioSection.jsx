@@ -32,12 +32,12 @@ const PortfolioSection = () => {
     : activeProjects.filter(p => p.category === activeFilter)
 
   return (
-    <section id="portfolio" className="py-16" style={{ backgroundColor: 'var(--t-bg-alt)' }}>
+    <section id="portfolio" className="py-16 bg-t-bg-alt">
       <div className="container">
         {/* Header */}
         <div className="text-center mb-12">
-          <h2 className="text-6xl font-extrabold tracking-tight mb-4" style={{ color: 'var(--t-heading)' }}>Our Portfolio</h2>
-          <p className="text-lg max-w-2xl mx-auto leading-relaxed" style={{ color: 'var(--t-text)' }}>
+          <h2 className="text-6xl font-extrabold tracking-tight mb-4 text-t-heading">Our Portfolio</h2>
+          <p className="text-lg max-w-2xl mx-auto leading-relaxed text-t-text">
             Explore some of our recent projects and see how we've helped businesses succeed
           </p>
         </div>
@@ -48,14 +48,11 @@ const PortfolioSection = () => {
             <button
               key={filter.id}
               onClick={() => setActiveFilter(filter.id)}
-              className={`px-6 py-2.5 font-bold transition-all duration-300 text-[11px] tracking-wider uppercase`}
-              style={{
-                borderRadius: 'var(--t-radius)',
-                ...(activeFilter === filter.id
-                  ? { backgroundColor: 'var(--t-primary)', color: '#fff', boxShadow: 'var(--t-shadow)' }
-                  : { backgroundColor: 'var(--t-bg-card)', color: 'var(--t-text-muted)', border: '1px solid var(--t-border)' }
-                ),
-              }}
+              className={`px-6 py-2.5 font-bold transition-all duration-300 text-[11px] tracking-wider uppercase rounded-t ${
+                activeFilter === filter.id
+                  ? 'bg-t-primary text-white shadow'
+                  : 'bg-t-bg-card text-t-muted border border-t-border'
+              }`}
             >
               {filter.label}
             </button>
@@ -67,8 +64,7 @@ const PortfolioSection = () => {
           {filteredProjects.map((project) => (
             <div
               key={project.id}
-              className="group relative overflow-hidden shadow-lg hover:shadow-2xl transition"
-              style={{ borderRadius: 'var(--t-radius-lg)' }}
+              className="group relative overflow-hidden shadow-lg hover:shadow-2xl transition rounded-t-lg"
             >
               {/* Image */}
               <img
@@ -87,7 +83,7 @@ const PortfolioSection = () => {
                     {project.description?.replace(/:contentReference\[oaicite:\d+\]\{index=\d+\}/g, '').replace(/<[^>]*>?/gm, '')}
                   </p>
                   <div className="flex gap-4 items-center mt-2">
-                    <Link to={`/project/${project.slug || project.id}`} className="font-bold hover:opacity-80 inline-block" style={{ color: 'var(--t-accent)' }}>
+                    <Link to={`/project/${project.slug || project.id}`} className="font-bold hover:opacity-80 inline-block text-t-accent">
                       View Project →
                     </Link>
                     {project.website_link && (
@@ -106,8 +102,7 @@ const PortfolioSection = () => {
         <div className="text-center mt-12">
           <button 
             onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event('openQuoteModal')); }} 
-            className="px-8 py-4 text-white font-bold transition-all duration-300 text-[12px] tracking-widest uppercase shadow-md hover:shadow-lg hover:-translate-y-0.5"
-            style={{ backgroundColor: 'var(--t-accent)', borderRadius: 'var(--t-radius)' }}
+            className="px-8 py-4 text-white font-bold transition-all duration-300 text-[12px] tracking-widest uppercase shadow-md hover:shadow-lg hover:-translate-y-0.5 bg-t-accent rounded-t hover:bg-t-accent-hover"
           >
             Start Your Project
           </button>

@@ -92,7 +92,7 @@ const BannerSection = () => {
   if (loading && slides.length === 0) {
     return (
       <div className="min-h-[40vh] lg:min-h-[50vh] flex items-center justify-center bg-gray-50">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2" style={{ borderColor: 'var(--t-primary)' }}></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-t-primary"></div>
       </div>
     )
   }
@@ -101,8 +101,8 @@ const BannerSection = () => {
     <>
       <section
         id="home"
-        className="relative pt-1 pb-4 lg:pt-1 lg:pb-6 overflow-hidden transition-all duration-1000 ease-in-out min-h-[30vh] lg:min-h-[35vh] flex flex-col justify-center"
-        style={{ background: activeBg }}
+        className="relative pt-1 pb-4 lg:pt-1 lg:pb-6 overflow-hidden transition-all duration-1000 ease-in-out min-h-[30vh] lg:min-h-[35vh] flex flex-col justify-center bg-dynamic"
+        style={{ '--bg-dynamic': activeBg }}
       >
         {/* ── Background Overlay for contrast ── */}
         <div className="absolute inset-0 bg-white/10 pointer-events-none z-0" />
@@ -131,8 +131,7 @@ const BannerSection = () => {
             return (
               <div
                 key={slide.id || index}
-                style={{ gridArea: '1 / 1 / 2 / 2' }}
-                className={`w-full flex flex-col lg:flex-row items-center gap-6 lg:gap-12 transition-all duration-1000 ease-[cubic-bezier(0.4,0.0,0.2,1)] py-1 ${
+                className={`w-full flex flex-col lg:flex-row items-center gap-6 lg:gap-12 transition-all duration-1000 ease-[cubic-bezier(0.4,0.0,0.2,1)] py-1 col-start-1 row-start-1 ${
                   isReversed ? 'lg:flex-row-reverse' : ''
                 } ${
                   isActive
@@ -154,34 +153,31 @@ const BannerSection = () => {
                 {/* ── Text Content ── */}
                 <div className="w-full lg:w-1/2 flex flex-col items-start text-left font-sans z-10 p-4 sm:p-6">
                   {slide.subtitle && (
-                    <div className="flex items-center gap-3 font-black tracking-[0.3em] text-[10px] sm:text-[12px] mb-3 uppercase drop-shadow-sm" style={{ color: 'var(--t-primary)' }}>
-                      <span className="w-8 h-0.5 inline-block rounded-full" style={{ backgroundColor: 'var(--t-primary)' }}></span>
+                    <div className="flex items-center gap-3 font-black tracking-[0.3em] text-[10px] sm:text-[12px] mb-3 uppercase drop-shadow-sm text-t-primary">
+                      <span className="w-8 h-0.5 inline-block rounded-full bg-t-primary"></span>
                       {slide.subtitle}
                     </div>
                   )}
 
                   <h1
-                    className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black leading-[1.1] tracking-tight mb-2 animate-fade-in-up"
-                    style={{ animationDelay: '100ms', textShadow: '0 2px 15px rgba(0,0,0,0.08)', color: 'var(--t-heading)' }}
+                    className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black leading-[1.1] tracking-tight mb-2 animate-fade-in-up delay-100 shadow-text-lg text-t-heading"
                   >
                     {slide.title}
                   </h1>
 
                   {slide.description && (
                     <div
-                      className="text-sm sm:text-lg text-slate-900 font-medium mb-4 sm:mb-6 max-w-xl leading-relaxed banner-rich-text animate-fade-in-up line-clamp-3 sm:line-clamp-none"
-                      style={{ animationDelay: '200ms', textShadow: '0 1px 1px rgba(255,255,255,1)' }}
+                      className="text-sm sm:text-lg text-slate-900 font-medium mb-4 sm:mb-6 max-w-xl leading-relaxed banner-rich-text animate-fade-in-up line-clamp-3 sm:line-clamp-none delay-200 shadow-text-sm"
                       dangerouslySetInnerHTML={{ __html: slide.description }}
                     />
                   )}
 
                   {(slide.cta_text || slide.cta_alt) && (
-                    <div className="flex flex-col sm:flex-row gap-3 mb-4 w-full sm:w-auto animate-fade-in-up" style={{ animationDelay: '300ms' }}>
+                    <div className="flex flex-col sm:flex-row gap-3 mb-4 w-full sm:w-auto animate-fade-in-up delay-300">
                       {slide.cta_text && (
                         <button
                           onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event('openQuoteModal')) }}
-                          className="px-8 py-4 text-white font-bold rounded-lg transition-all duration-300 text-[12px] tracking-widest uppercase shadow-md hover:shadow-xl hover:-translate-y-1 w-full sm:w-auto text-center"
-                          style={{ backgroundColor: 'var(--t-accent)' }}
+                          className="px-8 py-4 text-white font-bold rounded-lg transition-all duration-300 text-[12px] tracking-widest uppercase shadow-md hover:shadow-xl hover:-translate-y-1 w-full sm:w-auto text-center bg-t-accent"
                         >
                           {slide.cta_text}
                         </button>
@@ -189,8 +185,7 @@ const BannerSection = () => {
                       {slide.cta_alt && (
                         <a
                           href={slide.cta_link || '#contact'}
-                          className="px-8 py-4 border-2 font-bold rounded-lg transition-all duration-300 text-[12px] tracking-widest uppercase shadow-sm hover:shadow-xl hover:-translate-y-1 w-full sm:w-auto text-center flex items-center justify-center"
-                          style={{ borderColor: 'var(--t-primary)', color: 'var(--t-primary)', backgroundColor: 'var(--t-bg-card)' }}
+                          className="px-8 py-4 border-2 font-bold rounded-lg transition-all duration-300 text-[12px] tracking-widest uppercase shadow-sm hover:shadow-xl hover:-translate-y-1 w-full sm:w-auto text-center flex items-center justify-center border-t-primary text-t-primary bg-t-bg-card"
                         >
                           {slide.cta_alt}
                         </a>
@@ -200,7 +195,7 @@ const BannerSection = () => {
                 </div>
 
                 {/* ── Image Content ── */}
-                <div className="w-full lg:w-1/2 relative mt-2 lg:mt-0 flex justify-center animate-fade-in-up" style={{ animationDelay: '400ms' }}>
+                <div className="w-full lg:w-1/2 relative mt-2 lg:mt-0 flex justify-center animate-fade-in-up delay-400">
                   <div className="w-full aspect-[4/3] sm:aspect-video lg:aspect-[4/3] xl:aspect-[1.5/1] max-h-[300px] lg:max-h-[400px] relative group rounded-2xl overflow-hidden shadow-2xl bg-gray-100 border border-gray-100">
                     {slide.image ? (
                       <img

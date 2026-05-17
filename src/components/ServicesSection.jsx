@@ -36,12 +36,12 @@ const ServicesSection = () => {
   }, [])
 
   return (
-    <section id="services" className="py-16" style={{ backgroundColor: 'var(--t-bg)' }}>
+    <section id="services" className="py-16 bg-t-bg">
       <div className="container">
         {/* Header */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-extrabold tracking-tight mb-4" style={{ color: 'var(--t-heading)' }}>Our Services</h2>
-          <p className="text-lg max-w-2xl mx-auto leading-relaxed" style={{ color: 'var(--t-text)' }}>
+          <h2 className="text-4xl font-extrabold tracking-tight mb-4 text-t-heading">Our Services</h2>
+          <p className="text-lg max-w-2xl mx-auto leading-relaxed text-t-text">
             We provide simple, powerful digital services to help your business succeed. 
             From design to development, we handle everything for you.
           </p>
@@ -54,14 +54,9 @@ const ServicesSection = () => {
             return (
               <div
                 key={service.id}
-                className="overflow-hidden hover:shadow-lg transition"
-                style={{
-                  backgroundColor: 'var(--t-bg-card)',
-                  border: '1px solid var(--t-border)',
-                  borderRadius: 'var(--t-radius-lg)',
-                }}
+                className="overflow-hidden hover:shadow-lg transition bg-t-bg-card border border-t-border rounded-t-lg"
               >
-                <div className="h-52" style={{ backgroundColor: 'var(--t-bg-alt)' }}>
+                <div className="h-52 bg-t-bg-alt">
                   {imageUrl ? (
                     <img
                       src={imageUrl}
@@ -70,23 +65,21 @@ const ServicesSection = () => {
                       loading="lazy"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-sm" style={{ color: 'var(--t-text-muted)' }}>
+                    <div className="w-full h-full flex items-center justify-center text-sm text-t-muted">
                       No image available
                     </div>
                   )}
                 </div>
                 <div className="p-8">
-                  <h3 className="text-2xl font-extrabold tracking-tight mb-3" style={{ color: 'var(--t-heading)' }}>{service.title}</h3>
-                  <p className="mb-6 leading-relaxed" style={{ color: 'var(--t-text)' }}>{getShortDescription(service)}</p>
+                  <h3 className="text-2xl font-extrabold tracking-tight mb-3 text-t-heading">{service.title}</h3>
+                  <p className="mb-6 leading-relaxed text-t-text">{getShortDescription(service)}</p>
                   <Link
                     to={`/service/${service.slug || service.id}`}
-                    className="inline-flex items-center gap-2 font-bold transition-all uppercase tracking-widest text-[11px] group"
-                    style={{ color: 'var(--t-accent)' }}
+                    className="inline-flex items-center gap-2 font-bold transition-all uppercase tracking-widest text-[11px] group text-t-accent"
                   >
                     Learn More
                     <span 
-                      className="w-7 h-7 rounded-full border-2 flex items-center justify-center group-hover:text-white transition-all shadow-sm group-hover:shadow-md"
-                      style={{ borderColor: 'var(--t-accent)' }}
+                      className="w-7 h-7 rounded-full border-2 flex items-center justify-center group-hover:text-white transition-all shadow-sm group-hover:shadow-md border-t-accent group-hover:bg-t-accent"
                     >
                       <FaArrowRight size={10} />
                     </span>

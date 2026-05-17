@@ -56,11 +56,11 @@ const ServiceDetails = () => {
   return (
     <section className="py-8 md:py-12 bg-slate-50 min-h-screen fade-in">
       <div className="container mx-auto px-4 max-w-5xl">
-        <Link to="/" className="inline-flex items-center gap-2 font-bold mb-5 transition uppercase tracking-widest text-[11px]" style={{ color: 'var(--t-accent)' }}>
+        <Link to="/" className="inline-flex items-center gap-2 font-bold mb-5 transition uppercase tracking-widest text-[11px] text-t-accent hover:text-t-accent-hover">
           <FaArrowLeft /> Back to Home
         </Link>
 
-        <div className="border overflow-hidden shadow-sm" style={{ backgroundColor: 'var(--t-bg-card)', borderColor: 'var(--t-border)', borderRadius: 'var(--t-radius-lg)' }}>
+        <div className="border overflow-hidden shadow-sm bg-t-bg-card border-t-border rounded-t-lg">
           <div className="grid grid-cols-1 md:grid-cols-[300px_1fr]">
             <div className="bg-gray-100 h-64 md:h-full overflow-hidden">
               {imageUrl ? (
@@ -77,8 +77,8 @@ const ServiceDetails = () => {
             </div>
 
             <div className="p-8 md:p-10 flex flex-col justify-center">
-              <p className="text-[10px] uppercase tracking-[0.2em] font-bold mb-3" style={{ color: 'var(--t-accent)' }}>Service Details</p>
-              <h1 className="text-3xl md:text-5xl font-extrabold mb-4 leading-tight tracking-tight" style={{ color: 'var(--t-heading)' }}>{service.title}</h1>
+              <p className="text-[10px] uppercase tracking-[0.2em] font-bold mb-3 text-t-accent">Service Details</p>
+              <h1 className="text-3xl md:text-5xl font-extrabold mb-4 leading-tight tracking-tight text-t-heading">{service.title}</h1>
               <p className="text-gray-700 text-lg md:text-xl leading-relaxed">
                 {service.short_description || 'We provide professional digital solutions to help your business reach its goals.'}
               </p>
@@ -101,18 +101,17 @@ const ServiceDetails = () => {
           <div className="px-8 md:px-10 pb-10 pt-6">
             <hr className="border-gray-100 mb-10" />
             <div
-              className="prose prose-lg prose-gray max-w-none leading-relaxed prose-headings:font-extrabold prose-headings:tracking-tight prose-headings:mb-4 prose-p:mb-6 prose-ul:mb-6 prose-li:my-2"
-              style={{ '--tw-prose-headings': 'var(--t-heading)', color: 'var(--t-text)' }}
+              className="prose prose-lg prose-gray max-w-none leading-relaxed prose-headings:font-extrabold prose-headings:tracking-tight prose-headings:mb-4 prose-p:mb-6 prose-ul:mb-6 prose-li:my-2 prose-theme-headings text-t-text"
               dangerouslySetInnerHTML={{ __html: normalizedDescription.trim() ? normalizedDescription : sampleDescription }}
             />
 
-            <div className="mt-12 rounded-3xl p-8 md:p-12 text-white relative overflow-hidden group" style={{ backgroundColor: 'var(--t-primary)' }}>
+            <div className="mt-12 rounded-3xl p-8 md:p-12 text-white relative overflow-hidden group bg-t-primary">
               <div className="absolute top-0 right-0 w-64 h-64 bg-orange-600/10 rounded-lg -translate-y-1/2 translate-x-1/2 group-hover:scale-110 transition-transform duration-700"></div>
               
               <div className="relative z-10">
                 <h3 className="text-3xl font-extrabold mb-3 text-white tracking-tight">Ready to start?</h3>
                 <p className="text-blue-100 text-lg mb-8 max-w-2xl">Tell us what you need and we will create a simple, clear plan to help your business grow.</p>
-                <Link to="/#contact" className="inline-block px-10 py-4 text-white font-bold rounded-xl transition-all shadow-lg hover:-translate-y-1 uppercase tracking-widest text-xs" style={{ backgroundColor: 'var(--t-accent)' }}>
+                <Link to="/#contact" className="inline-block px-10 py-4 text-white font-bold rounded-xl transition-all shadow-lg hover:-translate-y-1 uppercase tracking-widest text-xs bg-t-accent hover:bg-t-accent-hover">
                   Talk to Our Team
                 </Link>
               </div>

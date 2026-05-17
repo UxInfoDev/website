@@ -73,8 +73,8 @@ const Footer = () => {
   return (
     <footer>
       {/* ─── CTA Banner ─── */}
-      <div className="relative overflow-hidden" style={{ background: template.cssVars['--t-cta-bg'] }}>
-        <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)', backgroundSize: '32px 32px' }} />
+      <div className="relative overflow-hidden bg-t-cta-bg">
+        <div className="absolute inset-0 opacity-[0.04] bg-radial-pattern" />
         <div className="container relative">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6 py-8 md:py-8">
             <div>
@@ -84,8 +84,7 @@ const Footer = () => {
             <button
               type="button"
               onClick={() => setIsInquiryOpen(true)}
-              className="group flex items-center justify-center gap-3 px-8 py-4 text-white font-bold rounded-lg transition-all duration-300 text-[12px] tracking-widest uppercase shadow-md hover:shadow-lg hover:-translate-y-0.5 whitespace-nowrap"
-              style={{ backgroundColor: 'var(--t-accent)' }}
+              className="group flex items-center justify-center gap-3 px-8 py-4 text-white font-bold rounded-lg transition-all duration-300 text-[12px] tracking-widest uppercase shadow-md hover:shadow-lg hover:-translate-y-0.5 whitespace-nowrap bg-t-accent hover:bg-t-accent-hover"
             >
               Start Your Project
               <FaArrowRight className="transition-transform group-hover:translate-x-1" />
@@ -95,7 +94,7 @@ const Footer = () => {
       </div>
 
       {/* ─── Main Footer ─── */}
-      <div style={{ background: template.cssVars['--t-footer-bg'] || 'linear-gradient(180deg, #061a2e 0%, #040f1a 100%)' }}>
+      <div className="bg-t-footer-bg">
           <div className="container">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 px-4 py-6">
             {/* Column 1: Brand */}
