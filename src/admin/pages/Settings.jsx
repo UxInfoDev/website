@@ -139,8 +139,8 @@ const SettingsPage = () => {
 
         {/* ── Sidebar ── */}
         <div className="lg:col-span-1">
-          <div className="bg-white rounded-lg shadow p-6 space-y-2 sticky top-4">
-            <h3 className="font-bold text-lg mb-4">Settings Categories</h3>
+          <div className="bg-t-bg-card border border-t-border rounded-lg shadow p-6 space-y-2 sticky top-4">
+            <h3 className="font-bold text-t-heading text-lg mb-4">Settings Categories</h3>
             {sidebarItems.map(({ key, label, ref }) => (
               <button
                 key={key}
@@ -148,8 +148,8 @@ const SettingsPage = () => {
                 onClick={() => scrollTo(ref, key)}
                 className={`w-full text-left px-4 py-2 rounded font-medium transition-colors flex items-center gap-2 ${
                   activeSection === key
-                    ? 'bg-orange-100 text-orange-600 font-bold'
-                    : 'hover:bg-gray-100 text-gray-700'
+                    ? 'bg-t-accent/10 text-t-accent font-bold'
+                    : 'hover:bg-slate-50 text-t-text'
                 }`}
               >
                 {key === 'appearance' && <FaPalette className="text-sm" />}
@@ -160,16 +160,16 @@ const SettingsPage = () => {
         </div>
 
         {/* ── Form ── */}
-        <div className="lg:col-span-2 bg-white rounded-lg shadow p-6">
+        <div className="lg:col-span-2 bg-t-bg-card border border-t-border rounded-lg shadow p-6">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
 
             {/* ════ Theme & Appearance ════ */}
             <div ref={appearanceRef} id="section-appearance" className="scroll-mt-4">
-              <h3 className="text-xl font-bold mb-5 pb-2 border-b flex items-center gap-2">
-                <FaPalette className="text-orange-500" />
+              <h3 className="text-xl font-bold mb-5 pb-2 border-b border-t-border text-t-heading flex items-center gap-2">
+                <FaPalette className="text-t-accent" />
                 Theme & Appearance
               </h3>
-              <p className="text-gray-500 text-sm mb-6">
+              <p className="text-t-muted text-sm mb-6">
                 Choose a template to change the entire look and feel of your website. Content stays the same — only the visual design changes.
               </p>
 
@@ -184,13 +184,13 @@ const SettingsPage = () => {
                       onClick={() => setSelectedTemplate(tpl.id)}
                       className={`relative text-left p-4 rounded-xl border-2 transition-all duration-200 group ${
                         isActive
-                          ? 'border-orange-500 bg-orange-50 shadow-md ring-2 ring-orange-200'
-                          : 'border-gray-200 hover:border-gray-300 hover:shadow-sm bg-white'
+                          ? 'border-t-accent bg-t-accent/10 shadow-md ring-2 ring-t-accent/30'
+                          : 'border-t-border hover:border-gray-300 hover:shadow-sm bg-t-bg-card'
                       }`}
                     >
                       {/* Active Badge */}
                       {isActive && (
-                        <div className="absolute -top-2 -right-2 w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center shadow-md">
+                        <div className="absolute -top-2 -right-2 w-6 h-6 bg-t-accent rounded-full flex items-center justify-center shadow-md">
                           <FaCheck className="text-white text-[10px]" />
                         </div>
                       )}
@@ -198,7 +198,7 @@ const SettingsPage = () => {
                       {/* Color Swatches Preview */}
                       <div className="flex gap-1 mb-3">
                         <div 
-                          className="w-full h-16 rounded-lg border border-gray-100 flex items-end p-2 relative overflow-hidden"
+                          className="w-full h-16 rounded-lg border border-t-border flex items-end p-2 relative overflow-hidden"
                           style={{ backgroundColor: swatches.bg }}
                         >
                           {/* Mini mockup */}
@@ -220,17 +220,17 @@ const SettingsPage = () => {
                         {Object.values(swatches).map((color, i) => (
                           <div
                             key={i}
-                            className="w-4 h-4 rounded-full border border-gray-200"
+                            className="w-4 h-4 rounded-full border border-t-border"
                             style={{ backgroundColor: color }}
                           />
                         ))}
                       </div>
 
                       {/* Label */}
-                      <h4 className={`font-bold text-sm mb-0.5 ${isActive ? 'text-orange-700' : 'text-gray-800'}`}>
+                      <h4 className={`font-bold text-sm mb-0.5 ${isActive ? 'text-t-accent' : 'text-t-heading'}`}>
                         {tpl.name}
                       </h4>
-                      <p className="text-[11px] text-gray-500 leading-snug line-clamp-2">
+                      <p className="text-[11px] text-t-muted leading-snug line-clamp-2">
                         {tpl.description}
                       </p>
                     </button>
@@ -239,11 +239,11 @@ const SettingsPage = () => {
               </div>
             </div>
 
-            <hr />
+            <hr className="border-t-border" />
 
             {/* ════ General ════ */}
             <div ref={generalRef} id="section-general" className="scroll-mt-4">
-              <h3 className="text-xl font-bold mb-5 pb-2 border-b">General Settings</h3>
+              <h3 className="text-xl font-bold mb-5 pb-2 border-b border-t-border text-t-heading">General Settings</h3>
 
               <div className="space-y-8">
 
@@ -255,7 +255,7 @@ const SettingsPage = () => {
                     <div className="space-y-3">
                       {/* Preview box */}
                       <div
-                        className="w-full h-24 border-2 border-dashed border-gray-300 rounded-xl flex items-center justify-center bg-gray-50 overflow-hidden cursor-pointer hover:border-orange-400 transition-colors relative group"
+                        className="w-full h-24 border-2 border-dashed border-t-border rounded-xl flex items-center justify-center bg-slate-50 overflow-hidden cursor-pointer hover:border-t-accent transition-colors relative group"
                         onClick={() => fileInputRef.current?.click()}
                       >
                         {activeLogo ? (
@@ -284,9 +284,9 @@ const SettingsPage = () => {
                         <button
                           type="button"
                           onClick={() => fileInputRef.current?.click()}
-                          className="flex-1 flex items-center justify-center gap-2 px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 text-xs font-medium transition-colors"
+                          className="flex-1 flex items-center justify-center gap-2 px-3 py-2 border border-t-border rounded-lg hover:bg-slate-50 text-t-text text-xs font-medium transition-colors"
                         >
-                          <FaUpload className="text-orange-500" /> Upload Logo
+                          <FaUpload className="text-t-accent" /> Upload Logo
                         </button>
                         {logoPreview && (
                           <button
@@ -307,7 +307,7 @@ const SettingsPage = () => {
                     <div className="space-y-3">
                       {/* Preview box */}
                       <div
-                        className="w-24 h-24 border-2 border-dashed border-gray-300 rounded-xl flex items-center justify-center bg-gray-50 overflow-hidden cursor-pointer hover:border-orange-400 transition-colors relative group"
+                        className="w-24 h-24 border-2 border-dashed border-t-border rounded-xl flex items-center justify-center bg-slate-50 overflow-hidden cursor-pointer hover:border-t-accent transition-colors relative group"
                         onClick={() => favFileInputRef.current?.click()}
                       >
                         {activeFavicon ? (
@@ -332,9 +332,9 @@ const SettingsPage = () => {
                         <button
                           type="button"
                           onClick={() => favFileInputRef.current?.click()}
-                          className="flex-1 flex items-center justify-center gap-2 px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 text-xs font-medium transition-colors"
+                          className="flex-1 flex items-center justify-center gap-2 px-3 py-2 border border-t-border rounded-lg hover:bg-slate-50 text-t-text text-xs font-medium transition-colors"
                         >
-                          <FaUpload className="text-orange-500" /> Upload Favicon
+                          <FaUpload className="text-t-accent" /> Upload Favicon
                         </button>
                         {faviconPreview && (
                           <button
@@ -357,7 +357,7 @@ const SettingsPage = () => {
                     <input
                       type="text"
                       {...register('site_name')}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-400"
+                      className="w-full px-4 py-2 border border-t-border rounded-lg focus:outline-none focus:border-t-accent bg-t-bg-card text-t-text"
                     />
                   </div>
 
@@ -369,20 +369,20 @@ const SettingsPage = () => {
                         type="number"
                         {...register('banner_rotation_speed')}
                         placeholder="10000"
-                        className="w-full max-w-[200px] px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-400"
+                        className="w-full max-w-[200px] px-4 py-2 border border-t-border rounded-lg focus:outline-none focus:border-t-accent bg-t-bg-card text-t-text"
                       />
-                      <span className="text-gray-500 text-sm">milliseconds (e.g., 10000 = 10 seconds)</span>
+                      <span className="text-t-muted text-sm">milliseconds (e.g., 10000 = 10 seconds)</span>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <hr />
+            <hr className="border-t-border" />
 
             {/* ════ Contact Information ════ */}
             <div ref={contactRef} id="section-contact" className="scroll-mt-4">
-              <h3 className="text-xl font-bold mb-5 pb-2 border-b">Contact Information</h3>
+              <h3 className="text-xl font-bold mb-5 pb-2 border-b border-t-border text-t-heading">Contact Information</h3>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -390,7 +390,7 @@ const SettingsPage = () => {
                   <input
                     type="tel"
                     {...register('phone')}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-400"
+                    className="w-full px-4 py-2 border border-t-border rounded-lg focus:outline-none focus:border-t-accent bg-t-bg-card text-t-text"
                   />
                 </div>
 
@@ -399,7 +399,7 @@ const SettingsPage = () => {
                   <input
                     type="email"
                     {...register('email')}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-400"
+                    className="w-full px-4 py-2 border border-t-border rounded-lg focus:outline-none focus:border-t-accent bg-t-bg-card text-t-text"
                   />
                 </div>
 
@@ -408,17 +408,17 @@ const SettingsPage = () => {
                   <input
                     type="text"
                     {...register('address')}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-400"
+                    className="w-full px-4 py-2 border border-t-border rounded-lg focus:outline-none focus:border-t-accent bg-t-bg-card text-t-text"
                   />
                 </div>
               </div>
             </div>
 
-            <hr />
+            <hr className="border-t-border" />
 
             {/* ════ Social Media ════ */}
             <div ref={socialRef} id="section-social" className="scroll-mt-4">
-              <h3 className="text-xl font-bold mb-5 pb-2 border-b">Social Media Links</h3>
+              <h3 className="text-xl font-bold mb-5 pb-2 border-b border-t-border text-t-heading">Social Media Links</h3>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -426,7 +426,7 @@ const SettingsPage = () => {
                   <input
                     type="url"
                     {...register('facebook_url')}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-400"
+                    className="w-full px-4 py-2 border border-t-border rounded-lg focus:outline-none focus:border-t-accent bg-t-bg-card text-t-text"
                   />
                 </div>
 
@@ -435,7 +435,7 @@ const SettingsPage = () => {
                   <input
                     type="url"
                     {...register('twitter_url')}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-400"
+                    className="w-full px-4 py-2 border border-t-border rounded-lg focus:outline-none focus:border-t-accent bg-t-bg-card text-t-text"
                   />
                 </div>
 
@@ -444,7 +444,7 @@ const SettingsPage = () => {
                   <input
                     type="url"
                     {...register('linkedin_url')}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-400"
+                    className="w-full px-4 py-2 border border-t-border rounded-lg focus:outline-none focus:border-t-accent bg-t-bg-card text-t-text"
                   />
                 </div>
 
@@ -453,16 +453,16 @@ const SettingsPage = () => {
                   <input
                     type="url"
                     {...register('youtube_url')}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-400"
+                    className="w-full px-4 py-2 border border-t-border rounded-lg focus:outline-none focus:border-t-accent bg-t-bg-card text-t-text"
                   />
                 </div>
               </div>
             </div>
 
-            <hr />
+            <hr className="border-t-border" />
 
             <div className="flex gap-4 pt-2">
-              <button type="submit" className="btn bg-orange-600 hover:bg-orange-700 text-white">
+              <button type="submit" className="btn bg-t-accent hover:bg-t-accent-hover text-white">
                 Save Settings
               </button>
               <button
@@ -474,7 +474,7 @@ const SettingsPage = () => {
                   setFaviconPreview(null);
                   setFaviconFile(null);
                 }}
-                className="btn border-2 border-gray-300 hover:bg-gray-50"
+                className="btn border-2 border-t-border text-t-text hover:bg-slate-50"
               >
                 Reset
               </button>

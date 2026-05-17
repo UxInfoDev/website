@@ -119,24 +119,24 @@ const ServicesManager = () => {
 
   return (
     <div className="space-y-6 animate-fade-in-up">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-t-bg-card p-6 rounded-2xl shadow-sm border border-t-border">
         <div>
-          <h2 className="text-3xl font-black text-slate-800 tracking-tight">Services Management</h2>
-          <p className="text-sm font-medium text-slate-500 mt-1">Manage and organize your service offerings.</p>
+          <h2 className="text-3xl font-black text-t-heading tracking-tight">Services Management</h2>
+          <p className="text-sm font-medium text-t-text mt-1">Manage and organize your service offerings.</p>
         </div>
         <div className="flex items-center gap-4 w-full sm:w-auto">
           {/* View Toggles */}
           <div className="flex bg-slate-100 p-1 rounded-xl">
             <button
               onClick={() => setViewMode('list')}
-              className={`p-2.5 rounded-lg transition-all duration-200 ${viewMode === 'list' ? 'bg-white shadow-sm text-[#0971C8] scale-105' : 'text-slate-500 hover:text-slate-800 hover:bg-slate-200'}`}
+              className={`p-2.5 rounded-lg transition-all duration-200 ${viewMode === 'list' ? 'bg-t-bg-card shadow-sm text-t-primary scale-105' : 'text-t-text hover:text-t-heading hover:bg-slate-200'}`}
               title="List View"
             >
               <FaList />
             </button>
             <button
               onClick={() => setViewMode('grid')}
-              className={`p-2.5 rounded-lg transition-all duration-200 ${viewMode === 'grid' ? 'bg-white shadow-sm text-[#0971C8] scale-105' : 'text-slate-500 hover:text-slate-800 hover:bg-slate-200'}`}
+              className={`p-2.5 rounded-lg transition-all duration-200 ${viewMode === 'grid' ? 'bg-t-bg-card shadow-sm text-t-primary scale-105' : 'text-t-text hover:text-t-heading hover:bg-slate-200'}`}
               title="Grid View"
             >
               <FaThLarge />
@@ -150,7 +150,7 @@ const ServicesManager = () => {
               setImagePreview('')
               setShowForm(!showForm)
             }}
-            className="btn bg-gradient-to-r from-[#0971C8] to-blue-500 hover:from-[#0A5A9E] hover:to-blue-600 text-white flex items-center gap-2 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all px-5 py-2.5 rounded-xl font-bold"
+            className="btn bg-t-accent hover:bg-t-accent-hover text-white flex items-center gap-2 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all px-5 py-2.5 rounded-xl font-bold"
           >
             <FaPlus /> Add Service
           </button>
@@ -160,15 +160,15 @@ const ServicesManager = () => {
       {/* Form Modal */}
       {showForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 p-4 sm:p-6 overflow-y-auto">
-          <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-4xl relative my-auto animate-fade-in-up">
+          <div className="bg-t-bg-card rounded-2xl shadow-2xl p-8 w-full max-w-4xl relative my-auto animate-fade-in-up border border-t-border">
             <div className="flex justify-between items-center mb-6">
-              <h3 className="text-2xl font-bold text-gray-900">{editingId ? 'Edit' : 'Add New'} Service</h3>
+              <h3 className="text-2xl font-bold text-t-heading">{editingId ? 'Edit' : 'Add New'} Service</h3>
               <button 
                 onClick={() => {
                   setShowForm(false)
                   setImagePreview('')
                 }} 
-                className="text-gray-400 hover:text-gray-800 transition-colors p-2 text-xl"
+                className="text-t-muted hover:text-t-heading transition-colors p-2 text-xl"
                 type="button"
               >
                 <FaTimes />
@@ -181,7 +181,7 @@ const ServicesManager = () => {
                 <input
                   type="text"
                   {...register('title', { required: 'Title is required' })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                  className="w-full px-4 py-2 border border-t-border rounded-lg bg-t-bg-card text-t-text focus:outline-none focus:border-t-accent"
                 />
                 {errors.title && <span className="text-red-600 text-sm">{errors.title.message}</span>}
               </div>
@@ -193,7 +193,7 @@ const ServicesManager = () => {
                   {...register('icon')}
                   placeholder="🎨"
                   maxLength="2"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                  className="w-full px-4 py-2 border border-t-border rounded-lg bg-t-bg-card text-t-text focus:outline-none focus:border-t-accent"
                 />
               </div>
 
@@ -202,7 +202,7 @@ const ServicesManager = () => {
                 <textarea
                   {...register('short_description', { required: 'Short description is required' })}
                   rows={3}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                  className="w-full px-4 py-2 border border-t-border rounded-lg bg-t-bg-card text-t-text focus:outline-none focus:border-t-accent"
                   placeholder="Short summary shown on home page service cards"
                 />
                 {errors.short_description && <span className="text-red-600 text-sm">{errors.short_description.message}</span>}
@@ -214,7 +214,7 @@ const ServicesManager = () => {
                   type="file"
                   accept="image/*"
                   {...imageRegister}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                  className="w-full px-4 py-2 border border-t-border rounded-lg bg-t-bg-card text-t-text focus:outline-none focus:border-t-accent"
                   onChange={(e) => {
                     imageRegister.onChange(e)
                     const file = e.target.files?.[0]
@@ -229,7 +229,7 @@ const ServicesManager = () => {
                   <img
                     src={imagePreview}
                     alt="Service preview"
-                    className="mt-3 w-full max-w-sm h-40 object-cover rounded-lg border border-gray-200"
+                    className="mt-3 w-full max-w-sm h-40 object-cover rounded-lg border border-t-border"
                   />
                 )}
               </div>
@@ -246,8 +246,8 @@ const ServicesManager = () => {
               </div>
             </div>
 
-              <div className="flex gap-4 pt-4 border-t border-gray-100">
-                <button type="submit" className="btn bg-orange-600 hover:bg-orange-700 text-white flex-1 md:flex-none">
+              <div className="flex gap-4 pt-4 border-t border-t-border">
+                <button type="submit" className="btn bg-t-accent hover:bg-t-accent-hover text-white flex-1 md:flex-none">
                   {editingId ? 'Update' : 'Add'} Service
                 </button>
                 <button
@@ -256,7 +256,7 @@ const ServicesManager = () => {
                     setShowForm(false)
                     setImagePreview('')
                   }}
-                  className="btn border-2 border-gray-300 hover:bg-gray-50 flex-1 md:flex-none"
+                  className="btn border-2 border-t-border hover:bg-slate-50 text-t-text flex-1 md:flex-none"
                 >
                   Cancel
                 </button>
@@ -279,12 +279,12 @@ const ServicesManager = () => {
           if (viewMode === 'list') {
             // -- LIST VIEW --
             return (
-              <div key={service.id} className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 hover:shadow-md hover:-translate-y-0.5 transition-all flex flex-col md:flex-row items-center gap-6 group">
+              <div key={service.id} className="bg-t-bg-card rounded-2xl shadow-sm border border-t-border p-5 hover:shadow-md hover:-translate-y-0.5 transition-all flex flex-col md:flex-row items-center gap-6 group">
                 
                 {/* Reorder Controls */}
-                <div className="flex md:flex-col gap-1 items-center bg-slate-50 p-2 rounded-xl shrink-0 border border-slate-100">
-                  <button onClick={() => handleMove(index, -1)} disabled={index === 0} className={`p-2 rounded-lg transition-colors ${index === 0 ? 'text-slate-300' : 'text-slate-500 hover:text-[#0971C8] hover:bg-blue-50'}`} title="Move Up"><FaArrowUp /></button>
-                  <button onClick={() => handleMove(index, 1)} disabled={index === services.length - 1} className={`p-2 rounded-lg transition-colors ${index === services.length - 1 ? 'text-slate-300' : 'text-slate-500 hover:text-[#0971C8] hover:bg-blue-50'}`} title="Move Down"><FaArrowDown /></button>
+                <div className="flex md:flex-col gap-1 items-center bg-slate-50 p-2 rounded-xl shrink-0 border border-t-border">
+                  <button onClick={() => handleMove(index, -1)} disabled={index === 0} className={`p-2 rounded-lg transition-colors ${index === 0 ? 'text-slate-300' : 'text-t-text hover:text-t-primary hover:bg-blue-50'}`} title="Move Up"><FaArrowUp /></button>
+                  <button onClick={() => handleMove(index, 1)} disabled={index === services.length - 1} className={`p-2 rounded-lg transition-colors ${index === services.length - 1 ? 'text-slate-300' : 'text-t-text hover:text-t-primary hover:bg-blue-50'}`} title="Move Down"><FaArrowDown /></button>
                 </div>
 
                 {/* Image/Icon */}
@@ -295,7 +295,7 @@ const ServicesManager = () => {
                     <div className="text-4xl text-slate-300"><IconComponent /></div>
                   )}
                   {imageUrl && (
-                    <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-md p-2 rounded-lg text-[#0971C8] shadow-sm text-sm">
+                    <div className="absolute top-2 right-2 bg-t-bg-card/90 backdrop-blur-md p-2 rounded-lg text-t-primary shadow-sm text-sm">
                       <IconComponent />
                     </div>
                   )}
@@ -304,15 +304,15 @@ const ServicesManager = () => {
                 {/* Content */}
                 <div className="flex-1 text-center md:text-left">
                   <div className="flex items-center gap-3 mb-2">
-                    <h3 className="text-xl font-bold text-slate-800">{service.title}</h3>
-                    <span className="bg-slate-100 text-slate-500 px-2 py-0.5 rounded-md text-[11px] font-mono font-medium">{service.slug}</span>
+                    <h3 className="text-xl font-bold text-t-heading">{service.title}</h3>
+                    <span className="bg-slate-100 text-t-muted px-2 py-0.5 rounded-md text-[11px] font-mono font-medium">{service.slug}</span>
                   </div>
-                  <p className="text-slate-600 text-sm line-clamp-2 leading-relaxed">{service.short_description}</p>
+                  <p className="text-t-text text-sm line-clamp-2 leading-relaxed">{service.short_description}</p>
                 </div>
 
                 {/* Actions */}
                 <div className="flex items-center gap-3 w-full md:w-auto shrink-0 mt-4 md:mt-0 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button onClick={() => handleEdit(service)} className="flex-1 md:flex-none p-3 bg-blue-50 text-[#0971C8] hover:bg-[#0971C8] hover:text-white rounded-xl transition-colors flex items-center justify-center font-semibold">
+                  <button onClick={() => handleEdit(service)} className="flex-1 md:flex-none p-3 bg-blue-50 text-t-primary hover:bg-t-primary hover:text-white rounded-xl transition-colors flex items-center justify-center font-semibold">
                     <FaEdit />
                   </button>
                   <button onClick={() => handleDelete(service.id)} className="flex-1 md:flex-none p-3 bg-red-50 text-red-600 hover:bg-red-600 hover:text-white rounded-xl transition-colors flex items-center justify-center font-semibold">
@@ -325,7 +325,7 @@ const ServicesManager = () => {
 
           // -- GRID VIEW --
           return (
-            <div key={service.id} className="bg-white rounded-2xl shadow-sm border border-slate-100 hover:shadow-lg transition-all duration-300 overflow-hidden group flex flex-col hover:-translate-y-1">
+            <div key={service.id} className="bg-t-bg-card rounded-2xl shadow-sm border border-t-border hover:shadow-lg transition-all duration-300 overflow-hidden group flex flex-col hover:-translate-y-1">
               
               {/* Header Image Area */}
               <div className="relative h-48 bg-slate-100 overflow-hidden">
@@ -340,29 +340,29 @@ const ServicesManager = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-90 transition-opacity duration-300"></div>
                 
                 {/* Floating Icon */}
-                <div className="absolute bottom-5 left-5 bg-white/95 backdrop-blur-md p-3 rounded-xl shadow-[0_8px_16px_rgba(0,0,0,0.1)] text-[#0971C8] text-2xl transform translate-y-2 group-hover:-translate-y-1 transition-all duration-300">
+                <div className="absolute bottom-5 left-5 bg-t-bg-card/95 backdrop-blur-md p-3 rounded-xl shadow-[0_8px_16px_rgba(0,0,0,0.1)] text-t-primary text-2xl transform translate-y-2 group-hover:-translate-y-1 transition-all duration-300">
                   <IconComponent />
                 </div>
 
                 {/* Reorder Controls */}
-                <div className="absolute top-4 right-4 flex bg-white/90 backdrop-blur-md rounded-xl shadow-sm overflow-hidden z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <button onClick={() => handleMove(index, -1)} disabled={index === 0} className={`p-2 transition-colors ${index === 0 ? 'text-slate-300 bg-slate-50' : 'text-slate-600 hover:text-[#0971C8] hover:bg-blue-50'}`} title="Move Left"><FaArrowLeft size={12} /></button>
+                <div className="absolute top-4 right-4 flex bg-t-bg-card/90 backdrop-blur-md rounded-xl shadow-sm overflow-hidden z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <button onClick={() => handleMove(index, -1)} disabled={index === 0} className={`p-2 transition-colors ${index === 0 ? 'text-slate-300 bg-slate-50' : 'text-t-text hover:text-t-primary hover:bg-blue-50'}`} title="Move Left"><FaArrowLeft size={12} /></button>
                   <div className="w-px bg-slate-200"></div>
-                  <button onClick={() => handleMove(index, 1)} disabled={index === services.length - 1} className={`p-2 transition-colors ${index === services.length - 1 ? 'text-slate-300 bg-slate-50' : 'text-slate-600 hover:text-[#0971C8] hover:bg-blue-50'}`} title="Move Right"><FaArrowRight size={12} /></button>
+                  <button onClick={() => handleMove(index, 1)} disabled={index === services.length - 1} className={`p-2 transition-colors ${index === services.length - 1 ? 'text-slate-300 bg-slate-50' : 'text-t-text hover:text-t-primary hover:bg-blue-50'}`} title="Move Right"><FaArrowRight size={12} /></button>
                 </div>
               </div>
 
               {/* Content Body */}
-              <div className="p-6 flex-1 flex flex-col bg-white relative">
+              <div className="p-6 flex-1 flex flex-col bg-t-bg-card relative">
                 {/* Decorative subtle line */}
                 <div className="absolute top-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 
-                <h3 className="text-xl font-bold text-slate-800 mb-2">{service.title}</h3>
-                <p className="text-slate-500 text-[14px] mb-5 line-clamp-3 flex-1 leading-relaxed">{service.short_description}</p>
+                <h3 className="text-xl font-bold text-t-heading mb-2">{service.title}</h3>
+                <p className="text-t-text text-[14px] mb-5 line-clamp-3 flex-1 leading-relaxed">{service.short_description}</p>
                 
                 {/* Actions Footer */}
-                <div className="flex gap-3 mt-auto pt-5 border-t border-slate-100">
-                  <button onClick={() => handleEdit(service)} className="flex-[3] py-2.5 bg-blue-50 text-[#0971C8] hover:bg-[#0971C8] hover:text-white rounded-xl transition-all duration-200 flex items-center justify-center gap-2 font-semibold text-[13px] shadow-sm hover:shadow">
+                <div className="flex gap-3 mt-auto pt-5 border-t border-t-border">
+                  <button onClick={() => handleEdit(service)} className="flex-[3] py-2.5 bg-blue-50 text-t-primary hover:bg-t-primary hover:text-white rounded-xl transition-all duration-200 flex items-center justify-center gap-2 font-semibold text-[13px] shadow-sm hover:shadow">
                     <FaEdit /> Edit Service
                   </button>
                   <button onClick={() => handleDelete(service.id)} className="flex-1 py-2.5 bg-red-50 text-red-600 hover:bg-red-600 hover:text-white rounded-xl transition-all duration-200 flex items-center justify-center gap-2 font-semibold text-[13px] shadow-sm hover:shadow">

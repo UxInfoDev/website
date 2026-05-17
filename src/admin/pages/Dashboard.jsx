@@ -109,10 +109,10 @@ const AdminDashboard = () => {
   }
 
   const stats = [
-    { id: 1, icon: <FaProjectDiagram className="text-2xl" />, label: 'Total Projects',  value: counts.projects,     bg: 'bg-gradient-to-br from-blue-50 to-blue-100/50', border: 'border-blue-100', text: 'text-blue-600', shadow: 'shadow-blue-500/10' },
-    { id: 2, icon: <FaTools         className="text-2xl" />, label: 'Services',         value: counts.services,     bg: 'bg-gradient-to-br from-emerald-50 to-emerald-100/50', border: 'border-emerald-100', text: 'text-emerald-600', shadow: 'shadow-emerald-500/10' },
-    { id: 3, icon: <FaUsers         className="text-2xl" />, label: 'Team Members',     value: counts.team,         bg: 'bg-gradient-to-br from-violet-50 to-violet-100/50', border: 'border-violet-100', text: 'text-violet-600', shadow: 'shadow-violet-500/10' },
-    { id: 4, icon: <FaEnvelope      className="text-2xl" />, label: 'New Inquiries',    value: counts.newInquiries, bg: 'bg-gradient-to-br from-orange-50 to-orange-100/50', border: 'border-orange-100', text: 'text-orange-600', shadow: 'shadow-orange-500/10' },
+    { id: 1, to: '/projects',  icon: <FaProjectDiagram className="text-2xl" />, label: 'Total Projects',  value: counts.projects,     bg: 'bg-gradient-to-br from-blue-50 to-blue-100/50', border: 'border-blue-100', text: 'text-blue-600', shadow: 'shadow-blue-500/10' },
+    { id: 2, to: '/services',  icon: <FaTools         className="text-2xl" />, label: 'Services',         value: counts.services,     bg: 'bg-gradient-to-br from-emerald-50 to-emerald-100/50', border: 'border-emerald-100', text: 'text-emerald-600', shadow: 'shadow-emerald-500/10' },
+    { id: 3, to: '/team',      icon: <FaUsers         className="text-2xl" />, label: 'Team Members',     value: counts.team,         bg: 'bg-gradient-to-br from-violet-50 to-violet-100/50', border: 'border-violet-100', text: 'text-violet-600', shadow: 'shadow-violet-500/10' },
+    { id: 4, to: '/inquiries', icon: <FaEnvelope      className="text-2xl" />, label: 'New Inquiries',    value: counts.newInquiries, bg: 'bg-gradient-to-br from-orange-50 to-orange-100/50', border: 'border-orange-100', text: 'text-orange-600', shadow: 'shadow-orange-500/10' },
   ]
 
   const quickActions = [
@@ -127,29 +127,29 @@ const AdminDashboard = () => {
     <div className="space-y-8 animate-fade-in-up">
 
       {/* ── Greeting ── */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-100 relative overflow-hidden">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-t-bg-card p-6 rounded-2xl shadow-sm border border-t-border relative overflow-hidden">
         {/* Decorative background element */}
         <div className="absolute right-0 top-0 w-64 h-full bg-gradient-to-l from-blue-50 to-transparent pointer-events-none" />
 
         <div className="relative z-10">
-          <h3 className="text-3xl font-black text-slate-800 tracking-tight">
-            {getGreeting()}, <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0971C8] to-blue-400">Admin</span> 👋
+          <h3 className="text-3xl font-black text-t-heading tracking-tight">
+            {getGreeting()}, <span className="text-t-primary">Admin</span> 👋
           </h3>
-          <p className="text-sm font-medium text-slate-500 mt-1">Here's what's happening on your site today.</p>
+          <p className="text-sm font-medium text-t-text mt-1">Here's what's happening on your site today.</p>
         </div>
         <button
           onClick={fetchData}
           title="Refresh data"
-          className="relative z-10 flex items-center justify-center p-3 rounded-xl border border-slate-200 bg-white text-slate-500 hover:text-[#0971C8] hover:border-[#0971C8]/30 hover:bg-blue-50/50 hover:shadow-sm transition-all duration-200 group"
+          className="relative z-10 flex items-center justify-center p-3 rounded-xl border border-t-border bg-t-bg-card text-t-text hover:text-t-primary hover:border-t-primary/30 hover:bg-slate-50 hover:shadow-sm transition-all duration-200 group"
         >
-          <FaSync className={`text-lg transition-transform duration-500 group-hover:rotate-180 ${loading ? 'animate-spin text-[#0971C8]' : ''}`} />
+          <FaSync className={`text-lg transition-transform duration-500 group-hover:rotate-180 ${loading ? 'animate-spin text-t-primary' : ''}`} />
         </button>
       </div>
 
       {/* ── Live Stats Cards ── */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
         {stats.map((stat) => (
-          <div key={stat.id} className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm hover:shadow-md transition-all duration-300 group hover:-translate-y-1 relative overflow-hidden">
+          <Link to={stat.to} key={stat.id} className="bg-t-bg-card rounded-2xl p-5 border border-t-border shadow-sm hover:shadow-md transition-all duration-300 group hover:-translate-y-1 relative overflow-hidden block">
             {/* Subtle highlight effect on hover */}
             <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300 ${stat.bg}`} />
 
@@ -158,15 +158,15 @@ const AdminDashboard = () => {
                 {stat.icon}
               </div>
               <div className="min-w-0">
-                <p className="text-slate-500 text-[13px] font-semibold uppercase tracking-wider leading-tight truncate mb-1">{stat.label}</p>
+                <p className="text-t-text text-[13px] font-semibold uppercase tracking-wider leading-tight truncate mb-1">{stat.label}</p>
                 {loading ? (
                   <div className="h-8 w-12 bg-slate-100 animate-pulse rounded mt-1" />
                 ) : (
-                  <p className="text-3xl font-black text-slate-800 leading-none tracking-tight">{stat.value}</p>
+                  <p className="text-3xl font-black text-t-heading leading-none tracking-tight">{stat.value}</p>
                 )}
               </div>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
 
@@ -174,23 +174,23 @@ const AdminDashboard = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
         {/* Recent Inquiries */}
-        <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden flex flex-col">
-          <div className="px-6 py-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
-            <h3 className="text-lg font-black text-slate-800 tracking-tight">Recent Inquiries</h3>
-            <Link to="/inquiries" className="text-sm font-bold text-[#0971C8] hover:text-blue-700 transition flex items-center gap-1 group">
+        <div className="lg:col-span-2 bg-t-bg-card rounded-2xl shadow-sm border border-t-border overflow-hidden flex flex-col">
+          <div className="px-6 py-5 border-b border-t-border flex items-center justify-between bg-slate-50/50">
+            <h3 className="text-lg font-black text-t-heading tracking-tight">Recent Inquiries</h3>
+            <Link to="/inquiries" className="text-sm font-bold text-t-primary hover:text-t-primary-hover transition flex items-center gap-1 group">
               View all <span className="group-hover:translate-x-1 transition-transform">→</span>
             </Link>
           </div>
 
           {recentInquiries.length === 0 && !loading ? (
-            <div className="flex-1 flex flex-col items-center justify-center py-16 text-slate-400">
-              <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-4 border border-slate-100">
-                <FaEnvelope className="text-2xl opacity-40 text-slate-500" />
+            <div className="flex-1 flex flex-col items-center justify-center py-16 text-t-muted">
+              <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-4 border border-t-border">
+                <FaEnvelope className="text-2xl opacity-40 text-t-muted" />
               </div>
-              <p className="text-[15px] font-medium text-slate-500">No new inquiries yet</p>
+              <p className="text-[15px] font-medium text-t-text">No new inquiries yet</p>
             </div>
           ) : (
-            <div className="divide-y divide-slate-100 flex-1 overflow-y-auto">
+            <div className="divide-y divide-t-border flex-1 overflow-y-auto">
               {recentInquiries.map((inquiry) => (
                 <div
                   key={inquiry.id}
@@ -198,12 +198,12 @@ const AdminDashboard = () => {
                   onClick={() => { setSelectedInquiry(inquiry); setReply('') }}
                 >
                   <div className="min-w-0 flex-1">
-                    <p className="text-[15px] font-bold text-slate-800 truncate mb-0.5 group-hover:text-[#0971C8] transition-colors">{inquiry.name}</p>
-                    <p className="text-[13px] font-medium text-slate-500 truncate">{inquiry.email}</p>
+                    <p className="text-[15px] font-bold text-t-heading truncate mb-0.5 group-hover:text-t-primary transition-colors">{inquiry.name}</p>
+                    <p className="text-[13px] font-medium text-t-text truncate">{inquiry.email}</p>
                   </div>
                   <div className="flex items-center gap-4 flex-shrink-0 ml-4">
                     <StatusBadge status={inquiry.status} />
-                    <button className="text-xs text-[#0971C8] bg-blue-50 px-3 py-1.5 rounded-lg font-bold opacity-0 group-hover:opacity-100 transition-all hover:bg-blue-100">
+                    <button className="text-xs text-t-primary bg-slate-50 px-3 py-1.5 rounded-lg font-bold opacity-0 group-hover:opacity-100 transition-all hover:bg-slate-100">
                       Review
                     </button>
                   </div>
@@ -214,9 +214,9 @@ const AdminDashboard = () => {
         </div>
 
         {/* Quick Actions */}
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-          <div className="px-6 py-5 border-b border-slate-100 bg-slate-50/50">
-            <h3 className="text-lg font-black text-slate-800 tracking-tight">Quick Actions</h3>
+        <div className="bg-t-bg-card rounded-2xl shadow-sm border border-t-border overflow-hidden">
+          <div className="px-6 py-5 border-b border-t-border bg-slate-50/50">
+            <h3 className="text-lg font-black text-t-heading tracking-tight">Quick Actions</h3>
           </div>
           <div className="p-5 space-y-3">
             {quickActions.map(({ to, label, icon, color }) => (
@@ -237,17 +237,17 @@ const AdminDashboard = () => {
       {/* ── Inquiry Detail Modal ── */}
       {selectedInquiry && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm p-4 sm:p-6 overflow-y-auto flex items-center justify-center">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden animate-fade-in-up">
+          <div className="bg-t-bg-card rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden animate-fade-in-up">
 
             {/* Header */}
-            <div className="px-5 py-4 border-b bg-gradient-to-r from-orange-50 to-white flex items-center justify-between gap-3">
+            <div className="px-5 py-4 border-b border-t-border bg-gradient-to-r from-slate-50 to-t-bg-card flex items-center justify-between gap-3">
               <div className="min-w-0">
-                <h3 className="font-bold text-lg text-gray-800 truncate">{selectedInquiry.subject || '(no subject)'}</h3>
+                <h3 className="font-bold text-lg text-t-heading truncate">{selectedInquiry.subject || '(no subject)'}</h3>
                 <div className="mt-1"><StatusBadge status={selectedInquiry.status} /></div>
               </div>
               <button
                 onClick={() => { setSelectedInquiry(null); setReply('') }}
-                className="text-gray-400 hover:text-gray-700 p-2 hover:bg-gray-100 rounded-lg transition"
+                className="text-slate-400 hover:text-slate-700 p-2 hover:bg-slate-100 rounded-lg transition"
                 aria-label="Close"
               >
                 <FaTimes />
@@ -263,8 +263,8 @@ const AdminDashboard = () => {
                   { Icon: FaCalendarAlt, val: fmt(selectedInquiry.created_at), small: true },
                   ...(selectedInquiry.subject ? [{ Icon: FaTag, val: selectedInquiry.subject, small: true }] : []),
                 ].map(({ Icon, val, small }) => (
-                  <div key={val} className="flex items-center gap-2 text-sm text-gray-700">
-                    <Icon className="text-gray-400 flex-shrink-0" size={12} />
+                  <div key={val} className="flex items-center gap-2 text-sm text-t-text">
+                    <Icon className="text-slate-400 flex-shrink-0" size={12} />
                     <span className={small ? 'text-xs' : 'font-medium'}>{val}</span>
                   </div>
                 ))}
@@ -272,15 +272,15 @@ const AdminDashboard = () => {
 
               {/* Message */}
               <div>
-                <p className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Message</p>
-                <div className="p-3 rounded-xl border bg-gray-50 text-sm text-gray-700 leading-relaxed">
+                <p className="text-xs font-bold text-slate-500 uppercase tracking-wide mb-2">Message</p>
+                <div className="p-3 rounded-xl border border-t-border bg-slate-50 text-sm text-t-text leading-relaxed">
                   {selectedInquiry.message}
                 </div>
               </div>
 
               {/* Status toggle */}
               <div>
-                <p className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Change Status</p>
+                <p className="text-xs font-bold text-slate-500 uppercase tracking-wide mb-2">Change Status</p>
                 <div className="flex gap-2">
                   {['new', 'pending', 'replied'].map((s) => (
                     <button
@@ -288,8 +288,8 @@ const AdminDashboard = () => {
                       onClick={() => handleUpdateStatus(selectedInquiry.id, s)}
                       className={`flex-1 py-2 rounded-lg text-xs font-semibold border transition ${
                         selectedInquiry.status === s
-                          ? 'bg-orange-500 text-white border-orange-500'
-                          : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
+                          ? 'bg-t-accent text-white border-t-accent'
+                          : 'bg-t-bg-card text-t-text border-t-border hover:bg-slate-50'
                       }`}
                     >
                       {s.charAt(0).toUpperCase() + s.slice(1)}
@@ -300,13 +300,13 @@ const AdminDashboard = () => {
 
               {/* Reply */}
               <div>
-                <p className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-1.5">Reply</p>
+                <p className="text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">Reply</p>
                 <textarea
                   value={reply}
                   onChange={(e) => setReply(e.target.value)}
                   rows="3"
                   placeholder="Type your reply..."
-                  className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-100 resize-none"
+                  className="w-full px-3 py-2 border border-t-border rounded-xl text-sm focus:outline-none focus:border-t-accent focus:ring-2 focus:ring-t-accent/20 resize-none bg-t-bg-card text-t-text"
                 />
               </div>
 

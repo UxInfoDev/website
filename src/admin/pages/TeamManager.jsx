@@ -77,15 +77,18 @@ const TeamManager = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-3xl font-bold">Team Members</h2>
+      <div className="flex justify-between items-center bg-t-bg-card p-6 rounded-2xl shadow-sm border border-t-border">
+        <div>
+          <h2 className="text-3xl font-black text-t-heading tracking-tight">Team Members</h2>
+          <p className="text-sm font-medium text-t-text mt-1">Manage your team member profiles.</p>
+        </div>
         <button
           onClick={() => {
             setEditingId(null)
             reset()
             setShowForm(!showForm)
           }}
-          className="btn bg-orange-600 hover:bg-orange-700 text-white flex items-center gap-2"
+          className="btn bg-t-accent hover:bg-t-accent-hover text-white flex items-center gap-2 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all px-5 py-2.5 rounded-xl font-bold"
         >
           <FaPlus /> Add Member
         </button>
@@ -93,8 +96,8 @@ const TeamManager = () => {
 
       {/* Form */}
       {showForm && (
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-xl font-bold mb-4">{editingId ? 'Edit' : 'Add New'} Team Member</h3>
+        <div className="bg-t-bg-card rounded-2xl shadow-sm p-6 border border-t-border">
+          <h3 className="text-xl font-bold mb-4 text-t-heading">{editingId ? 'Edit' : 'Add New'} Team Member</h3>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
@@ -102,7 +105,7 @@ const TeamManager = () => {
                 <input
                   type="text"
                   {...register('name', { required: 'Name is required' })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                  className="w-full px-4 py-2 border border-t-border rounded-lg bg-t-bg-card text-t-text focus:outline-none focus:border-t-accent"
                 />
                 {errors.name && <span className="text-red-600 text-sm">{errors.name.message}</span>}
               </div>
@@ -112,7 +115,7 @@ const TeamManager = () => {
                 <input
                   type="text"
                   {...register('role', { required: 'Role is required' })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                  className="w-full px-4 py-2 border border-t-border rounded-lg bg-t-bg-card text-t-text focus:outline-none focus:border-t-accent"
                 />
                 {errors.role && <span className="text-red-600 text-sm">{errors.role.message}</span>}
               </div>
@@ -122,7 +125,7 @@ const TeamManager = () => {
                 <input
                   type="text"
                   {...register('linkedin')}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                  className="w-full px-4 py-2 border border-t-border rounded-lg bg-t-bg-card text-t-text focus:outline-none focus:border-t-accent"
                 />
               </div>
 
@@ -131,7 +134,7 @@ const TeamManager = () => {
                 <input
                   type="text"
                   {...register('twitter')}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                  className="w-full px-4 py-2 border border-t-border rounded-lg bg-t-bg-card text-t-text focus:outline-none focus:border-t-accent"
                 />
               </div>
               
@@ -140,7 +143,7 @@ const TeamManager = () => {
                 <input
                   type="text"
                   {...register('github')}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                  className="w-full px-4 py-2 border border-t-border rounded-lg bg-t-bg-card text-t-text focus:outline-none focus:border-t-accent"
                 />
               </div>
 
@@ -150,7 +153,7 @@ const TeamManager = () => {
                   type="file"
                   accept="image/*"
                   {...register('image')}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                  className="w-full px-4 py-2 border border-t-border rounded-lg bg-t-bg-card text-t-text focus:outline-none focus:border-t-accent"
                 />
               </div>
 
@@ -159,20 +162,20 @@ const TeamManager = () => {
                 <textarea
                   {...register('bio', { required: 'Bio is required' })}
                   rows="3"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                  className="w-full px-4 py-2 border border-t-border rounded-lg bg-t-bg-card text-t-text focus:outline-none focus:border-t-accent"
                 />
                 {errors.bio && <span className="text-red-600 text-sm">{errors.bio.message}</span>}
               </div>
             </div>
 
             <div className="flex gap-4">
-              <button type="submit" className="btn bg-orange-600 hover:bg-orange-700 text-white">
+              <button type="submit" className="btn bg-t-accent hover:bg-t-accent-hover text-white">
                 {editingId ? 'Update' : 'Add'} Member
               </button>
               <button
                 type="button"
                 onClick={() => setShowForm(false)}
-                className="btn border-2 border-gray-300 hover:bg-gray-50"
+                className="btn border-2 border-t-border hover:bg-slate-50 text-t-text"
               >
                 Cancel
               </button>
@@ -182,35 +185,39 @@ const TeamManager = () => {
       )}
 
       {/* Table */}
-      <div className="bg-white rounded-lg shadow overflow-x-auto">
+      <div className="bg-t-bg-card rounded-2xl shadow-sm border border-t-border overflow-x-auto">
         <table className="w-full min-w-[760px]">
-          <thead className="bg-gray-100 border-b">
+          <thead className="bg-slate-50/50 border-b border-t-border">
             <tr>
-              <th className="text-left py-3 px-4">Name</th>
-              <th className="text-left py-3 px-4">Role</th>
-              <th className="text-left py-3 px-4">Bio</th>
-              <th className="text-left py-3 px-4">Actions</th>
+              <th className="text-left py-4 px-6 text-[13px] font-bold text-t-muted uppercase tracking-wider">Name</th>
+              <th className="text-left py-4 px-6 text-[13px] font-bold text-t-muted uppercase tracking-wider">Role</th>
+              <th className="text-left py-4 px-6 text-[13px] font-bold text-t-muted uppercase tracking-wider">Bio</th>
+              <th className="text-left py-4 px-6 text-[13px] font-bold text-t-muted uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-t-border">
             {teamMembers.map((member) => (
-              <tr key={member.id} className="border-b hover:bg-gray-50">
-                <td className="py-3 px-4 font-bold">{member.name}</td>
-                <td className="py-3 px-4 text-orange-600">{member.role}</td>
-                <td className="py-3 px-4">{member.bio}</td>
-                <td className="py-3 px-4">
-                  <button
-                    onClick={() => handleEdit(member)}
-                    className="text-blue-600 hover:text-blue-800 mr-4"
-                  >
-                    <FaEdit />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(member.id)}
-                    className="text-red-600 hover:text-red-800"
-                  >
-                    <FaTrash />
-                  </button>
+              <tr key={member.id} className="hover:bg-slate-50 transition-colors group">
+                <td className="py-4 px-6 text-[15px] font-bold text-t-heading">{member.name}</td>
+                <td className="py-4 px-6 font-medium text-t-accent">{member.role}</td>
+                <td className="py-4 px-6 text-sm text-t-text line-clamp-2 max-w-xs">{member.bio}</td>
+                <td className="py-4 px-6">
+                  <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button
+                      onClick={() => handleEdit(member)}
+                      className="p-2 text-t-primary bg-blue-50 rounded-lg hover:bg-t-primary hover:text-white transition-colors"
+                      title="Edit"
+                    >
+                      <FaEdit />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(member.id)}
+                      className="p-2 text-red-600 bg-red-50 rounded-lg hover:bg-red-600 hover:text-white transition-colors"
+                      title="Delete"
+                    >
+                      <FaTrash />
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}

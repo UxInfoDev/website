@@ -20,7 +20,7 @@ This document outlines the standard rules, patterns, and best practices followed
 
 ## 3. Frontend Guidelines (React & Tailwind)
 - **State Management:** Use local state (`useState`, `useReducer`) for component-specific state. Use Context API for global state (e.g., Theme, Auth). Avoid over-engineering with complex state libraries unless strictly necessary.
-- **Tailwind CSS:** Use Tailwind utility classes for styling. Avoid writing custom CSS in `index.css` unless defining base theme variables, complex animations, or overriding third-party library styles.
+- **Tailwind CSS:** Use Tailwind utility classes for styling. Always use classes instead of inline styles (`style={{...}}`). Avoid writing custom CSS in `index.css` unless defining base theme variables, complex animations, or overriding third-party library styles.
 - **Responsive Design:** Follow a mobile-first approach. Ensure all UI components render perfectly on mobile, tablet, and desktop viewports.
 - **Accessibility (a11y):** Use semantic HTML. Include `aria-labels` for icon buttons, `alt` text for images, and ensure keyboard navigability.
 

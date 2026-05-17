@@ -89,10 +89,10 @@ const ProjectsManager = () => {
 
   return (
     <div className="space-y-6 animate-fade-in-up">
-      <div className="flex justify-between items-center bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+      <div className="flex justify-between items-center bg-t-bg-card p-6 rounded-2xl shadow-sm border border-t-border">
         <div>
-          <h2 className="text-3xl font-black text-slate-800 tracking-tight">Projects Management</h2>
-          <p className="text-sm font-medium text-slate-500 mt-1">Manage and organize your portfolio projects.</p>
+          <h2 className="text-3xl font-black text-t-heading tracking-tight">Projects Management</h2>
+          <p className="text-sm font-medium text-t-text mt-1">Manage and organize your portfolio projects.</p>
         </div>
         <button
           onClick={() => {
@@ -100,7 +100,7 @@ const ProjectsManager = () => {
             reset({ is_active: true })
             setShowForm(!showForm)
           }}
-          className="btn bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-700 hover:to-orange-600 text-white flex items-center gap-2 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all px-5 py-2.5 rounded-xl font-bold"
+          className="btn bg-t-accent hover:bg-t-accent-hover text-white flex items-center gap-2 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all px-5 py-2.5 rounded-xl font-bold"
         >
           <FaPlus /> Add Project
         </button>
@@ -108,8 +108,8 @@ const ProjectsManager = () => {
 
       {/* Form */}
       {showForm && (
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-xl font-bold mb-4">{editingId ? 'Edit' : 'Add New'} Project</h3>
+        <div className="bg-t-bg-card rounded-lg shadow p-6 border border-t-border">
+          <h3 className="text-xl font-bold mb-4 text-t-heading">{editingId ? 'Edit' : 'Add New'} Project</h3>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
@@ -117,7 +117,7 @@ const ProjectsManager = () => {
                 <input
                   type="text"
                   {...register('title', { required: 'Title is required' })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                  className="w-full px-4 py-2 border border-t-border rounded-lg bg-t-bg-card text-t-text focus:outline-none focus:border-t-accent"
                 />
                 {errors.title && <span className="text-red-600 text-sm">{errors.title.message}</span>}
               </div>
@@ -126,7 +126,7 @@ const ProjectsManager = () => {
                 <label className="block font-bold mb-2">Category</label>
                 <select
                   {...register('category', { required: 'Category is required' })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                  className="w-full px-4 py-2 border border-t-border rounded-lg bg-t-bg-card text-t-text focus:outline-none focus:border-t-accent"
                 >
                   <option value="">Select Category</option>
                   <option value="web-development">Web Development</option>
@@ -140,7 +140,7 @@ const ProjectsManager = () => {
                 <label className="block font-bold mb-2">Status</label>
                 <select
                   {...register('status', { required: 'Status is required' })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                  className="w-full px-4 py-2 border border-t-border rounded-lg bg-t-bg-card text-t-text focus:outline-none focus:border-t-accent"
                 >
                   <option value="">Select Status</option>
                   <option value="completed">Completed</option>
@@ -166,7 +166,7 @@ const ProjectsManager = () => {
                   type="file"
                   accept="image/*"
                   {...register('image')}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                  className="w-full px-4 py-2 border border-t-border rounded-lg bg-t-bg-card text-t-text focus:outline-none focus:border-t-accent"
                 />
               </div>
 
@@ -175,7 +175,7 @@ const ProjectsManager = () => {
                 <input
                   type="url"
                   {...register('website_link')}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                  className="w-full px-4 py-2 border border-t-border rounded-lg bg-t-bg-card text-t-text focus:outline-none focus:border-t-accent"
                   placeholder="https://example.com"
                 />
               </div>
@@ -184,20 +184,20 @@ const ProjectsManager = () => {
                 <input
                   type="checkbox"
                   {...register('is_active')}
-                  className="w-5 h-5 mr-2 text-orange-600 rounded focus:ring-orange-500"
+                  className="w-5 h-5 mr-2 text-t-accent rounded focus:ring-t-accent"
                 />
                 <label className="font-bold">Active Project</label>
               </div>
             </div>
 
             <div className="flex gap-4">
-              <button type="submit" className="btn bg-orange-600 hover:bg-orange-700 text-white">
+              <button type="submit" className="btn bg-t-accent hover:bg-t-accent-hover text-white">
                 {editingId ? 'Update' : 'Add'} Project
               </button>
               <button
                 type="button"
                 onClick={() => setShowForm(false)}
-                className="btn border-2 border-gray-300 hover:bg-gray-50"
+                className="btn border-2 border-t-border hover:bg-slate-50 text-t-text"
               >
                 Cancel
               </button>
@@ -207,24 +207,24 @@ const ProjectsManager = () => {
       )}
 
       {/* Table */}
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-x-auto">
+      <div className="bg-t-bg-card rounded-2xl shadow-sm border border-t-border overflow-x-auto">
         <table className="w-full min-w-[720px]">
-          <thead className="bg-slate-50/50 border-b border-slate-100">
+          <thead className="bg-slate-50/50 border-b border-t-border">
             <tr>
-              <th className="text-left py-4 px-6 text-[13px] font-bold text-slate-500 uppercase tracking-wider">Title</th>
-              <th className="text-left py-4 px-6 text-[13px] font-bold text-slate-500 uppercase tracking-wider">Slug</th>
-              <th className="text-left py-4 px-6 text-[13px] font-bold text-slate-500 uppercase tracking-wider">Category</th>
-              <th className="text-left py-4 px-6 text-[13px] font-bold text-slate-500 uppercase tracking-wider">Status</th>
-              <th className="text-left py-4 px-6 text-[13px] font-bold text-slate-500 uppercase tracking-wider">Active</th>
-              <th className="text-left py-4 px-6 text-[13px] font-bold text-slate-500 uppercase tracking-wider">Actions</th>
+              <th className="text-left py-4 px-6 text-[13px] font-bold text-t-muted uppercase tracking-wider">Title</th>
+              <th className="text-left py-4 px-6 text-[13px] font-bold text-t-muted uppercase tracking-wider">Slug</th>
+              <th className="text-left py-4 px-6 text-[13px] font-bold text-t-muted uppercase tracking-wider">Category</th>
+              <th className="text-left py-4 px-6 text-[13px] font-bold text-t-muted uppercase tracking-wider">Status</th>
+              <th className="text-left py-4 px-6 text-[13px] font-bold text-t-muted uppercase tracking-wider">Active</th>
+              <th className="text-left py-4 px-6 text-[13px] font-bold text-t-muted uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-t-border">
             {projects.map((project) => (
               <tr key={project.id} className="hover:bg-slate-50 transition-colors group">
-                <td className="py-4 px-6 text-[15px] font-bold text-slate-800">{project.title}</td>
-                <td className="py-4 px-6 font-mono text-[13px] text-slate-500">{project.slug}</td>
-                <td className="py-4 px-6 text-[14px] font-medium text-slate-600">{project.category}</td>
+                <td className="py-4 px-6 text-[15px] font-bold text-t-heading">{project.title}</td>
+                <td className="py-4 px-6 font-mono text-[13px] text-t-text">{project.slug}</td>
+                <td className="py-4 px-6 text-[14px] font-medium text-t-text">{project.category}</td>
                 <td className="py-4 px-6">
                   <span className={`inline-flex px-3 py-1 rounded-full text-[12px] font-bold ${
                     project.status === 'completed' ? 'bg-emerald-100 text-emerald-700' :
@@ -238,7 +238,7 @@ const ProjectsManager = () => {
                   <div className="flex items-center gap-3">
                     <button
                       onClick={() => handleToggleActive(project)}
-                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0971C8] ${
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-t-primary ${
                         project.is_active ? 'bg-emerald-500' : 'bg-slate-300'
                       }`}
                       title={project.is_active ? 'Deactivate Project' : 'Activate Project'}
@@ -259,7 +259,7 @@ const ProjectsManager = () => {
                   <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button
                       onClick={() => handleEdit(project)}
-                      className="p-2 text-[#0971C8] bg-blue-50 rounded-lg hover:bg-[#0971C8] hover:text-white transition-colors"
+                      className="p-2 text-t-primary bg-blue-50 rounded-lg hover:bg-t-primary hover:text-white transition-colors"
                       title="Edit"
                     >
                       <FaEdit />

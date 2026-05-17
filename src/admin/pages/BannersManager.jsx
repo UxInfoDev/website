@@ -125,10 +125,10 @@ const BannersManager = () => {
 
   return (
     <div className="space-y-6 animate-fade-in-up">
-      <div className="flex justify-between items-center bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+      <div className="flex justify-between items-center bg-t-bg-card p-6 rounded-2xl shadow-sm border border-t-border">
         <div>
-          <h2 className="text-3xl font-black text-slate-800 tracking-tight">Home Banners</h2>
-          <p className="text-sm font-medium text-slate-500 mt-1">Manage carousel banners for the homepage.</p>
+          <h2 className="text-3xl font-black text-t-heading tracking-tight">Home Banners</h2>
+          <p className="text-sm font-medium text-t-text mt-1">Manage carousel banners for the homepage.</p>
         </div>
         <button
           onClick={() => {
@@ -140,15 +140,15 @@ const BannersManager = () => {
             reset({ is_active: true })
             setShowForm(!showForm)
           }}
-          className="btn bg-gradient-to-r from-[#0971C8] to-blue-500 hover:from-[#0A5A9E] hover:to-blue-600 text-white flex items-center gap-2 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all px-5 py-2.5 rounded-xl font-bold"
+          className="btn bg-t-accent hover:bg-t-accent-hover text-white flex items-center gap-2 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all px-5 py-2.5 rounded-xl font-bold"
         >
           <FaPlus /> Add Banner
         </button>
       </div>
 
       {showForm && (
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-xl font-bold mb-4">{editingId ? 'Edit' : 'Add New'} Banner</h3>
+        <div className="bg-t-bg-card rounded-lg shadow p-6 border border-t-border">
+          <h3 className="text-xl font-bold mb-4 text-t-heading">{editingId ? 'Edit' : 'Add New'} Banner</h3>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="col-span-2">
@@ -156,7 +156,7 @@ const BannersManager = () => {
                 <input
                   type="text"
                   {...register('title', { required: 'Title is required' })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                  className="w-full px-4 py-2 border border-t-border rounded-lg bg-t-bg-card text-t-text focus:outline-none focus:border-t-accent"
                 />
                 {errors.title && <span className="text-red-600 text-sm">{errors.title.message}</span>}
               </div>
@@ -167,7 +167,7 @@ const BannersManager = () => {
                   type="text"
                   {...register('subtitle')}
                   placeholder="e.g. Trusted Ontario Home Comfort Experts"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                  className="w-full px-4 py-2 border border-t-border rounded-lg bg-t-bg-card text-t-text focus:outline-none focus:border-t-accent"
                 />
               </div>
 
@@ -185,7 +185,7 @@ const BannersManager = () => {
                 <input
                   type="text"
                   {...register('cta_text')}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                  className="w-full px-4 py-2 border border-t-border rounded-lg bg-t-bg-card text-t-text focus:outline-none focus:border-t-accent"
                 />
               </div>
 
@@ -194,7 +194,7 @@ const BannersManager = () => {
                 <input
                   type="text"
                   {...register('cta_link')}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                  className="w-full px-4 py-2 border border-t-border rounded-lg bg-t-bg-card text-t-text focus:outline-none focus:border-t-accent"
                 />
               </div>
 
@@ -203,7 +203,7 @@ const BannersManager = () => {
                 <input
                   type="text"
                   {...register('cta_alt')}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                  className="w-full px-4 py-2 border border-t-border rounded-lg bg-t-bg-card text-t-text focus:outline-none focus:border-t-accent"
                 />
               </div>
 
@@ -212,15 +212,15 @@ const BannersManager = () => {
                 <textarea
                   {...register('background_pattern')}
                   placeholder="e.g. linear-gradient(145deg, #fffae6 0%, #ffffff 100%)"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg h-20"
+                  className="w-full px-4 py-2 border border-t-border rounded-lg h-20 bg-t-bg-card text-t-text focus:outline-none focus:border-t-accent"
                 />
-                <p className="text-xs text-gray-500 mt-1">Leave empty to use default rotating gradients.</p>
+                <p className="text-xs text-t-muted mt-1">Leave empty to use default rotating gradients.</p>
               </div>
 
               <div>
                 <label className="block font-bold mb-2">Background Image</label>
                 {(imagePreview || currentImage) && (
-                  <div className="mb-3 border rounded-lg p-2 bg-gray-50 flex items-center justify-center h-32 overflow-hidden">
+                  <div className="mb-3 border border-t-border rounded-lg p-2 bg-slate-50 flex items-center justify-center h-32 overflow-hidden">
                     <img 
                       src={imagePreview || currentImage} 
                       alt="Banner Preview" 
@@ -238,7 +238,7 @@ const BannersManager = () => {
                       setImagePreview(URL.createObjectURL(file))
                     }
                   }}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                  className="w-full px-4 py-2 border border-t-border rounded-lg bg-t-bg-card text-t-text focus:outline-none focus:border-t-accent"
                 />
               </div>
 
@@ -246,20 +246,20 @@ const BannersManager = () => {
                 <input
                   type="checkbox"
                   {...register('is_active')}
-                  className="w-5 h-5 mr-2 text-orange-600 rounded focus:ring-orange-500"
+                  className="w-5 h-5 mr-2 text-t-accent rounded focus:ring-t-accent"
                 />
                 <label className="font-bold">Active Banner</label>
               </div>
             </div>
 
             <div className="flex gap-4 mt-4">
-              <button type="submit" className="btn bg-orange-600 hover:bg-orange-700 text-white">
+              <button type="submit" className="btn bg-t-accent hover:bg-t-accent-hover text-white">
                 {editingId ? 'Update' : 'Add'} Banner
               </button>
               <button
                 type="button"
                 onClick={() => setShowForm(false)}
-                className="btn border-2 border-gray-300 hover:bg-gray-50"
+                className="btn border-2 border-t-border hover:bg-slate-50 text-t-text"
               >
                 Cancel
               </button>
@@ -268,29 +268,29 @@ const BannersManager = () => {
         </div>
       )}
 
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-x-auto">
+      <div className="bg-t-bg-card rounded-2xl shadow-sm border border-t-border overflow-x-auto">
         <table className="w-full min-w-[800px]">
-          <thead className="bg-slate-50/50 border-b border-slate-100">
+          <thead className="bg-slate-50/50 border-b border-t-border">
             <tr>
-              <th className="text-left py-4 px-6 text-[13px] font-bold text-slate-500 uppercase tracking-wider">Title</th>
-              <th className="text-left py-4 px-6 text-[13px] font-bold text-slate-500 uppercase tracking-wider">Subtitle</th>
-              <th className="text-left py-4 px-6 text-[13px] font-bold text-slate-500 uppercase tracking-wider">CTA Link</th>
-              <th className="text-left py-4 px-6 text-[13px] font-bold text-slate-500 uppercase tracking-wider">Active</th>
-              <th className="text-left py-4 px-6 text-[13px] font-bold text-slate-500 uppercase tracking-wider">Order</th>
-              <th className="text-left py-4 px-6 text-[13px] font-bold text-slate-500 uppercase tracking-wider">Actions</th>
+              <th className="text-left py-4 px-6 text-[13px] font-bold text-t-muted uppercase tracking-wider">Title</th>
+              <th className="text-left py-4 px-6 text-[13px] font-bold text-t-muted uppercase tracking-wider">Subtitle</th>
+              <th className="text-left py-4 px-6 text-[13px] font-bold text-t-muted uppercase tracking-wider">CTA Link</th>
+              <th className="text-left py-4 px-6 text-[13px] font-bold text-t-muted uppercase tracking-wider">Active</th>
+              <th className="text-left py-4 px-6 text-[13px] font-bold text-t-muted uppercase tracking-wider">Order</th>
+              <th className="text-left py-4 px-6 text-[13px] font-bold text-t-muted uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-t-border">
             {banners.map((banner, index) => (
               <tr key={banner.id} className="hover:bg-slate-50 transition-colors group">
-                <td className="py-4 px-6 text-[15px] font-bold text-slate-800">{banner.title}</td>
-                <td className="py-4 px-6 text-[13px] text-slate-500">{banner.subtitle || '—'}</td>
-                <td className="py-4 px-6 text-[13px] text-[#0971C8] font-medium">{banner.cta_link}</td>
+                <td className="py-4 px-6 text-[15px] font-bold text-t-heading">{banner.title}</td>
+                <td className="py-4 px-6 text-[13px] text-t-text">{banner.subtitle || '—'}</td>
+                <td className="py-4 px-6 text-[13px] text-t-primary font-medium">{banner.cta_link}</td>
                 <td className="py-4 px-6">
                   <div className="flex items-center gap-3">
                     <button
                       onClick={() => handleToggleActive(banner)}
-                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0971C8] ${
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-t-primary ${
                         banner.is_active ? 'bg-emerald-500' : 'bg-slate-300'
                       }`}
                       title={banner.is_active ? 'Deactivate Banner' : 'Activate Banner'}
@@ -312,14 +312,14 @@ const BannersManager = () => {
                     <button
                       onClick={() => handleMove(index, -1)}
                       disabled={index === 0}
-                      className={`p-2 rounded-lg transition-colors ${index === 0 ? 'text-slate-300 bg-slate-50' : 'text-slate-600 hover:text-[#0971C8] hover:bg-blue-50'}`}
+                      className={`p-2 rounded-lg transition-colors ${index === 0 ? 'text-slate-300 bg-slate-50' : 'text-slate-600 hover:text-t-primary hover:bg-blue-50'}`}
                     >
                       <FaArrowUp />
                     </button>
                     <button
                       onClick={() => handleMove(index, 1)}
                       disabled={index === banners.length - 1}
-                      className={`p-2 rounded-lg transition-colors ${index === banners.length - 1 ? 'text-slate-300 bg-slate-50' : 'text-slate-600 hover:text-[#0971C8] hover:bg-blue-50'}`}
+                      className={`p-2 rounded-lg transition-colors ${index === banners.length - 1 ? 'text-slate-300 bg-slate-50' : 'text-slate-600 hover:text-t-primary hover:bg-blue-50'}`}
                     >
                       <FaArrowDown />
                     </button>
@@ -329,7 +329,7 @@ const BannersManager = () => {
                   <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button
                       onClick={() => handleEdit(banner)}
-                      className="p-2 text-[#0971C8] bg-blue-50 rounded-lg hover:bg-[#0971C8] hover:text-white transition-colors"
+                      className="p-2 text-t-primary bg-blue-50 rounded-lg hover:bg-t-primary hover:text-white transition-colors"
                       title="Edit"
                     >
                       <FaEdit />
