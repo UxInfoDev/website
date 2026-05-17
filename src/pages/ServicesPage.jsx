@@ -37,7 +37,7 @@ const ServicesPage = () => {
   }, [])
 
   return (
-    <div className="bg-gray-50 min-h-screen">
+    <div className="min-h-screen" style={{ backgroundColor: 'var(--t-bg-alt)' }}>
       {/* Page Header Banner */}
       <div className="relative text-white py-32 px-4 mt-[76px] lg:mt-[84px] overflow-hidden">
         {/* Background Image */}
@@ -46,8 +46,8 @@ const ServicesPage = () => {
           style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2015&auto=format&fit=crop")' }}
         >
           {/* Overlays for premium contrast */}
-          <div className="absolute inset-0 bg-[#0971C8]/80 mix-blend-multiply"></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0971C8] to-transparent opacity-90"></div>
+          <div className="absolute inset-0 mix-blend-multiply" style={{ backgroundColor: 'var(--t-primary)', opacity: 0.8 }}></div>
+          <div className="absolute inset-0 bg-gradient-to-t to-transparent opacity-90" style={{ background: `linear-gradient(to top, var(--t-primary), transparent)` }}></div>
         </div>
 
         <div className="container mx-auto text-center relative z-10 animate-fade-in-up">
@@ -87,11 +87,12 @@ const ServicesPage = () => {
                     )}
                   </div>
                   <div className="p-8">
-                    <h3 className="text-2xl font-extrabold text-[#0971C8] tracking-tight mb-3">{service.title}</h3>
+                    <h3 className="text-2xl font-extrabold tracking-tight mb-3" style={{ color: 'var(--t-heading)' }}>{service.title}</h3>
                     <p className="text-gray-600 mb-6 leading-relaxed line-clamp-3">{getShortDescription(service)}</p>
                     <Link
                       to={`/service/${service.slug || service.id}`}
-                      className="inline-flex items-center gap-2 text-orange-600 font-bold hover:text-orange-700 transition-all uppercase tracking-widest text-[11px] group"
+                      className="inline-flex items-center gap-2 font-bold transition-all uppercase tracking-widest text-[11px] group"
+                    style={{ color: 'var(--t-accent)' }}
                     >
                       Learn More
                       <span className="w-7 h-7 rounded-full border-2 border-orange-200 flex items-center justify-center group-hover:bg-orange-600 group-hover:border-orange-600 group-hover:text-white transition-all shadow-sm group-hover:shadow-md">

@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { FaBars, FaTimes, FaSearch, FaChevronDown } from 'react-icons/fa'
 import axios from 'axios'
+import { useTheme } from '../templates'
 
 const Header = () => {
+  const { variant } = useTheme()
+  const headerVariant = variant('header') || 'standard'
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   // Pre-load from sessionStorage to avoid flash-of-fallback on every mount
@@ -119,14 +122,28 @@ const Header = () => {
     return () => window.removeEventListener('scroll', onScroll)
   }, [location.pathname])
 
+  const accentColor = 'var(--t-accent)'
+
   const desktopNavClass = (tab) =>
-    `font-medium border-b-2 py-1 transition ${activeTab === tab ? 'text-orange-600 border-orange-600' : 'border-transparent hover:text-orange-600'}`
+    `font-medium border-b-2 py-1 transition ${activeTab === tab ? 'border-current' : 'border-transparent'}` 
 
   const mobileNavClass = (tab) =>
-    `text-left py-2 transition ${activeTab === tab ? 'text-orange-600 font-semibold' : 'hover:text-orange-600'}`
+    `text-left py-2 transition ${activeTab === tab ? 'font-semibold' : ''}`
+
+  // Header container styles based on variant
+  const headerStyles = {
+    standard:    { backgroundColor: 'var(--t-header-bg)', borderBottom: '1px solid var(--t-border)', boxShadow: '0 1px 3px rgba(0,0,0,0.08)' },
+    transparent: { backgroundColor: 'var(--t-header-bg)', backdropFilter: 'blur(12px)', borderBottom: '1px solid rgba(255,255,255,0.1)' },
+    minimal:     { backgroundColor: 'var(--t-header-bg)', borderBottom: '1px solid var(--t-border)' },
+    colored:     { backgroundColor: 'var(--t-header-bg)', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' },
+    'two-row':   { backgroundColor: 'var(--t-header-bg)', borderBottom: '1px solid var(--t-border)' },
+  }
+
+  const navTextColor = 'var(--t-header-text)'
+  const activeNavColor = 'var(--t-accent)'
 
   return (
-    <header className="sticky top-0 z-50 bg-white shadow">
+    <header className="sticky top-0 z-50" style={{ ...headerStyles[headerVariant] || headerStyles.standard, color: navTextColor }}>
       <div className="container">
         <div className="flex justify-between items-center py-4">
           {/* Logo */}
@@ -196,7 +213,8 @@ const Header = () => {
                           setActiveTab('services')
                           setIsServicesDropdownOpen(false)
                         }}
-                        className="block px-4 py-2 text-sm font-bold text-[#0971C8]  hover:bg-gray-50 border-b border-gray-50"
+                        className="block px-4 py-2 text-sm font-bold hover:bg-gray-50 border-b border-gray-50"
+                        style={{ color: 'var(--t-heading)' }}
                       >
                         View All Services
                       </Link>
@@ -237,7 +255,8 @@ const Header = () => {
                   window.dispatchEvent(new Event('openQuoteModal'))
                 }
               }} 
-              className="px-6 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-lg transition-all duration-300 text-[11px] tracking-widest uppercase shadow hover:shadow-md hover:-translate-y-0.5"
+              className="px-6 py-2.5 text-white font-bold rounded-lg transition-all duration-300 text-[11px] tracking-widest uppercase shadow hover:shadow-md hover:-translate-y-0.5"
+              style={{ backgroundColor: 'var(--t-accent)' }}
             >
               Get a Quote
             </button>
@@ -271,7 +290,7 @@ const Header = () => {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:border-orange-600"
               />
-              <button type="submit" className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700">
+              <button type="submit" className="px-4 py-2 text-white rounded-lg" style={{ backgroundColor: 'var(--t-accent)' }}>
                 <FaSearch />
               </button>
             </form>

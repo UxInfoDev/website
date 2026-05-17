@@ -36,12 +36,12 @@ const ServicesSection = () => {
   }, [])
 
   return (
-    <section id="services" className="py-16">
+    <section id="services" className="py-16" style={{ backgroundColor: 'var(--t-bg)' }}>
       <div className="container">
         {/* Header */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-extrabold text-[#0971C8] tracking-tight mb-4">Our Services</h2>
-          <p className="text-gray-700 text-lg max-w-2xl mx-auto leading-relaxed">
+          <h2 className="text-4xl font-extrabold tracking-tight mb-4" style={{ color: 'var(--t-heading)' }}>Our Services</h2>
+          <p className="text-lg max-w-2xl mx-auto leading-relaxed" style={{ color: 'var(--t-text)' }}>
             We provide simple, powerful digital services to help your business succeed. 
             From design to development, we handle everything for you.
           </p>
@@ -54,9 +54,14 @@ const ServicesSection = () => {
             return (
               <div
                 key={service.id}
-                className="border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition bg-white"
+                className="overflow-hidden hover:shadow-lg transition"
+                style={{
+                  backgroundColor: 'var(--t-bg-card)',
+                  border: '1px solid var(--t-border)',
+                  borderRadius: 'var(--t-radius-lg)',
+                }}
               >
-                <div className="h-52 bg-gray-100">
+                <div className="h-52" style={{ backgroundColor: 'var(--t-bg-alt)' }}>
                   {imageUrl ? (
                     <img
                       src={imageUrl}
@@ -65,20 +70,24 @@ const ServicesSection = () => {
                       loading="lazy"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-sm text-gray-500">
+                    <div className="w-full h-full flex items-center justify-center text-sm" style={{ color: 'var(--t-text-muted)' }}>
                       No image available
                     </div>
                   )}
                 </div>
                 <div className="p-8">
-                  <h3 className="text-2xl font-extrabold text-[#0971C8] tracking-tight mb-3">{service.title}</h3>
-                  <p className="text-gray-700 mb-6 leading-relaxed">{getShortDescription(service)}</p>
+                  <h3 className="text-2xl font-extrabold tracking-tight mb-3" style={{ color: 'var(--t-heading)' }}>{service.title}</h3>
+                  <p className="mb-6 leading-relaxed" style={{ color: 'var(--t-text)' }}>{getShortDescription(service)}</p>
                   <Link
                     to={`/service/${service.slug || service.id}`}
-                    className="inline-flex items-center gap-2 text-orange-600 font-bold hover:text-orange-700 transition-all uppercase tracking-widest text-[11px] group"
+                    className="inline-flex items-center gap-2 font-bold transition-all uppercase tracking-widest text-[11px] group"
+                    style={{ color: 'var(--t-accent)' }}
                   >
                     Learn More
-                    <span className="w-7 h-7 rounded-full border-2 border-orange-200 flex items-center justify-center group-hover:bg-orange-600 group-hover:border-orange-600 group-hover:text-white transition-all shadow-sm group-hover:shadow-md">
+                    <span 
+                      className="w-7 h-7 rounded-full border-2 flex items-center justify-center group-hover:text-white transition-all shadow-sm group-hover:shadow-md"
+                      style={{ borderColor: 'var(--t-accent)' }}
+                    >
                       <FaArrowRight size={10} />
                     </span>
                   </Link>

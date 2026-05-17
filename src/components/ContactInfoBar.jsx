@@ -43,31 +43,35 @@ const ContactInfoBar = () => {
   ]
 
   return (
-    <div className="bg-white border-t border-gray-100 shadow-md">
+    <div className="shadow-md" style={{ backgroundColor: 'var(--t-bg-card)', borderTop: '1px solid var(--t-border)' }}>
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-gray-100">
+        <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x" style={{ borderColor: 'var(--t-border)' }}>
           {items.map(({ icon, label, value, href }) => (
             <div
               key={label}
               className="flex items-center gap-4 py-4 px-6 group"
             >
               {/* Icon */}
-              <div className="w-10 h-10 flex-shrink-0 bg-orange-50 text-orange-600 rounded-full flex items-center justify-center text-base group-hover:bg-orange-100 transition-colors">
+              <div 
+                className="w-10 h-10 flex-shrink-0 rounded-full flex items-center justify-center text-base transition-colors"
+                style={{ backgroundColor: 'color-mix(in srgb, var(--t-accent) 10%, transparent)', color: 'var(--t-accent)' }}
+              >
                 {icon}
               </div>
 
               {/* Text */}
               <div className="min-w-0">
-                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-0.5">{label}</p>
+                <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: 'var(--t-text-muted)' }}>{label}</p>
                 {href ? (
                   <a
                     href={href}
-                    className="text-sm font-bold text-gray-800 hover:text-orange-600 transition-colors truncate block"
+                    className="text-sm font-bold transition-colors truncate block"
+                    style={{ color: 'var(--t-text)' }}
                   >
                     {value}
                   </a>
                 ) : (
-                  <p className="text-sm font-bold text-gray-800 truncate">{value}</p>
+                  <p className="text-sm font-bold truncate" style={{ color: 'var(--t-text)' }}>{value}</p>
                 )}
               </div>
             </div>

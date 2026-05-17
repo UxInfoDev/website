@@ -141,8 +141,8 @@ const InquiriesManager = () => {
         <div className="min-w-0">
           <div className="bg-white rounded-xl shadow-sm overflow-x-auto border border-gray-100">
 
-            {/* Table header — sortable */}
-            <div className="grid grid-cols-[1.3fr_1.6fr_110px_90px] gap-2 px-3 py-2 bg-gray-50 border-b min-w-[640px]">
+            {/* Table header — sortable (hidden on mobile) */}
+            <div className="hidden md:grid grid-cols-[1.3fr_1.6fr_110px_90px] gap-2 px-3 py-2 bg-gray-50 border-b">
               {[
                 { key: 'name',       label: 'Name',   align: 'left'   },
                 { key: 'email',      label: 'Email',  align: 'left' },
@@ -179,29 +179,45 @@ const InquiriesManager = () => {
                       setReply('');
                       setTimeout(() => document.getElementById('inquiry-detail')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
                     }}
-                    className={`grid grid-cols-[1.3fr_1.6fr_110px_90px] gap-2 px-3 py-2.5 border-b cursor-pointer transition-colors items-center min-w-[640px]
+                    className={`flex flex-col md:grid md:grid-cols-[1.3fr_1.6fr_110px_90px] gap-1.5 md:gap-2 px-4 md:px-3 py-3 md:py-2.5 border-b cursor-pointer transition-colors md:items-center
                       ${isSelected
                         ? 'bg-orange-50 border-l-[3px] border-l-orange-500'
                         : 'hover:bg-gray-50 border-l-[3px] border-l-transparent'
                       }`}
                   >
-                    {/* Name only */}
-                    <div className="min-w-0">
+                    {/* Mobile View: Top Row (Name & Status) */}
+                    <div className="flex justify-between items-center md:hidden w-full">
+                      <p className={`text-sm font-semibold truncate ${inq.status === 'new' ? 'text-gray-900' : 'text-gray-600'}`}>
+                        {inq.name}
+                      </p>
+                      <StatusBadge status={inq.status} />
+                    </div>
+
+                    {/* Mobile View: Bottom Row (Email & Date) */}
+                    <div className="flex justify-between items-center md:hidden w-full">
+                      <p className="text-xs text-gray-500 truncate mr-2">{inq.email}</p>
+                      <p className="text-[10px] text-gray-400 whitespace-nowrap font-medium">
+                        {new Date(inq.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}
+                      </p>
+                    </div>
+
+                    {/* Desktop View: Name */}
+                    <div className="hidden md:block min-w-0">
                       <p className={`text-sm font-semibold truncate ${inq.status === 'new' ? 'text-gray-900' : 'text-gray-600'}`}>
                         {inq.name}
                       </p>
                     </div>
 
-                    {/* Email */}
-                    <p className="text-sm text-gray-600 truncate">{inq.email}</p>
+                    {/* Desktop View: Email */}
+                    <p className="hidden md:block text-sm text-gray-600 truncate">{inq.email}</p>
 
-                    {/* Status — centered */}
-                    <div className="flex justify-center">
+                    {/* Desktop View: Status */}
+                    <div className="hidden md:flex justify-center">
                       <StatusBadge status={inq.status} />
                     </div>
 
-                    {/* Date — centered */}
-                    <p className="text-xs text-gray-400 whitespace-nowrap text-center">
+                    {/* Desktop View: Date */}
+                    <p className="hidden md:block text-xs text-gray-400 whitespace-nowrap text-center">
                       {new Date(inq.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}
                     </p>
                   </div>
@@ -269,22 +285,26 @@ const InquiriesManager = () => {
             />
             
             <div id="inquiry-detail" className="fixed inset-x-0 bottom-0 z-50 xl:relative xl:inset-auto xl:z-0 xl:min-w-0">
-              <div className="bg-white w-full rounded-t-3xl xl:rounded-xl shadow-[0_-10px_40px_rgba(0,0,0,0.1)] xl:shadow-sm border-t xl:border border-gray-100 overflow-hidden flex flex-col max-h-[90vh] xl:max-h-none animate-fade-in-up xl:animate-none">
+              <div className="bg-white w-full rounded-t-3xl xl:rounded-xl shadow-[0_-10px_40px_rgba(0,0,0,0.15)] xl:shadow-sm border-t xl:border border-gray-100 overflow-hidden flex flex-col max-h-[85vh] xl:max-h-none animate-fade-in-up xl:animate-none">
+                
+                {/* Mobile drag handle indicator */}
+                <div className="w-full flex justify-center py-2 xl:hidden bg-gradient-to-r from-orange-50 to-white">
+                  <div className="w-12 h-1.5 bg-gray-300 rounded-full"></div>
+                </div>
 
-              {/* Detail header — title + badge on same line */}
-              <div className="flex-shrink-0 px-4 py-2 border-b bg-gradient-to-r from-orange-50 to-white">
+              <div className="flex-shrink-0 px-4 py-2.5 xl:py-2 border-b bg-gradient-to-r from-orange-50 to-white">
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-3 min-w-0">
-                    <h3 className="font-semibold text-lg text-gray-800 leading-none truncate">
+                    <h3 className="font-semibold text-lg text-gray-800 leading-tight truncate">
                       {selectedInquiry.subject || '(no subject)'}
                     </h3>
                     <div className="flex-shrink-0 flex items-center pt-0.5"><StatusBadge status={selectedInquiry.status} /></div>
                   </div>
                   <button
                     onClick={() => setSelectedInquiry(null)}
-                    className="text-gray-400 hover:text-gray-600 flex-shrink-0"
+                    className="text-gray-400 hover:text-gray-700 flex-shrink-0 p-1.5 rounded-full hover:bg-gray-100 transition-colors"
                   >
-                    <FaTimes size={13} />
+                    <FaTimes size={15} />
                   </button>
                 </div>
               </div>

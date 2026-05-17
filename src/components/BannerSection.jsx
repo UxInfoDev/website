@@ -4,9 +4,12 @@ import axios from 'axios'
 import ContactInfoBar from './ContactInfoBar'
 import ConfettiOverlay from './ConfettiOverlay'
 import { resolveImageUrl } from '../utils/media'
+import { useTheme } from '../templates'
 import '../styles/bannerParticles.css'
 
 const BannerSection = () => {
+  const { variant } = useTheme()
+  const bannerVariant = variant('banner') || 'split'
   const [currentSlide, setCurrentSlide] = useState(0)
   const [slides, setSlides]             = useState([])
   const [loading, setLoading]           = useState(true)
@@ -89,7 +92,7 @@ const BannerSection = () => {
   if (loading && slides.length === 0) {
     return (
       <div className="min-h-[40vh] lg:min-h-[50vh] flex items-center justify-center bg-gray-50">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0971C8]"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2" style={{ borderColor: 'var(--t-primary)' }}></div>
       </div>
     )
   }
@@ -151,15 +154,15 @@ const BannerSection = () => {
                 {/* ── Text Content ── */}
                 <div className="w-full lg:w-1/2 flex flex-col items-start text-left font-sans z-10 p-4 sm:p-6">
                   {slide.subtitle && (
-                    <div className="flex items-center gap-3 text-[#00a0dc] font-black tracking-[0.3em] text-[10px] sm:text-[12px] mb-3 uppercase drop-shadow-sm">
-                      <span className="w-8 h-0.5 bg-[#00a0dc] inline-block rounded-full"></span>
+                    <div className="flex items-center gap-3 font-black tracking-[0.3em] text-[10px] sm:text-[12px] mb-3 uppercase drop-shadow-sm" style={{ color: 'var(--t-primary)' }}>
+                      <span className="w-8 h-0.5 inline-block rounded-full" style={{ backgroundColor: 'var(--t-primary)' }}></span>
                       {slide.subtitle}
                     </div>
                   )}
 
                   <h1
-                    className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black text-[#0971C8] leading-[1.1] tracking-tight mb-2 animate-fade-in-up"
-                    style={{ animationDelay: '100ms', textShadow: '0 2px 15px rgba(0,0,0,0.08)' }}
+                    className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black leading-[1.1] tracking-tight mb-2 animate-fade-in-up"
+                    style={{ animationDelay: '100ms', textShadow: '0 2px 15px rgba(0,0,0,0.08)', color: 'var(--t-heading)' }}
                   >
                     {slide.title}
                   </h1>
@@ -177,7 +180,8 @@ const BannerSection = () => {
                       {slide.cta_text && (
                         <button
                           onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event('openQuoteModal')) }}
-                          className="px-8 py-4 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-lg transition-all duration-300 text-[12px] tracking-widest uppercase shadow-md hover:shadow-xl hover:-translate-y-1 w-full sm:w-auto text-center"
+                          className="px-8 py-4 text-white font-bold rounded-lg transition-all duration-300 text-[12px] tracking-widest uppercase shadow-md hover:shadow-xl hover:-translate-y-1 w-full sm:w-auto text-center"
+                          style={{ backgroundColor: 'var(--t-accent)' }}
                         >
                           {slide.cta_text}
                         </button>
@@ -185,7 +189,8 @@ const BannerSection = () => {
                       {slide.cta_alt && (
                         <a
                           href={slide.cta_link || '#contact'}
-                          className="px-8 py-4 border-2 border-[#0971C8] text-[#0971C8] hover:bg-[#0971C8] hover:text-white font-bold rounded-lg transition-all duration-300 text-[12px] tracking-widest uppercase shadow-sm hover:shadow-xl hover:-translate-y-1 w-full sm:w-auto text-center flex items-center justify-center bg-white"
+                          className="px-8 py-4 border-2 font-bold rounded-lg transition-all duration-300 text-[12px] tracking-widest uppercase shadow-sm hover:shadow-xl hover:-translate-y-1 w-full sm:w-auto text-center flex items-center justify-center"
+                          style={{ borderColor: 'var(--t-primary)', color: 'var(--t-primary)', backgroundColor: 'var(--t-bg-card)' }}
                         >
                           {slide.cta_alt}
                         </a>
@@ -247,9 +252,10 @@ const BannerSection = () => {
                 aria-label={`Go to slide ${index + 1}`}
                 className={`rounded-full cursor-pointer transition-all duration-300 shadow-sm ${
                   index === currentSlide
-                    ? 'bg-[#0971C8] w-3 h-3 scale-125'
+                    ? 'w-3 h-3 scale-125'
                     : 'bg-gray-300 hover:bg-gray-400 w-3 h-3'
                 }`}
+                style={index === currentSlide ? { backgroundColor: 'var(--t-primary)' } : {}}
               />
             ))}
           </div>

@@ -121,3 +121,6 @@ CREATE TABLE IF NOT EXISTS media_library (
 -- Indexes for fast filtering
 CREATE INDEX IF NOT EXISTS idx_media_folder ON media_library(folder);
 CREATE INDEX IF NOT EXISTS idx_media_created ON media_library(created_at DESC);
+
+-- Template system: store the active template ID
+ALTER TABLE settings ADD COLUMN IF NOT EXISTS active_template VARCHAR(50) DEFAULT 'default';

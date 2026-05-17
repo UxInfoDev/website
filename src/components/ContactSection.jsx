@@ -24,12 +24,12 @@ const ContactSection = () => {
   }, [])
 
   return (
-    <section id="contact" className="py-8 bg-gray-50">
+    <section id="contact" className="py-8" style={{ backgroundColor: 'var(--t-bg-alt)' }}>
       <div className="container mx-auto px-4 max-w-6xl">
         {/* Header */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-extrabold mb-4 text-[#0971C8]  tracking-tight">Get In Touch</h2>
-          <p className="text-gray-700 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
+          <h2 className="text-4xl md:text-5xl font-extrabold mb-4 tracking-tight" style={{ color: 'var(--t-heading)' }}>Get In Touch</h2>
+          <p className="text-lg md:text-xl max-w-2xl mx-auto leading-relaxed" style={{ color: 'var(--t-text)' }}>
             Have a project in mind? Let's talk about how we can help your business grow.
           </p>
         </div>
@@ -37,34 +37,34 @@ const ContactSection = () => {
         {/* Contact Info Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
           {/* Address */}
-          <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-            <div className="w-16 h-16 bg-orange-50 text-orange-600 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl">
+          <div className="p-8 shadow-sm hover:shadow-md transition-shadow" style={{ backgroundColor: 'var(--t-bg-card)', border: '1px solid var(--t-border)', borderRadius: 'var(--t-radius-lg)' }}>
+            <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl" style={{ backgroundColor: 'color-mix(in srgb, var(--t-accent) 10%, transparent)', color: 'var(--t-accent)' }}>
               <FaMapMarkerAlt />
             </div>
-            <h3 className="text-2xl font-extrabold mb-4 text-[#0971C8]  tracking-tight">Address</h3>
-            <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+            <h3 className="text-2xl font-extrabold mb-4 tracking-tight" style={{ color: 'var(--t-heading)' }}>Address</h3>
+            <p className="leading-relaxed whitespace-pre-line" style={{ color: 'var(--t-text)' }}>
               {settings.address}
             </p>
           </div>
 
           {/* Phone */}
-          <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-            <div className="w-16 h-16 bg-orange-50 text-orange-600 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl">
+          <div className="p-8 shadow-sm hover:shadow-md transition-shadow" style={{ backgroundColor: 'var(--t-bg-card)', border: '1px solid var(--t-border)', borderRadius: 'var(--t-radius-lg)' }}>
+            <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl" style={{ backgroundColor: 'color-mix(in srgb, var(--t-accent) 10%, transparent)', color: 'var(--t-accent)' }}>
               <FaPhoneAlt />
             </div>
-            <h3 className="text-2xl font-extrabold mb-4 text-[#0971C8]  tracking-tight">Phone</h3>
-            <a href={`tel:${settings.phone}`} className="text-orange-600 font-bold text-lg hover:text-orange-700 block transition-colors mt-2">
+            <h3 className="text-2xl font-extrabold mb-4 tracking-tight" style={{ color: 'var(--t-heading)' }}>Phone</h3>
+            <a href={`tel:${settings.phone}`} className="font-bold text-lg block transition-colors mt-2" style={{ color: 'var(--t-accent)' }}>
               {settings.phone}
             </a>
           </div>
 
           {/* Email */}
-          <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-            <div className="w-16 h-16 bg-orange-50 text-orange-600 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl">
+          <div className="p-8 shadow-sm hover:shadow-md transition-shadow" style={{ backgroundColor: 'var(--t-bg-card)', border: '1px solid var(--t-border)', borderRadius: 'var(--t-radius-lg)' }}>
+            <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl" style={{ backgroundColor: 'color-mix(in srgb, var(--t-accent) 10%, transparent)', color: 'var(--t-accent)' }}>
               <FaEnvelope />
             </div>
-            <h3 className="text-2xl font-extrabold mb-4 text-[#0971C8]  tracking-tight">Email</h3>
-            <a href={`mailto:${settings.email}`} className="text-orange-600 font-bold text-lg hover:text-orange-700 block transition-colors mt-2">
+            <h3 className="text-2xl font-extrabold mb-4 tracking-tight" style={{ color: 'var(--t-heading)' }}>Email</h3>
+            <a href={`mailto:${settings.email}`} className="font-bold text-lg block transition-colors mt-2" style={{ color: 'var(--t-accent)' }}>
               {settings.email}
             </a>
           </div>
@@ -72,13 +72,14 @@ const ContactSection = () => {
           {/* Voice Assistant */}
           <div
             onClick={() => window.dispatchEvent(new Event('openVoiceAssistant'))}
-            className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 hover:shadow-md transition-shadow cursor-pointer"
+            className="p-8 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+            style={{ backgroundColor: 'var(--t-bg-card)', border: '1px solid var(--t-border)', borderRadius: 'var(--t-radius-lg)' }}
           >
-            <div className="w-16 h-16 bg-orange-50 text-orange-600 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl">
+            <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl" style={{ backgroundColor: 'color-mix(in srgb, var(--t-accent) 10%, transparent)', color: 'var(--t-accent)' }}>
               <FaMicrophone />
             </div>
-            <h3 className="text-2xl font-extrabold mb-4 text-[#0971C8] tracking-tight">Voice Assistant</h3>
-            <p className="text-gray-700 leading-relaxed">
+            <h3 className="text-2xl font-extrabold mb-4 tracking-tight" style={{ color: 'var(--t-heading)' }}>Voice Assistant</h3>
+            <p className="leading-relaxed" style={{ color: 'var(--t-text)' }}>
               Interact with our site using voice commands. Navigate, search, and more.
             </p>
           </div>

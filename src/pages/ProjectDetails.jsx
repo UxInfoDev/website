@@ -45,7 +45,7 @@ const ProjectDetails = () => {
   const imageUrl = project.image?.startsWith('/uploads') ? `${project.image}` : project.image
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen" style={{ backgroundColor: 'var(--t-bg)' }}>
       {/* Hero Header with Background Image and Gradient */}
       <div className="relative h-[60vh] md:h-[70vh] flex items-center overflow-hidden">
         <div 
@@ -86,7 +86,7 @@ const ProjectDetails = () => {
       <section className="py-16 md:py-24 relative -mt-20 z-30">
         <div className="container mx-auto px-4 max-w-5xl">
           <div className="bg-white p-8 md:p-16 rounded-[2.5rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] border border-gray-100">
-            <div className="prose prose-xl prose-slate max-w-none prose-headings:text-[#0971C8] prose-headings:font-black prose-p:text-gray-600 prose-p:leading-[1.8]">
+            <div className="prose prose-xl prose-slate max-w-none prose-headings:font-black prose-p:leading-[1.8]" style={{ '--tw-prose-headings': 'var(--t-heading)', color: 'var(--t-text)' }}>
               {(() => {
                 const rawDescription = (project.description || '')
                   .replace(/:contentReference\[oaicite:\d+\]\{index=\d+\}/g, '');
@@ -108,7 +108,8 @@ const ProjectDetails = () => {
                   href={project.website_link} 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="group relative inline-flex items-center gap-4 px-12 py-5 bg-[#0971C8] text-white font-black rounded-2xl hover:bg-[#F18835] transition-all duration-500 shadow-2xl hover:shadow-[#F18835]/40 hover:-translate-y-2 uppercase tracking-[0.2em] text-[11px]"
+                  className="group relative inline-flex items-center gap-4 px-12 py-5 text-white font-black rounded-2xl transition-all duration-500 shadow-2xl hover:-translate-y-2 uppercase tracking-[0.2em] text-[11px]"
+                  style={{ backgroundColor: 'var(--t-primary)' }}
                 >
                   <FaExternalLinkAlt /> Visit Live Project
                   <span className="absolute inset-0 rounded-2xl bg-white/20 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500" />

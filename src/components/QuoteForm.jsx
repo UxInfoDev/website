@@ -151,7 +151,7 @@ const QuoteForm = ({ compact = false, onAutoClose, onClose }) => {
             <div className="flex items-center gap-2 text-xs text-gray-600 font-medium mb-2">
               <span className="text-orange-500">⚡</span> 100+ projects delivered · Response within 24 hours
             </div>
-            <h2 className={`font-extrabold text-[#0971C8]  tracking-tight mb-1 whitespace-nowrap ${compact ? 'text-xl' : 'text-3xl'}`}>Get a Free Quote</h2>
+            <h2 className={`font-extrabold tracking-tight mb-1 whitespace-nowrap ${compact ? 'text-xl' : 'text-3xl'}`} style={{ color: 'var(--t-heading)' }}>Get a Free Quote</h2>
             <p className={`text-gray-700 ${compact ? 'text-sm mb-4' : 'mb-6'} leading-relaxed`}>Tell us about your project — we'll respond fast.</p>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -194,7 +194,8 @@ const QuoteForm = ({ compact = false, onAutoClose, onClose }) => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-4 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-lg transition-all duration-300 text-[12px] tracking-widest uppercase shadow-md hover:shadow-lg hover:-translate-y-0.5 disabled:opacity-70 flex justify-center items-center gap-2 whitespace-nowrap"
+                className="w-full py-4 text-white font-bold rounded-lg transition-all duration-300 text-[12px] tracking-widest uppercase shadow-md hover:shadow-lg hover:-translate-y-0.5 disabled:opacity-70 flex justify-center items-center gap-2 whitespace-nowrap"
+                style={{ backgroundColor: 'var(--t-accent)' }}
               >
                 {loading ? 'Sending...' : <>👉 Get Free Quote</>}
               </button>

@@ -2,9 +2,11 @@ import React, { useState, useEffect, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { FaFacebook, FaTwitter, FaYoutube, FaLinkedin, FaVoicemail, FaMapMarkerAlt, FaPhone, FaEnvelope, FaArrowRight, FaChevronRight, FaWhatsapp } from 'react-icons/fa'
 import axios from 'axios'
-import QuoteForm from './QuoteForm'  
+import QuoteForm from './QuoteForm'
+import { useTheme } from '../templates'  
 
 const Footer = () => {
+  const { template } = useTheme()
   const currentYear = new Date().getFullYear()
   const [settings, setSettings] = useState({
     site_name: 'UX Infotech',
@@ -71,7 +73,7 @@ const Footer = () => {
   return (
     <footer>
       {/* ─── CTA Banner ─── */}
-      <div className="relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #0971C8 0%, #093050 50%, #071e35 100%)' }}>
+      <div className="relative overflow-hidden" style={{ background: template.cssVars['--t-cta-bg'] }}>
         <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)', backgroundSize: '32px 32px' }} />
         <div className="container relative">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6 py-8 md:py-8">
@@ -82,7 +84,8 @@ const Footer = () => {
             <button
               type="button"
               onClick={() => setIsInquiryOpen(true)}
-              className="group flex items-center justify-center gap-3 px-8 py-4 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-lg transition-all duration-300 text-[12px] tracking-widest uppercase shadow-md hover:shadow-lg hover:-translate-y-0.5 whitespace-nowrap"
+              className="group flex items-center justify-center gap-3 px-8 py-4 text-white font-bold rounded-lg transition-all duration-300 text-[12px] tracking-widest uppercase shadow-md hover:shadow-lg hover:-translate-y-0.5 whitespace-nowrap"
+              style={{ backgroundColor: 'var(--t-accent)' }}
             >
               Start Your Project
               <FaArrowRight className="transition-transform group-hover:translate-x-1" />
@@ -92,7 +95,7 @@ const Footer = () => {
       </div>
 
       {/* ─── Main Footer ─── */}
-      <div style={{ background: 'linear-gradient(180deg, #061a2e 0%, #040f1a 100%)' }}>
+      <div style={{ background: template.cssVars['--t-footer-bg'] || 'linear-gradient(180deg, #061a2e 0%, #040f1a 100%)' }}>
           <div className="container">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 px-4 py-6">
             {/* Column 1: Brand */}

@@ -2,7 +2,46 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
+/* ═══════════════════════════════════════════════════════════════════════
+   Theme Tokens — set at runtime by ThemeProvider, defaults below
+   ═══════════════════════════════════════════════════════════════════════ */
 :root {
+  /* Backgrounds */
+  --t-bg:            #ffffff;
+  --t-bg-alt:        #f9fafb;
+  --t-bg-card:       #ffffff;
+
+  /* Text */
+  --t-text:          #1f2937;
+  --t-text-muted:    #6b7280;
+  --t-heading:       #0971C8;
+
+  /* Brand Colors */
+  --t-primary:       #0971C8;
+  --t-primary-hover: #065ea6;
+  --t-accent:        #ea580c;
+  --t-accent-hover:  #c2410c;
+
+  /* Borders & Shadows */
+  --t-border:        #e5e7eb;
+  --t-shadow:        0 1px 3px rgba(0, 0, 0, 0.1);
+  --t-shadow-lg:     0 10px 25px rgba(0, 0, 0, 0.1);
+
+  /* Radii */
+  --t-radius:        0.5rem;
+  --t-radius-lg:     1rem;
+
+  /* Typography */
+  --t-font-heading:  'Outfit', sans-serif;
+  --t-font-body:     'Outfit', sans-serif;
+
+  /* Layout-specific */
+  --t-header-bg:     #ffffff;
+  --t-header-text:   #374151;
+  --t-footer-text:   #9ca3af;
+  --t-cta-bg:        linear-gradient(135deg, #0971C8 0%, #093050 50%, #071e35 100%);
+
+  /* Legacy aliases — kept so .btn etc. keep working */
   --primary: #FF6B35;
   --secondary: #004E89;
   --dark: #1a1a1a;
@@ -24,16 +63,17 @@ html {
 }
 
 body {
-  font-family: 'Outfit', sans-serif;
-  color: #1f2937;
-  background-color: #fff;
+  font-family: var(--t-font-body);
+  color: var(--t-text);
+  background-color: var(--t-bg);
   line-height: 1.7;
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-weight: 800;
   margin-bottom: 1rem;
-  color: #0971C8;
+  color: var(--t-heading);
+  font-family: var(--t-font-heading);
   letter-spacing: -0.025em;
 }
 
@@ -45,20 +85,20 @@ h5 { font-size: 1.25rem; }
 h6 { font-size: 1rem; }
 
 a {
-  color: var(--primary);
+  color: var(--t-accent);
   text-decoration: none;
   transition: color 0.3s ease;
 }
 
 a:hover {
-  color: var(--secondary);
+  color: var(--t-primary);
 }
 
 button, .btn {
   cursor: pointer;
   transition: all 0.3s ease;
   border: none;
-  border-radius: 0.5rem;
+  border-radius: var(--t-radius);
   padding: 0.75rem 1.5rem;
   font-weight: 500;
   text-decoration: none;
@@ -66,37 +106,37 @@ button, .btn {
 }
 
 .btn {
-  background-color: var(--primary);
+  background-color: var(--t-accent);
   color: white;
 }
 
 .btn:hover {
-  background-color: #e55a2b;
+  background-color: var(--t-accent-hover);
   transform: translateY(-2px);
 }
 
 .btn-blue {
-  background-color: var(--secondary);
+  background-color: var(--t-primary);
 }
 
 .btn-blue:hover {
-  background-color: #003d6b;
+  background-color: var(--t-primary-hover);
 }
 
 .btn-outline {
   background-color: transparent;
-  border: 2px solid var(--primary);
-  color: var(--primary);
+  border: 2px solid var(--t-accent);
+  color: var(--t-accent);
 }
 
 .btn-outline:hover {
-  background-color: var(--primary);
+  background-color: var(--t-accent);
   color: white;
 }
 
 .btn-white {
   background-color: white;
-  color: var(--primary);
+  color: var(--t-accent);
 }
 
 .btn-white:hover {
@@ -146,35 +186,37 @@ button, .btn {
 .p-3 { padding: 1.5rem; }
 .p-4 { padding: 2rem; }
 
-.shadow { box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); }
-.shadow-lg { box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); }
+.shadow { box-shadow: var(--t-shadow); }
+.shadow-lg { box-shadow: var(--t-shadow-lg); }
 
-.rounded { border-radius: 0.5rem; }
-.rounded-lg { border-radius: 1rem; }
+.rounded { border-radius: var(--t-radius); }
+.rounded-lg { border-radius: var(--t-radius-lg); }
 .rounded-full { border-radius: 50%; }
 
-.bg-primary { background-color: var(--primary); }
-.bg-secondary { background-color: var(--secondary); }
+.bg-primary { background-color: var(--t-accent); }
+.bg-secondary { background-color: var(--t-primary); }
 .bg-light { background-color: var(--light); }
 .bg-dark { background-color: var(--dark); }
 
 .text-white { color: white; }
-.text-primary { color: var(--primary); }
-.text-secondary { color: var(--secondary); }
-.text-muted { color: #666; }
+.text-primary { color: var(--t-accent); }
+.text-secondary { color: var(--t-primary); }
+.text-muted { color: var(--t-text-muted); }
 
 input, textarea, select {
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid #ddd;
-  border-radius: 0.5rem;
-  font-family: 'Outfit', sans-serif;
+  border: 1px solid var(--t-border);
+  border-radius: var(--t-radius);
+  font-family: var(--t-font-body);
   font-size: 1rem;
+  background-color: var(--t-bg);
+  color: var(--t-text);
 }
 
 input:focus, textarea:focus, select:focus {
   outline: none;
-  border-color: var(--primary);
+  border-color: var(--t-accent);
   box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
 }
 
@@ -267,7 +309,7 @@ input:focus, textarea:focus, select:focus {
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background: var(--primary);
+  background: var(--t-accent);
   animation: bounce 1.4s infinite ease-in-out;
 }
 
@@ -293,7 +335,7 @@ input:focus, textarea:focus, select:focus {
   right: 2rem;
   width: 50px;
   height: 50px;
-  background-color: var(--primary);
+  background-color: var(--t-accent);
   color: white;
   border-radius: 50%;
   display: flex;
@@ -312,7 +354,7 @@ input:focus, textarea:focus, select:focus {
 }
 
 .back-to-top:hover {
-  background-color: var(--secondary);
+  background-color: var(--t-primary);
   transform: translateY(-5px);
 }
 
@@ -322,16 +364,16 @@ input:focus, textarea:focus, select:focus {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--light);
+  background: var(--t-bg-alt);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--primary);
+  background: var(--t-accent);
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--secondary);
+  background: var(--t-primary);
 }
 
 /* Banner Rich Text Content (Quill HTML output) */
@@ -343,28 +385,28 @@ input:focus, textarea:focus, select:focus {
 }
 .banner-rich-text strong {
   font-weight: 800;
-  color: #0971C8;
+  color: var(--t-heading);
 }
 .banner-rich-text em {
   font-style: italic;
-  color: #1e293b;
+  color: var(--t-text);
 }
 .banner-rich-text u {
   text-decoration: underline;
 }
 .banner-rich-text a {
-  color: #00a0dc;
+  color: var(--t-primary);
   text-decoration: underline;
   font-weight: 700;
 }
 .banner-rich-text a:hover {
-  color: #0971C8;
+  color: var(--t-heading);
 }
 .banner-rich-text ul,
 .banner-rich-text ol {
   padding-left: 1.5rem;
   margin-bottom: 1rem;
-  color: #1e293b;
+  color: var(--t-text);
 }
 .banner-rich-text li {
   margin-bottom: 0.5rem;
@@ -372,7 +414,7 @@ input:focus, textarea:focus, select:focus {
 .banner-rich-text h1,
 .banner-rich-text h2,
 .banner-rich-text h3 {
-  color: #0971C8;
+  color: var(--t-heading);
   margin-bottom: 1rem;
   font-weight: 900;
 }

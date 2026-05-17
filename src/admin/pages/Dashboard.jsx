@@ -109,54 +109,62 @@ const AdminDashboard = () => {
   }
 
   const stats = [
-    { id: 1, icon: <FaProjectDiagram className="text-xl" />, label: 'Total Projects',  value: counts.projects,     color: 'from-[#0971C8] to-blue-400',   bg: 'bg-blue-50',   text: 'text-[#0971C8]'  },
-    { id: 2, icon: <FaTools         className="text-xl" />, label: 'Services',         value: counts.services,     color: 'from-green-600 to-green-400',   bg: 'bg-green-50',  text: 'text-green-600'  },
-    { id: 3, icon: <FaUsers         className="text-xl" />, label: 'Team Members',     value: counts.team,         color: 'from-purple-600 to-purple-400', bg: 'bg-purple-50', text: 'text-purple-600' },
-    { id: 4, icon: <FaEnvelope      className="text-xl" />, label: 'New Inquiries',    value: counts.newInquiries, color: 'from-orange-600 to-orange-400', bg: 'bg-orange-50', text: 'text-orange-600' },
+    { id: 1, icon: <FaProjectDiagram className="text-2xl" />, label: 'Total Projects',  value: counts.projects,     bg: 'bg-gradient-to-br from-blue-50 to-blue-100/50', border: 'border-blue-100', text: 'text-blue-600', shadow: 'shadow-blue-500/10' },
+    { id: 2, icon: <FaTools         className="text-2xl" />, label: 'Services',         value: counts.services,     bg: 'bg-gradient-to-br from-emerald-50 to-emerald-100/50', border: 'border-emerald-100', text: 'text-emerald-600', shadow: 'shadow-emerald-500/10' },
+    { id: 3, icon: <FaUsers         className="text-2xl" />, label: 'Team Members',     value: counts.team,         bg: 'bg-gradient-to-br from-violet-50 to-violet-100/50', border: 'border-violet-100', text: 'text-violet-600', shadow: 'shadow-violet-500/10' },
+    { id: 4, icon: <FaEnvelope      className="text-2xl" />, label: 'New Inquiries',    value: counts.newInquiries, bg: 'bg-gradient-to-br from-orange-50 to-orange-100/50', border: 'border-orange-100', text: 'text-orange-600', shadow: 'shadow-orange-500/10' },
   ]
 
   const quickActions = [
-    { to: '/projects',  label: 'Manage Projects',  icon: <FaFolder      />, color: 'bg-[#0971C8]   hover:bg-blue-700'   },
-    { to: '/services',  label: 'Manage Services',  icon: <FaCog         />, color: 'bg-green-600   hover:bg-green-700'  },
-    { to: '/team',      label: 'Manage Team',      icon: <FaUserFriends />, color: 'bg-purple-600  hover:bg-purple-700' },
-    { to: '/banners',   label: 'Manage Banners',   icon: <FaImage       />, color: 'bg-indigo-500  hover:bg-indigo-600' },
-    { to: '/inquiries', label: 'All Inquiries',    icon: <FaInbox       />, color: 'bg-orange-600  hover:bg-orange-700' },
+    { to: '/projects',  label: 'Manage Projects',  icon: <FaFolder      />, color: 'bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 shadow-blue-500/20' },
+    { to: '/services',  label: 'Manage Services',  icon: <FaCog         />, color: 'bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-700 hover:to-emerald-600 shadow-emerald-500/20' },
+    { to: '/team',      label: 'Manage Team',      icon: <FaUserFriends />, color: 'bg-gradient-to-r from-violet-600 to-violet-500 hover:from-violet-700 hover:to-violet-600 shadow-violet-500/20' },
+    { to: '/banners',   label: 'Manage Banners',   icon: <FaImage       />, color: 'bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-700 hover:to-indigo-600 shadow-indigo-500/20' },
+    { to: '/inquiries', label: 'All Inquiries',    icon: <FaInbox       />, color: 'bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-700 hover:to-orange-600 shadow-orange-500/20' },
   ]
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 animate-fade-in-up">
 
       {/* ── Greeting ── */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h3 className="text-2xl font-black text-gray-800">
-            {getGreeting()}, <span className="text-[#0971C8]">Admin</span> 👋
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-100 relative overflow-hidden">
+        {/* Decorative background element */}
+        <div className="absolute right-0 top-0 w-64 h-full bg-gradient-to-l from-blue-50 to-transparent pointer-events-none" />
+
+        <div className="relative z-10">
+          <h3 className="text-3xl font-black text-slate-800 tracking-tight">
+            {getGreeting()}, <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0971C8] to-blue-400">Admin</span> 👋
           </h3>
-          <p className="text-sm text-gray-500 mt-0.5">Here's what's happening on your site today.</p>
+          <p className="text-sm font-medium text-slate-500 mt-1">Here's what's happening on your site today.</p>
         </div>
         <button
           onClick={fetchData}
           title="Refresh data"
-          className="p-2 rounded-lg border border-gray-200 text-gray-500 hover:text-[#0971C8] hover:border-[#0971C8]/30 hover:bg-blue-50 transition"
+          className="relative z-10 flex items-center justify-center p-3 rounded-xl border border-slate-200 bg-white text-slate-500 hover:text-[#0971C8] hover:border-[#0971C8]/30 hover:bg-blue-50/50 hover:shadow-sm transition-all duration-200 group"
         >
-          <FaSync className={loading ? 'animate-spin' : ''} />
+          <FaSync className={`text-lg transition-transform duration-500 group-hover:rotate-180 ${loading ? 'animate-spin text-[#0971C8]' : ''}`} />
         </button>
       </div>
 
       {/* ── Live Stats Cards ── */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
         {stats.map((stat) => (
-          <div key={stat.id} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex items-center gap-4 hover:shadow-md transition-shadow">
-            <div className={`${stat.bg} ${stat.text} w-12 h-12 rounded-xl flex-shrink-0 flex items-center justify-center shadow-sm`}>
-              {stat.icon}
-            </div>
-            <div className="min-w-0">
-              <p className="text-gray-500 text-xs leading-tight truncate">{stat.label}</p>
-              {loading ? (
-                <div className="h-7 w-10 bg-gray-100 animate-pulse rounded mt-1" />
-              ) : (
-                <p className="text-2xl font-black text-gray-800 leading-tight">{stat.value}</p>
-              )}
+          <div key={stat.id} className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm hover:shadow-md transition-all duration-300 group hover:-translate-y-1 relative overflow-hidden">
+            {/* Subtle highlight effect on hover */}
+            <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300 ${stat.bg}`} />
+
+            <div className="relative z-10 flex items-center gap-5">
+              <div className={`${stat.bg} ${stat.text} border ${stat.border} w-14 h-14 rounded-2xl flex-shrink-0 flex items-center justify-center shadow-sm ${stat.shadow} transition-transform duration-300 group-hover:scale-110`}>
+                {stat.icon}
+              </div>
+              <div className="min-w-0">
+                <p className="text-slate-500 text-[13px] font-semibold uppercase tracking-wider leading-tight truncate mb-1">{stat.label}</p>
+                {loading ? (
+                  <div className="h-8 w-12 bg-slate-100 animate-pulse rounded mt-1" />
+                ) : (
+                  <p className="text-3xl font-black text-slate-800 leading-none tracking-tight">{stat.value}</p>
+                )}
+              </div>
             </div>
           </div>
         ))}
@@ -166,35 +174,37 @@ const AdminDashboard = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
         {/* Recent Inquiries */}
-        <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-            <h3 className="text-base font-bold text-gray-800">Recent Inquiries</h3>
-            <Link to="/inquiries" className="text-xs font-semibold text-[#0971C8] hover:underline">
-              View all →
+        <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden flex flex-col">
+          <div className="px-6 py-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+            <h3 className="text-lg font-black text-slate-800 tracking-tight">Recent Inquiries</h3>
+            <Link to="/inquiries" className="text-sm font-bold text-[#0971C8] hover:text-blue-700 transition flex items-center gap-1 group">
+              View all <span className="group-hover:translate-x-1 transition-transform">→</span>
             </Link>
           </div>
 
           {recentInquiries.length === 0 && !loading ? (
-            <div className="py-12 text-center text-gray-400">
-              <FaEnvelope className="text-4xl mx-auto mb-3 opacity-30" />
-              <p className="text-sm">No inquiries yet</p>
+            <div className="flex-1 flex flex-col items-center justify-center py-16 text-slate-400">
+              <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-4 border border-slate-100">
+                <FaEnvelope className="text-2xl opacity-40 text-slate-500" />
+              </div>
+              <p className="text-[15px] font-medium text-slate-500">No new inquiries yet</p>
             </div>
           ) : (
-            <div className="divide-y divide-gray-50">
+            <div className="divide-y divide-slate-100 flex-1 overflow-y-auto">
               {recentInquiries.map((inquiry) => (
                 <div
                   key={inquiry.id}
-                  className="flex items-center justify-between px-6 py-3 hover:bg-gray-50 transition cursor-pointer group"
+                  className="flex items-center justify-between px-6 py-4 hover:bg-slate-50 transition cursor-pointer group"
                   onClick={() => { setSelectedInquiry(inquiry); setReply('') }}
                 >
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-semibold text-gray-800 truncate">{inquiry.name}</p>
-                    <p className="text-xs text-gray-400 truncate">{inquiry.email}</p>
+                    <p className="text-[15px] font-bold text-slate-800 truncate mb-0.5 group-hover:text-[#0971C8] transition-colors">{inquiry.name}</p>
+                    <p className="text-[13px] font-medium text-slate-500 truncate">{inquiry.email}</p>
                   </div>
-                  <div className="flex items-center gap-3 flex-shrink-0 ml-3">
+                  <div className="flex items-center gap-4 flex-shrink-0 ml-4">
                     <StatusBadge status={inquiry.status} />
-                    <button className="text-xs text-orange-600 font-bold opacity-0 group-hover:opacity-100 transition">
-                      View
+                    <button className="text-xs text-[#0971C8] bg-blue-50 px-3 py-1.5 rounded-lg font-bold opacity-0 group-hover:opacity-100 transition-all hover:bg-blue-100">
+                      Review
                     </button>
                   </div>
                 </div>
@@ -204,19 +214,20 @@ const AdminDashboard = () => {
         </div>
 
         {/* Quick Actions */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-100">
-            <h3 className="text-base font-bold text-gray-800">Quick Actions</h3>
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+          <div className="px-6 py-5 border-b border-slate-100 bg-slate-50/50">
+            <h3 className="text-lg font-black text-slate-800 tracking-tight">Quick Actions</h3>
           </div>
-          <div className="p-4 space-y-2">
+          <div className="p-5 space-y-3">
             {quickActions.map(({ to, label, icon, color }) => (
               <Link
                 key={to}
                 to={to}
-                className={`flex items-center gap-3 w-full px-4 py-2.5 rounded-xl text-white text-sm font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md ${color}`}
+                className={`group flex items-center gap-4 w-full px-5 py-3.5 rounded-xl text-white text-[15px] font-bold transition-all duration-300 hover:-translate-y-1 shadow-sm ${color}`}
               >
-                <span className="text-base opacity-90">{icon}</span>
+                <span className="text-xl opacity-90 group-hover:scale-110 transition-transform">{icon}</span>
                 {label}
+                <span className="ml-auto opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all">→</span>
               </Link>
             ))}
           </div>

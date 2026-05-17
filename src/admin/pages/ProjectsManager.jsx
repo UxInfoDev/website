@@ -88,16 +88,19 @@ const ProjectsManager = () => {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-3xl font-bold">Projects</h2>
+    <div className="space-y-6 animate-fade-in-up">
+      <div className="flex justify-between items-center bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+        <div>
+          <h2 className="text-3xl font-black text-slate-800 tracking-tight">Projects Management</h2>
+          <p className="text-sm font-medium text-slate-500 mt-1">Manage and organize your portfolio projects.</p>
+        </div>
         <button
           onClick={() => {
             setEditingId(null)
             reset({ is_active: true })
             setShowForm(!showForm)
           }}
-          className="btn bg-orange-600 hover:bg-orange-700 text-white flex items-center gap-2"
+          className="btn bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-700 hover:to-orange-600 text-white flex items-center gap-2 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all px-5 py-2.5 rounded-xl font-bold"
         >
           <FaPlus /> Add Project
         </button>
@@ -204,39 +207,39 @@ const ProjectsManager = () => {
       )}
 
       {/* Table */}
-      <div className="bg-white rounded-lg shadow overflow-x-auto">
+      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-x-auto">
         <table className="w-full min-w-[720px]">
-          <thead className="bg-gray-100 border-b">
+          <thead className="bg-slate-50/50 border-b border-slate-100">
             <tr>
-              <th className="text-left py-3 px-4">Title</th>
-              <th className="text-left py-3 px-4">Slug</th>
-              <th className="text-left py-3 px-4">Category</th>
-              <th className="text-left py-3 px-4">Status</th>
-              <th className="text-left py-3 px-4">Active</th>
-              <th className="text-left py-3 px-4">Actions</th>
+              <th className="text-left py-4 px-6 text-[13px] font-bold text-slate-500 uppercase tracking-wider">Title</th>
+              <th className="text-left py-4 px-6 text-[13px] font-bold text-slate-500 uppercase tracking-wider">Slug</th>
+              <th className="text-left py-4 px-6 text-[13px] font-bold text-slate-500 uppercase tracking-wider">Category</th>
+              <th className="text-left py-4 px-6 text-[13px] font-bold text-slate-500 uppercase tracking-wider">Status</th>
+              <th className="text-left py-4 px-6 text-[13px] font-bold text-slate-500 uppercase tracking-wider">Active</th>
+              <th className="text-left py-4 px-6 text-[13px] font-bold text-slate-500 uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-slate-100">
             {projects.map((project) => (
-              <tr key={project.id} className="border-b hover:bg-gray-50">
-                <td className="py-3 px-4">{project.title}</td>
-                <td className="py-3 px-4 font-mono text-xs">{project.slug}</td>
-                <td className="py-3 px-4">{project.category}</td>
-                <td className="py-3 px-4">
-                  <span className={`px-3 py-1 rounded-full text-sm font-bold ${
-                    project.status === 'completed' ? 'bg-green-100 text-green-800' :
-                    project.status === 'in-progress' ? 'bg-yellow-100 text-yellow-800' :
-                    'bg-gray-100 text-gray-800'
+              <tr key={project.id} className="hover:bg-slate-50 transition-colors group">
+                <td className="py-4 px-6 text-[15px] font-bold text-slate-800">{project.title}</td>
+                <td className="py-4 px-6 font-mono text-[13px] text-slate-500">{project.slug}</td>
+                <td className="py-4 px-6 text-[14px] font-medium text-slate-600">{project.category}</td>
+                <td className="py-4 px-6">
+                  <span className={`inline-flex px-3 py-1 rounded-full text-[12px] font-bold ${
+                    project.status === 'completed' ? 'bg-emerald-100 text-emerald-700' :
+                    project.status === 'in-progress' ? 'bg-amber-100 text-amber-700' :
+                    'bg-slate-100 text-slate-700'
                   }`}>
                     {project.status.charAt(0).toUpperCase() + project.status.slice(1).replace('-', ' ')}
                   </span>
                 </td>
-                <td className="py-3 px-4">
-                  <div className="flex items-center gap-2">
+                <td className="py-4 px-6">
+                  <div className="flex items-center gap-3">
                     <button
                       onClick={() => handleToggleActive(project)}
-                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
-                        project.is_active ? 'bg-green-500' : 'bg-gray-300'
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0971C8] ${
+                        project.is_active ? 'bg-emerald-500' : 'bg-slate-300'
                       }`}
                       title={project.is_active ? 'Deactivate Project' : 'Activate Project'}
                     >
@@ -247,24 +250,28 @@ const ProjectsManager = () => {
                         }`}
                       />
                     </button>
-                    <span className={`text-sm font-bold ${project.is_active ? 'text-green-700' : 'text-gray-500'}`}>
+                    <span className={`text-[13px] font-bold ${project.is_active ? 'text-emerald-600' : 'text-slate-400'}`}>
                       {project.is_active ? 'Active' : 'Inactive'}
                     </span>
                   </div>
                 </td>
-                <td className="py-3 px-4">
-                  <button
-                    onClick={() => handleEdit(project)}
-                    className="text-blue-600 hover:text-blue-800 mr-4"
-                  >
-                    <FaEdit />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(project.id)}
-                    className="text-red-600 hover:text-red-800"
-                  >
-                    <FaTrash />
-                  </button>
+                <td className="py-4 px-6">
+                  <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button
+                      onClick={() => handleEdit(project)}
+                      className="p-2 text-[#0971C8] bg-blue-50 rounded-lg hover:bg-[#0971C8] hover:text-white transition-colors"
+                      title="Edit"
+                    >
+                      <FaEdit />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(project.id)}
+                      className="p-2 text-red-600 bg-red-50 rounded-lg hover:bg-red-600 hover:text-white transition-colors"
+                      title="Delete"
+                    >
+                      <FaTrash />
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}

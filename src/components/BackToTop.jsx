@@ -30,8 +30,8 @@ const BackToTop = () => {
         <div
           role="button"
           onClick={scrollToTop}
-          className="fixed bottom-8 right-8 w-12 h-12 bg-orange-600 text-white rounded-full flex items-center justify-center hover:bg-orange-700 transition shadow-lg z-40 cursor-pointer"
-          style={{ padding: 0, margin: 0, border: 'none' }}
+          className="fixed bottom-8 right-8 w-12 h-12 text-white rounded-full flex items-center justify-center transition shadow-lg z-40 cursor-pointer"
+          style={{ padding: 0, margin: 0, border: 'none', backgroundColor: 'var(--t-accent)' }}
           aria-label="Back to top"
         >
           <FaArrowUp size={20} />

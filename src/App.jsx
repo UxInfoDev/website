@@ -5,6 +5,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import { Helmet } from 'react-helmet'
 import axios from 'axios'
 
+import { ThemeProvider } from './templates'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import Home from './pages/Home'
@@ -44,44 +45,46 @@ function App() {
   }, [])
 
   return (
-    <Router>
-      <Helmet>
-        <title>{settings?.site_name || 'UX Infotech'} | Professional Design Agency</title>
-        {settings?.favicon_url && (
-          <link rel="icon" type="image/png" href={settings.favicon_url} />
-        )}
-        <meta
-          name="description"
-          content={settings?.site_description || "UX Infotech provides world-class UX design services for web and mobile. Explore our portfolio and case studies."}
-        />
-        <meta name="keywords" content="UX, UX Design, User Experience, Web Design, Mobile UX" />
-      </Helmet>
+    <ThemeProvider>
+      <Router>
+        <Helmet>
+          <title>{settings?.site_name || 'UX Infotech'} | Professional Design Agency</title>
+          {settings?.favicon_url && (
+            <link rel="icon" type="image/png" href={settings.favicon_url} />
+          )}
+          <meta
+            name="description"
+            content={settings?.site_description || "UX Infotech provides world-class UX design services for web and mobile. Explore our portfolio and case studies."}
+          />
+          <meta name="keywords" content="UX, UX Design, User Experience, Web Design, Mobile UX" />
+        </Helmet>
 
-      <div className="flex flex-col min-h-screen">
-        <Header />
+        <div className="flex flex-col min-h-screen">
+          <Header />
 
-        <main className="flex-grow">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/search" element={<SearchResults />} />
-            <Route path="/services" element={<ServicesPage />} />
-            <Route path="/service/:id" element={<ServiceDetails />} />
-            <Route path="/project/:id" element={<ProjectDetails />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </main>
+          <main className="flex-grow">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/search" element={<SearchResults />} />
+              <Route path="/services" element={<ServicesPage />} />
+              <Route path="/service/:id" element={<ServiceDetails />} />
+              <Route path="/project/:id" element={<ProjectDetails />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </main>
 
-        <Footer />
-        <QuoteModal />
-        <VoiceAssistant />
+          <Footer />
+          <QuoteModal />
+          <VoiceAssistant />
 
-        <ToastContainer
-          position="bottom-right"
-          autoClose={3000}
-          hideProgressBar={false}
-        />
-      </div>
-    </Router>
+          <ToastContainer
+            position="bottom-right"
+            autoClose={3000}
+            hideProgressBar={false}
+          />
+        </div>
+      </Router>
+    </ThemeProvider>
   )
 }
 

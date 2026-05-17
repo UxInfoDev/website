@@ -564,7 +564,7 @@ app.put('/api/settings', async (req, res) => {
       { name: 'favicon', maxCount: 1 }
     ]), req, res);
 
-    const { site_name, site_description, phone, email, address, facebook_url, twitter_url, linkedin_url, youtube_url, banner_rotation_speed } = req.body;
+    const { site_name, site_description, phone, email, address, facebook_url, twitter_url, linkedin_url, youtube_url, banner_rotation_speed, active_template } = req.body;
     
     // Helper to convert file to Base64
     const fileToBase64 = (file) => {
@@ -599,6 +599,7 @@ app.put('/api/settings', async (req, res) => {
     }
     
     const rotationSpeed = banner_rotation_speed ? parseInt(banner_rotation_speed) : 10000;
+    const templateId = active_template || current?.active_template || 'default';
 
     const currentSettingsRes = await pool.query('SELECT * FROM settings WHERE id = 1');
     const current = currentSettingsRes.rows[0] || {};
@@ -607,14 +608,14 @@ app.put('/api/settings', async (req, res) => {
     const finalFavicon = faviconData || current.favicon_url;
 
     const result = await pool.query(
-      `INSERT INTO settings (id, site_name, site_description, phone, email, address, facebook_url, twitter_url, linkedin_url, youtube_url, logo_url, favicon_url, banner_rotation_speed, updated_at)
-       VALUES (1, $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, CURRENT_TIMESTAMP)
+      `INSERT INTO settings (id, site_name, site_description, phone, email, address, facebook_url, twitter_url, linkedin_url, youtube_url, logo_url, favicon_url, banner_rotation_speed, active_template, updated_at)
+       VALUES (1, $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, CURRENT_TIMESTAMP)
        ON CONFLICT (id) DO UPDATE SET
          site_name = $1, site_description = $2, phone = $3, email = $4, address = $5,
          facebook_url = $6, twitter_url = $7, linkedin_url = $8, youtube_url = $9,
-         logo_url = $10, favicon_url = $11, banner_rotation_speed = $12, updated_at = CURRENT_TIMESTAMP
+         logo_url = $10, favicon_url = $11, banner_rotation_speed = $12, active_template = $13, updated_at = CURRENT_TIMESTAMP
        RETURNING *`,
-      [site_name, site_description, phone, email, address, facebook_url, twitter_url, linkedin_url, youtube_url, finalLogo, finalFavicon, rotationSpeed]
+      [site_name, site_description, phone, email, address, facebook_url, twitter_url, linkedin_url, youtube_url, finalLogo, finalFavicon, rotationSpeed, templateId]
     );
 
     res.json(result.rows[0]);

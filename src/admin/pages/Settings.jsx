@@ -2,10 +2,20 @@ import React, { useState, useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import axios from 'axios'
-import { FaUpload, FaTimesCircle } from 'react-icons/fa'
+import { FaUpload, FaTimesCircle, FaCheck, FaPalette } from 'react-icons/fa'
+import { TEMPLATES } from '../../templates'
+
+// Preview color swatches for each template
+const TEMPLATE_SWATCHES = {
+  default:   { bg: '#ffffff', heading: '#0971C8', accent: '#ea580c', card: '#f9fafb' },
+  dark:      { bg: '#0f172a', heading: '#38bdf8', accent: '#f97316', card: '#1e293b' },
+  minimal:   { bg: '#ffffff', heading: '#171717', accent: '#737373', card: '#fafafa' },
+  bold:      { bg: '#fffbeb', heading: '#7c2d12', accent: '#ea580c', card: '#ffffff' },
+  corporate: { bg: '#ffffff', heading: '#0f172a', accent: '#b45309', card: '#f8fafc' },
+}
 
 const SettingsPage = () => {
-  const { register, handleSubmit, reset } = useForm()
+  const { register, handleSubmit, reset, setValue } = useForm()
   const [logoPreview, setLogoPreview] = useState(null)
   const [currentLogo, setCurrentLogo] = useState(null)
   const [logoFile, setLogoFile] = useState(null)
@@ -14,10 +24,12 @@ const SettingsPage = () => {
   const [currentFavicon, setCurrentFavicon] = useState(null)
   const [faviconFile, setFaviconFile] = useState(null)
 
-  const [activeSection, setActiveSection] = useState('general')
+  const [activeSection, setActiveSection] = useState('appearance')
+  const [selectedTemplate, setSelectedTemplate] = useState('default')
 
   const fileInputRef    = useRef(null)
   const favFileInputRef = useRef(null)
+  const appearanceRef   = useRef(null)
   const generalRef      = useRef(null)
   const contactRef      = useRef(null)
   const socialRef       = useRef(null)
@@ -31,6 +43,7 @@ const SettingsPage = () => {
           reset(response.data)
           setCurrentLogo(response.data.logo_url || null)
           setCurrentFavicon(response.data.favicon_url || null)
+          setSelectedTemplate(response.data.active_template || 'default')
         }
       } catch {
         toast.error('Failed to load settings from server')
@@ -78,6 +91,9 @@ const SettingsPage = () => {
         const value = data[key]
         formData.append(key, value ?? '')
       })
+      // Include the selected template
+      formData.append('active_template', selectedTemplate)
+
       if (logoFile) formData.append('logo', logoFile)
       if (faviconFile) formData.append('favicon', faviconFile)
 
@@ -109,6 +125,7 @@ const SettingsPage = () => {
   const activeFavicon = faviconPreview || currentFavicon
 
   const sidebarItems = [
+    { key: 'appearance', label: 'Theme & Appearance', ref: appearanceRef },
     { key: 'general', label: 'General',             ref: generalRef },
     { key: 'contact', label: 'Contact Information', ref: contactRef },
     { key: 'social',  label: 'Social Media',        ref: socialRef  },
@@ -129,12 +146,13 @@ const SettingsPage = () => {
                 key={key}
                 type="button"
                 onClick={() => scrollTo(ref, key)}
-                className={`w-full text-left px-4 py-2 rounded font-medium transition-colors ${
+                className={`w-full text-left px-4 py-2 rounded font-medium transition-colors flex items-center gap-2 ${
                   activeSection === key
                     ? 'bg-orange-100 text-orange-600 font-bold'
                     : 'hover:bg-gray-100 text-gray-700'
                 }`}
               >
+                {key === 'appearance' && <FaPalette className="text-sm" />}
                 {label}
               </button>
             ))}
@@ -144,6 +162,84 @@ const SettingsPage = () => {
         {/* ── Form ── */}
         <div className="lg:col-span-2 bg-white rounded-lg shadow p-6">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+
+            {/* ════ Theme & Appearance ════ */}
+            <div ref={appearanceRef} id="section-appearance" className="scroll-mt-4">
+              <h3 className="text-xl font-bold mb-5 pb-2 border-b flex items-center gap-2">
+                <FaPalette className="text-orange-500" />
+                Theme & Appearance
+              </h3>
+              <p className="text-gray-500 text-sm mb-6">
+                Choose a template to change the entire look and feel of your website. Content stays the same — only the visual design changes.
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+                {TEMPLATES.map((tpl) => {
+                  const isActive = selectedTemplate === tpl.id
+                  const swatches = TEMPLATE_SWATCHES[tpl.id] || TEMPLATE_SWATCHES.default
+                  return (
+                    <button
+                      key={tpl.id}
+                      type="button"
+                      onClick={() => setSelectedTemplate(tpl.id)}
+                      className={`relative text-left p-4 rounded-xl border-2 transition-all duration-200 group ${
+                        isActive
+                          ? 'border-orange-500 bg-orange-50 shadow-md ring-2 ring-orange-200'
+                          : 'border-gray-200 hover:border-gray-300 hover:shadow-sm bg-white'
+                      }`}
+                    >
+                      {/* Active Badge */}
+                      {isActive && (
+                        <div className="absolute -top-2 -right-2 w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center shadow-md">
+                          <FaCheck className="text-white text-[10px]" />
+                        </div>
+                      )}
+
+                      {/* Color Swatches Preview */}
+                      <div className="flex gap-1 mb-3">
+                        <div 
+                          className="w-full h-16 rounded-lg border border-gray-100 flex items-end p-2 relative overflow-hidden"
+                          style={{ backgroundColor: swatches.bg }}
+                        >
+                          {/* Mini mockup */}
+                          <div className="w-full space-y-1">
+                            <div className="h-1.5 rounded-full w-3/4" style={{ backgroundColor: swatches.heading }} />
+                            <div className="h-1 rounded-full w-1/2 opacity-40" style={{ backgroundColor: swatches.heading }} />
+                            <div className="flex gap-1 mt-1">
+                              <div className="h-2 w-6 rounded-sm" style={{ backgroundColor: swatches.accent }} />
+                              <div className="h-2 w-6 rounded-sm border" style={{ borderColor: swatches.heading }} />
+                            </div>
+                          </div>
+                          {/* Card preview */}
+                          <div className="absolute top-1 right-1 w-6 h-8 rounded-sm border" style={{ backgroundColor: swatches.card, borderColor: swatches.heading + '20' }} />
+                        </div>
+                      </div>
+
+                      {/* Color Dots */}
+                      <div className="flex gap-1.5 mb-2">
+                        {Object.values(swatches).map((color, i) => (
+                          <div
+                            key={i}
+                            className="w-4 h-4 rounded-full border border-gray-200"
+                            style={{ backgroundColor: color }}
+                          />
+                        ))}
+                      </div>
+
+                      {/* Label */}
+                      <h4 className={`font-bold text-sm mb-0.5 ${isActive ? 'text-orange-700' : 'text-gray-800'}`}>
+                        {tpl.name}
+                      </h4>
+                      <p className="text-[11px] text-gray-500 leading-snug line-clamp-2">
+                        {tpl.description}
+                      </p>
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+
+            <hr />
 
             {/* ════ General ════ */}
             <div ref={generalRef} id="section-general" className="scroll-mt-4">

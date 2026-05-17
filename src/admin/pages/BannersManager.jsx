@@ -124,9 +124,12 @@ const BannersManager = () => {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-3xl font-bold">Home Banners</h2>
+    <div className="space-y-6 animate-fade-in-up">
+      <div className="flex justify-between items-center bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+        <div>
+          <h2 className="text-3xl font-black text-slate-800 tracking-tight">Home Banners</h2>
+          <p className="text-sm font-medium text-slate-500 mt-1">Manage carousel banners for the homepage.</p>
+        </div>
         <button
           onClick={() => {
             setEditingId(null)
@@ -137,7 +140,7 @@ const BannersManager = () => {
             reset({ is_active: true })
             setShowForm(!showForm)
           }}
-          className="btn bg-orange-600 hover:bg-orange-700 text-white flex items-center gap-2"
+          className="btn bg-gradient-to-r from-[#0971C8] to-blue-500 hover:from-[#0A5A9E] hover:to-blue-600 text-white flex items-center gap-2 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all px-5 py-2.5 rounded-xl font-bold"
         >
           <FaPlus /> Add Banner
         </button>
@@ -265,30 +268,30 @@ const BannersManager = () => {
         </div>
       )}
 
-      <div className="bg-white rounded-lg shadow overflow-x-auto">
+      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-x-auto">
         <table className="w-full min-w-[800px]">
-          <thead className="bg-gray-100 border-b">
+          <thead className="bg-slate-50/50 border-b border-slate-100">
             <tr>
-              <th className="text-left py-3 px-4">Title</th>
-              <th className="text-left py-3 px-4">Subtitle</th>
-              <th className="text-left py-3 px-4">CTA Link</th>
-              <th className="text-left py-3 px-4">Active</th>
-              <th className="text-left py-3 px-4">Order</th>
-              <th className="text-left py-3 px-4">Actions</th>
+              <th className="text-left py-4 px-6 text-[13px] font-bold text-slate-500 uppercase tracking-wider">Title</th>
+              <th className="text-left py-4 px-6 text-[13px] font-bold text-slate-500 uppercase tracking-wider">Subtitle</th>
+              <th className="text-left py-4 px-6 text-[13px] font-bold text-slate-500 uppercase tracking-wider">CTA Link</th>
+              <th className="text-left py-4 px-6 text-[13px] font-bold text-slate-500 uppercase tracking-wider">Active</th>
+              <th className="text-left py-4 px-6 text-[13px] font-bold text-slate-500 uppercase tracking-wider">Order</th>
+              <th className="text-left py-4 px-6 text-[13px] font-bold text-slate-500 uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-slate-100">
             {banners.map((banner, index) => (
-              <tr key={banner.id} className="border-b hover:bg-gray-50">
-                <td className="py-3 px-4">{banner.title}</td>
-                <td className="py-3 px-4 text-sm text-gray-500">{banner.subtitle || '—'}</td>
-                <td className="py-3 px-4">{banner.cta_link}</td>
-                <td className="py-3 px-4">
-                  <div className="flex items-center gap-2">
+              <tr key={banner.id} className="hover:bg-slate-50 transition-colors group">
+                <td className="py-4 px-6 text-[15px] font-bold text-slate-800">{banner.title}</td>
+                <td className="py-4 px-6 text-[13px] text-slate-500">{banner.subtitle || '—'}</td>
+                <td className="py-4 px-6 text-[13px] text-[#0971C8] font-medium">{banner.cta_link}</td>
+                <td className="py-4 px-6">
+                  <div className="flex items-center gap-3">
                     <button
                       onClick={() => handleToggleActive(banner)}
-                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
-                        banner.is_active ? 'bg-green-500' : 'bg-gray-300'
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0971C8] ${
+                        banner.is_active ? 'bg-emerald-500' : 'bg-slate-300'
                       }`}
                       title={banner.is_active ? 'Deactivate Banner' : 'Activate Banner'}
                     >
@@ -299,42 +302,46 @@ const BannersManager = () => {
                         }`}
                       />
                     </button>
-                    <span className={`text-sm font-bold ${banner.is_active ? 'text-green-700' : 'text-gray-500'}`}>
+                    <span className={`text-[13px] font-bold ${banner.is_active ? 'text-emerald-600' : 'text-slate-400'}`}>
                       {banner.is_active ? 'Active' : 'Inactive'}
                     </span>
                   </div>
                 </td>
-                <td className="py-3 px-4">
+                <td className="py-4 px-6">
                   <div className="flex gap-2">
                     <button
                       onClick={() => handleMove(index, -1)}
                       disabled={index === 0}
-                      className={`p-1 rounded ${index === 0 ? 'text-gray-300' : 'text-gray-600 hover:bg-gray-200'}`}
+                      className={`p-2 rounded-lg transition-colors ${index === 0 ? 'text-slate-300 bg-slate-50' : 'text-slate-600 hover:text-[#0971C8] hover:bg-blue-50'}`}
                     >
                       <FaArrowUp />
                     </button>
                     <button
                       onClick={() => handleMove(index, 1)}
                       disabled={index === banners.length - 1}
-                      className={`p-1 rounded ${index === banners.length - 1 ? 'text-gray-300' : 'text-gray-600 hover:bg-gray-200'}`}
+                      className={`p-2 rounded-lg transition-colors ${index === banners.length - 1 ? 'text-slate-300 bg-slate-50' : 'text-slate-600 hover:text-[#0971C8] hover:bg-blue-50'}`}
                     >
                       <FaArrowDown />
                     </button>
                   </div>
                 </td>
-                <td className="py-3 px-4 flex gap-2">
-                  <button
-                    onClick={() => handleEdit(banner)}
-                    className="text-blue-600 hover:text-blue-800"
-                  >
-                    <FaEdit />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(banner.id)}
-                    className="text-red-600 hover:text-red-800"
-                  >
-                    <FaTrash />
-                  </button>
+                <td className="py-4 px-6">
+                  <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button
+                      onClick={() => handleEdit(banner)}
+                      className="p-2 text-[#0971C8] bg-blue-50 rounded-lg hover:bg-[#0971C8] hover:text-white transition-colors"
+                      title="Edit"
+                    >
+                      <FaEdit />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(banner.id)}
+                      className="p-2 text-red-600 bg-red-50 rounded-lg hover:bg-red-600 hover:text-white transition-colors"
+                      title="Delete"
+                    >
+                      <FaTrash />
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}

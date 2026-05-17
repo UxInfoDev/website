@@ -502,7 +502,8 @@ const VoiceAssistant = () => {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-40 w-14 h-14 bg-[#FF6B35] hover:bg-orange-600 text-white rounded-full shadow-lg flex items-center justify-center transition-all hover:scale-110"
+        className="fixed bottom-6 right-6 z-40 w-14 h-14 text-white rounded-full shadow-lg flex items-center justify-center transition-all hover:scale-110"
+        style={{ backgroundColor: 'var(--t-accent)' }}
         aria-label="Open voice assistant"
       >
         {isSupported ? <FaMicrophone size={22} /> : <FaRobot size={22} />}
