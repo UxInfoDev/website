@@ -20,35 +20,20 @@ const LoginPage = ({ onLogin }) => {
   const onSubmit = async (data) => {
     setLoading(true)
     try {
-      // Try backend API first — credentials are stored server-side in .env
       const res = await axios.post('/api/auth/login', {
         email:    data.email,
         password: data.password,
       })
-      const token = res.data?.token
+      const { token, expiresIn } = res.data
       if (token) {
-        onLogin(token)
+        onLogin(token, expiresIn)
         toast.success('Welcome back! Logged in successfully.')
       } else {
-        toast.error('Invalid credentials. Please try again.')
+        toast.error('Login failed. Please try again.')
       }
     } catch (err) {
-      // Fallback: if the API route doesn't exist yet (404) or server is unreachable,
-      // validate locally so login still works during development
-      if (err.response?.status === 404 || err.code === 'ERR_NETWORK') {
-        const validEmail = 'admin@uxinfotech.com'
-        const validPass  = 'SatSuresh123$$'
-        if (data.email === validEmail && data.password === validPass) {
-          const token = 'admin-session-' + Date.now()
-          onLogin(token)
-          toast.success('Welcome back! Logged in successfully.')
-        } else {
-          toast.error('Invalid credentials. Please try again.')
-        }
-      } else {
-        const msg = err.response?.data?.error || 'Login failed. Please try again.'
-        toast.error(msg)
-      }
+      const msg = err.response?.data?.error || 'Login failed. Please try again.'
+      toast.error(msg)
     } finally {
       setLoading(false)
     }
