@@ -80,7 +80,7 @@ const AdminLayout = ({ children, onLogout }) => {
   ]
 
   return (
-    <div className="relative flex min-h-screen bg-[#F4F7FA] overflow-hidden font-sans">
+    <div className="relative flex min-h-screen bg-t-bg overflow-hidden font-sans admin-theme">
 
       {/* Mobile backdrop */}
       {isMobile && isSidebarOpen && (

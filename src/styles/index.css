@@ -520,3 +520,88 @@ input:focus, textarea:focus, select:focus {
 .anim-duration-dynamic {
   animation-duration: var(--anim-duration-dynamic);
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Enterprise CMS Admin Theme (Branding & Spacing Overrides)
+   ═══════════════════════════════════════════════════════════════════════ */
+.admin-theme {
+  /* Premium Slate & Cobalt Branding Palette */
+  --t-bg:            #f8fafc; /* Professional Cool Slate background */
+  --t-bg-alt:        #f1f5f9;
+  --t-bg-card:       #ffffff;
+
+  /* Typography */
+  --t-text:          #334155; /* Slate-700 body text */
+  --t-text-muted:    #64748b; /* Slate-500 muted text */
+  --t-heading:       #0f172a; /* Slate-900 high-contrast headings */
+
+  /* Branding Colors */
+  --t-primary:       #0971C8; /* Enterprise Blue */
+  --t-primary-hover: #075699;
+  --t-accent:        #f25c05; /* Deep rich orange highlight */
+  --t-accent-hover:  #d34e02;
+
+  /* Borders & Shadows */
+  --t-border:        #e2e8f0; /* Ultra-thin, crisp slate borders */
+  --t-radius:        0.625rem; /* Clean modern corner radius */
+  --t-radius-lg:     1rem;
+
+  --t-shadow:        0 1px 2px 0 rgba(15, 23, 42, 0.05);
+  --t-shadow-lg:     0 4px 6px -1px rgba(15, 23, 42, 0.05), 0 2px 4px -2px rgba(15, 23, 42, 0.05);
+}
+
+/* Compact layout spacing overrides specifically for the Admin workspace */
+.admin-theme .space-y-6 > :not([hidden]) ~ :not([hidden]) {
+  margin-top: 1rem !important; /* Compact spacing between page sections */
+}
+.admin-theme .p-6 {
+  padding: 1.25rem !important; /* Tighten general container padding */
+}
+.admin-theme .p-8 {
+  padding: 1.5rem !important; /* Compact form modal overlays */
+}
+.admin-theme .p-5 {
+  padding: 1rem !important; /* Compact list/grid cells */
+}
+.admin-theme .gap-6 {
+  gap: 1.25rem !important; /* Tighten grid gaps */
+}
+.admin-theme .h-48, 
+.admin-theme .h-52 {
+  height: 10rem !important; /* More compact media wrappers in cards */
+}
+.admin-theme .mt-6 {
+  margin-top: 1rem !important; /* Tighter sidebar/top margins */
+}
+.admin-theme .mb-6 {
+  margin-bottom: 1rem !important;
+}
+
+/* Refined Form fields and controls */
+.admin-theme input[type="text"],
+.admin-theme input[type="url"],
+.admin-theme input[type="file"],
+.admin-theme select,
+.admin-theme textarea {
+  padding-top: 0.5rem !important;
+  padding-bottom: 0.5rem !important;
+  font-size: 0.875rem !important; /* Tighter 14px size */
+  line-height: 1.25rem !important;
+  border-radius: 0.5rem !important;
+  transition: all 0.2s ease-in-out !important;
+  border-color: #cbd5e1 !important; /* Slate-300 border by default */
+}
+.admin-theme input:focus,
+.admin-theme select:focus,
+.admin-theme textarea:focus {
+  border-color: var(--t-primary) !important;
+  box-shadow: 0 0 0 2px rgba(9, 113, 200, 0.15) !important;
+  outline: none !important;
+}
+
+/* Compact tabular cell flows */
+.admin-theme .py-3 {
+  padding-top: 0.625rem !important;
+  padding-bottom: 0.625rem !important;
+}
+
