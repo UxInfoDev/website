@@ -98,11 +98,11 @@ const LoginPage = ({ onLogin }) => {
       </div>
 
       {/* ── Right Login Panel ── */}
-      <div className="flex-1 flex items-center justify-center p-6 sm:p-12 relative overflow-hidden">
+      <div className="flex-1 flex flex-col p-6 sm:p-12 relative overflow-y-auto overflow-x-hidden">
         {/* Subtle background decoration for the right panel */}
         <div className="absolute top-[-20%] right-[-10%] w-[60%] h-[60%] rounded-full bg-blue-50/50 blur-[100px] pointer-events-none" />
 
-        <div className="w-full max-w-[420px] relative z-10">
+        <div className="w-full max-w-[420px] m-auto relative z-10">
 
           {/* Mobile logo (shown only on mobile — desktop shows it on left panel) */}
           <div className="lg:hidden flex justify-center mb-10">

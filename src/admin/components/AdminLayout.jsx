@@ -48,8 +48,19 @@ const AdminLayout = ({ children, onLogout }) => {
     }
 
     handleViewport(mq)
-    mq.addEventListener('change', handleViewport)
-    return () => mq.removeEventListener('change', handleViewport)
+    if (mq.addEventListener) {
+      mq.addEventListener('change', handleViewport)
+    } else if (mq.addListener) {
+      mq.addListener(handleViewport) // Fallback for older Safari
+    }
+    
+    return () => {
+      if (mq.removeEventListener) {
+        mq.removeEventListener('change', handleViewport)
+      } else if (mq.removeListener) {
+        mq.removeListener(handleViewport)
+      }
+    }
   }, [])
 
   const closeSidebarOnMobile = () => {

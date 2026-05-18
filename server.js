@@ -46,7 +46,7 @@ app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 const allowedOrigin = process.env.CORS_ORIGIN || 'http://localhost:5173';
 const isProduction  = process.env.NODE_ENV === 'production';
 
-app.use(cors({
+const corsOptions = {
   origin: (origin, callback) => {
     // Requests with no Origin header (same-origin, curl, Vite proxy) — always allow
     if (!origin) return callback(null, true);
@@ -54,12 +54,20 @@ app.use(cors({
     if (!isProduction && /^https?:\/\/localhost(:\d+)?$/.test(origin)) {
       return callback(null, true);
     }
-    // In production: only the configured origin is trusted
-    if (origin === allowedOrigin) return callback(null, true);
-    callback(new Error(`CORS: origin '${origin}' not allowed`));
+    // In production: support both www and non-www variants of allowedOrigin
+    const baseOrigin = allowedOrigin.replace(/^https?:\/\/(www\.)?/, '');
+    const reqOrigin = origin.replace(/^https?:\/\/(www\.)?/, '');
+    
+    if (baseOrigin === reqOrigin) return callback(null, true);
+    
+    // Pass false instead of throwing new Error() to prevent Express 500 crashes
+    callback(null, false);
   },
   credentials: true,
-}));
+};
+
+// Apply strict CORS only to API routes, leaving static assets unblocked
+app.use('/api', cors(corsOptions));
 app.use(express.json({ limit: '1mb' }));
 
 // Serve static files from public/uploads

@@ -22,8 +22,20 @@ const BannerSection = () => {
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
     setPrefersReducedMotion(mediaQuery.matches)
     const handler = (e) => setPrefersReducedMotion(e.matches)
-    mediaQuery.addEventListener('change', handler)
-    return () => mediaQuery.removeEventListener('change', handler)
+    
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener('change', handler)
+    } else if (mediaQuery.addListener) {
+      mediaQuery.addListener(handler) // Fallback for older Safari
+    }
+    
+    return () => {
+      if (mediaQuery.removeEventListener) {
+        mediaQuery.removeEventListener('change', handler)
+      } else if (mediaQuery.removeListener) {
+        mediaQuery.removeListener(handler)
+      }
+    }
   }, [])
 
   // ── Data fetching ──

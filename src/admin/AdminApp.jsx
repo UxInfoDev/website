@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import axios from 'axios'
@@ -15,7 +15,7 @@ import LoginPage from './pages/Login'
 import BannersManager from './pages/BannersManager'
 
 // ── Axios interceptor: attach JWT to every request ────────────────────────────
-const axiosInterceptor = axios.interceptors.request.use((config) => {
+axios.interceptors.request.use((config) => {
   const token = localStorage.getItem('adminToken')
   if (token) {
     config.headers['Authorization'] = `Bearer ${token}`
@@ -64,23 +64,39 @@ function AdminApp() {
     setIsAuthenticated(false)
   }
 
-  if (!isAuthenticated) {
-    return <LoginPage onLogin={handleLogin} />
-  }
-
   return (
     <Router basename="/admin">
-      <AdminLayout onLogout={handleLogout}>
-        <Routes>
-          <Route path="/" element={<AdminDashboard />} />
-          <Route path="/projects" element={<ProjectsManager />} />
-          <Route path="/services" element={<ServicesManager />} />
-          <Route path="/team" element={<TeamManager />} />
-          <Route path="/inquiries" element={<InquiriesManager />} />
-          <Route path="/banners" element={<BannersManager />} />
-          <Route path="/settings" element={<SettingsPage />} />
-        </Routes>
-      </AdminLayout>
+      <Routes>
+        {/* If authenticated, visiting /login redirects to root dashboard. Otherwise, mount LoginPage. */}
+        <Route 
+          path="/login" 
+          element={isAuthenticated ? <Navigate to="/" replace /> : <LoginPage onLogin={handleLogin} />} 
+        />
+        
+        {/* Protect all other routes. Redirect to /login if unauthenticated. */}
+        <Route 
+          path="/*" 
+          element={
+            isAuthenticated ? (
+              <AdminLayout onLogout={handleLogout}>
+                <Routes>
+                  <Route path="/" element={<AdminDashboard />} />
+                  <Route path="/projects" element={<ProjectsManager />} />
+                  <Route path="/services" element={<ServicesManager />} />
+                  <Route path="/team" element={<TeamManager />} />
+                  <Route path="/inquiries" element={<InquiriesManager />} />
+                  <Route path="/banners" element={<BannersManager />} />
+                  <Route path="/settings" element={<SettingsPage />} />
+                  {/* Default fallback route to dashboard */}
+                  <Route path="*" element={<Navigate to="/" replace />} />
+                </Routes>
+              </AdminLayout>
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          } 
+        />
+      </Routes>
       <ToastContainer
         position="bottom-right"
         autoClose={3000}
